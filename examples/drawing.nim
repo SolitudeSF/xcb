@@ -1,3 +1,4 @@
+import system/ansi_c
 import xcb/xcb
 
 var
@@ -68,15 +69,15 @@ while true:
   case event.responseType and not 0x80'u8
   of xcbExpose:
 
-    conn.polyPoint(xcbCoordModeOrigin.uint8, window.XcbDrawable, foreground, 4, addr points[0])
-    conn.polyLine(xcbCoordModePrevious.uint8, window.XcbDrawable, foreground, 4, addr polylines[0])
-    conn.polySegment(window.XcbDrawable, foreground, 2, addr segments[0])
-    conn.polyRectangle(window.XcbDrawable, foreground, 2, addr rectangles[0])
-    conn.polyArc(window.XcbDrawable, foreground, 2, addr arcs[0])
+    conn.polyPoint xcbCoordModeOrigin, window.XcbDrawable, foreground, points.len.uint32, points[0].addr
+    conn.polyLine xcbCoordModePrevious, window.XcbDrawable, foreground, polylines.len.uint32, polylines[0].addr
+    conn.polySegment window.XcbDrawable, foreground, segments.len.uint32, segments[0].addr
+    conn.polyRectangle window.XcbDrawable, foreground, rectangles.len.uint32, rectangles[0].addr
+    conn.polyArc window.XcbDrawable, foreground, arcs.len.uint32, arcs[0].addr
 
     discard conn.flush
 
   else:
     discard
 
-  # free event
+  event.c_free

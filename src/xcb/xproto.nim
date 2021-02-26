@@ -1182,7 +1182,7 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbPropMode* {.importc: "xcb_prop_mode_t".} = enum
+  XcbPropMode* {.importc: "xcb_prop_mode_t", size: 1.} = enum
     xcbPropModeReplace = 0, xcbPropModePrepend = 1, xcbPropModeAppend = 2
 
   XcbChangePropertyRequest* {.importc: "xcb_change_property_request_t", bycopy.} = object
@@ -1925,19 +1925,19 @@ type
     height*: uint16
     bitPlane* {.importc: "bit_plane".}: uint32
 
-  XcbCoordMode* {.importc: "xcb_coord_mode_t".} = enum
+  XcbCoordMode* {.importc: "xcb_coord_mode_t", size: 1.} = enum
     xcbCoordModeOrigin = 0, xcbCoordModePrevious = 1
 
   XcbPolyPointRequest* {.importc: "xcb_poly_point_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
-    coordinateMode* {.importc: "coordinate_mode".}: uint8
+    coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
   XcbPolyLineRequest* {.importc: "xcb_poly_line_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
-    coordinateMode* {.importc: "coordinate_mode".}: uint8
+    coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
@@ -1985,7 +1985,7 @@ type
     drawable*: XcbDrawable
     gc*: XcbGcontext
     shape*: uint8
-    coordinateMode* {.importc: "coordinate_mode".}: uint8
+    coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     pad1: array[2, uint8]
 
   XcbPolyFillRectangleRequest* {.importc: "xcb_poly_fill_rectangle_request_t", bycopy.} = object
@@ -2876,8 +2876,8 @@ proc childrenLength*(R: ptr XcbQueryTreeReply): cint {.importc: "xcb_query_tree_
 proc childrenEnd*(R: ptr XcbQueryTreeReply): XcbGenericIterator {.importc: "xcb_query_tree_children_end".}
 proc reply*(c: ptr XcbConnection; cookie: XcbQueryTreeCookie; e: ptr ptr XcbGenericError): ptr XcbQueryTreeReply {.importc: "xcb_query_tree_reply".}
 proc internAtomSizeof*(buffer: pointer): cint {.importc: "xcb_intern_atom_sizeof".}
-proc internAtom*(c: ptr XcbConnection; onlyIfExists: uint8; nameLen: uint16; name: cstring): XcbInternAtomCookie {.importc: "xcb_intern_atom".}
-proc internAtomUnchecked*(c: ptr XcbConnection; onlyIfExists: uint8; nameLen: uint16; name: cstring): XcbInternAtomCookie {.importc: "xcb_intern_atom_unchecked".}
+proc internAtom*(c: ptr XcbConnection; onlyIfExists: bool; nameLen: uint16; name: cstring): XcbInternAtomCookie {.importc: "xcb_intern_atom".}
+proc internAtomUnchecked*(c: ptr XcbConnection; onlyIfExists: bool; nameLen: uint16; name: cstring): XcbInternAtomCookie {.importc: "xcb_intern_atom_unchecked".}
 proc reply*(c: ptr XcbConnection; cookie: XcbInternAtomCookie; e: ptr ptr XcbGenericError): ptr XcbInternAtomReply {.importc: "xcb_intern_atom_reply".}
 proc getAtomNameSizeof*(buffer: pointer): cint {.importc: "xcb_get_atom_name_sizeof".}
 proc getName*(c: ptr XcbConnection; atom: XcbAtom): XcbGetAtomNameCookie {.importc: "xcb_get_atom_name".}
@@ -2887,8 +2887,8 @@ proc nameLength*(R: ptr XcbGetAtomNameReply): cint {.importc: "xcb_get_atom_name
 proc nameEnd*(R: ptr XcbGetAtomNameReply): XcbGenericIterator {.importc: "xcb_get_atom_name_name_end".}
 proc reply*(c: ptr XcbConnection; cookie: XcbGetAtomNameCookie; e: ptr ptr XcbGenericError): ptr XcbGetAtomNameReply {.importc: "xcb_get_atom_name_reply".}
 proc changePropertySizeof*(buffer: pointer): cint {.importc: "xcb_change_property_sizeof".}
-proc changePropertyChecked*(c: ptr XcbConnection; mode: uint8; window: XcbWindow; property: XcbAtom; `type`: XcbAtom; format: uint8; dataLen: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_change_property_checked".}
-proc changeProperty*(c: ptr XcbConnection; mode: uint8; window: XcbWindow; property: XcbAtom; `type`: XcbAtom; format: uint8; dataLen: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_change_property".}
+proc changePropertyChecked*(c: ptr XcbConnection; mode: XcbPropMode; window: XcbWindow; property: XcbAtom; `type`: XcbAtom; format: uint8; dataLen: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_change_property_checked".}
+proc changeProperty*(c: ptr XcbConnection; mode: XcbPropMode; window: XcbWindow; property: XcbAtom; `type`: XcbAtom; format: uint8; dataLen: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_change_property".}
 proc data*(R: ptr XcbChangePropertyRequest): pointer {.importc: "xcb_change_property_data".}
 proc dataLength*(R: ptr XcbChangePropertyRequest): cint {.importc: "xcb_change_property_data_length".}
 proc dataEnd*(R: ptr XcbChangePropertyRequest): XcbGenericIterator {.importc: "xcb_change_property_data_end".}
@@ -3072,14 +3072,14 @@ proc copyArea*(c: ptr XcbConnection; srcDrawable: XcbDrawable; dstDrawable: XcbD
 proc copyPlaneChecked*(c: ptr XcbConnection; srcDrawable: XcbDrawable; dstDrawable: XcbDrawable; gc: XcbGcontext; srcX: int16; srcY: int16; dstX: int16; dstY: int16; width: uint16; height: uint16; bitPlane: uint32): XcbVoidCookie {.discardable, importc: "xcb_copy_plane_checked".}
 proc copyPlane*(c: ptr XcbConnection; srcDrawable: XcbDrawable; dstDrawable: XcbDrawable; gc: XcbGcontext; srcX: int16; srcY: int16; dstX: int16; dstY: int16; width: uint16; height: uint16; bitPlane: uint32): XcbVoidCookie {.discardable, importc: "xcb_copy_plane".}
 proc polyPointSizeof*(buffer: pointer; pointsLen: uint32): cint {.importc: "xcb_poly_point_sizeof".}
-proc polyPointChecked*(c: ptr XcbConnection; coordinateMode: uint8; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_point_checked".}
-proc polyPoint*(c: ptr XcbConnection; coordinateMode: uint8; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_point".}
+proc polyPointChecked*(c: ptr XcbConnection; coordinateMode: XcbCoordMode; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_point_checked".}
+proc polyPoint*(c: ptr XcbConnection; coordinateMode: XcbCoordMode; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_point".}
 proc points*(R: ptr XcbPolyPointRequest): ptr UncheckedArray[XcbPoint] {.importc: "xcb_poly_point_points".}
 proc pointsLength*(R: ptr XcbPolyPointRequest): cint {.importc: "xcb_poly_point_points_length".}
 proc pointsIterator*(R: ptr XcbPolyPointRequest): XcbPointIterator {.importc: "xcb_poly_point_points_iterator".}
 proc polyLineSizeof*(buffer: pointer; pointsLen: uint32): cint {.importc: "xcb_poly_line_sizeof".}
-proc polyLineChecked*(c: ptr XcbConnection; coordinateMode: uint8; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_line_checked".}
-proc polyLine*(c: ptr XcbConnection; coordinateMode: uint8; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_line".}
+proc polyLineChecked*(c: ptr XcbConnection; coordinateMode: XcbCoordMode; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_line_checked".}
+proc polyLine*(c: ptr XcbConnection; coordinateMode: XcbCoordMode; drawable: XcbDrawable; gc: XcbGcontext; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_poly_line".}
 proc points*(R: ptr XcbPolyLineRequest): ptr UncheckedArray[XcbPoint] {.importc: "xcb_poly_line_points".}
 proc pointsLength*(R: ptr XcbPolyLineRequest): cint {.importc: "xcb_poly_line_points_length".}
 proc pointsIterator*(R: ptr XcbPolyLineRequest): XcbPointIterator {.importc: "xcb_poly_line_points_iterator".}
@@ -3104,8 +3104,8 @@ proc arcs*(R: ptr XcbPolyArcRequest): ptr UncheckedArray[XcbArc] {.importc: "xcb
 proc arcsLength*(R: ptr XcbPolyArcRequest): cint {.importc: "xcb_poly_arc_arcs_length".}
 proc arcsIterator*(R: ptr XcbPolyArcRequest): XcbArcIterator {.importc: "xcb_poly_arc_arcs_iterator".}
 proc fillPolySizeof*(buffer: pointer; pointsLen: uint32): cint {.importc: "xcb_fill_poly_sizeof".}
-proc fillPolyChecked*(c: ptr XcbConnection; drawable: XcbDrawable; gc: XcbGcontext; shape: uint8; coordinateMode: uint8; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_fill_poly_checked".}
-proc fillPoly*(c: ptr XcbConnection; drawable: XcbDrawable; gc: XcbGcontext; shape: uint8; coordinateMode: uint8; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_fill_poly".}
+proc fillPolyChecked*(c: ptr XcbConnection; drawable: XcbDrawable; gc: XcbGcontext; shape: uint8; coordinateMode: XcbCoordMode; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_fill_poly_checked".}
+proc fillPoly*(c: ptr XcbConnection; drawable: XcbDrawable; gc: XcbGcontext; shape: uint8; coordinateMode: XcbCoordMode; pointsLen: uint32; points: ptr XcbPoint): XcbVoidCookie {.discardable, importc: "xcb_fill_poly".}
 proc points*(R: ptr XcbFillPolyRequest): ptr UncheckedArray[XcbPoint] {.importc: "xcb_fill_poly_points".}
 proc pointsLength*(R: ptr XcbFillPolyRequest): cint {.importc: "xcb_fill_poly_points_length".}
 proc pointsIterator*(R: ptr XcbFillPolyRequest): XcbPointIterator {.importc: "xcb_fill_poly_points_iterator".}

@@ -307,7 +307,7 @@ type
     namesLen* {.importc: "names_len".}: uint16
     pad1: array[8, uint8]
 
-  XcbRandrConnection* {.importc: "xcb_randr_connection_t".} = enum
+  XcbRandrConnection* {.importc: "xcb_randr_connection_t", size: 1.} = enum
     xcbRandrConnectionConnected = 0, xcbRandrConnectionDisconnected = 1,
     xcbRandrConnectionUnknown = 2
 
@@ -330,7 +330,7 @@ type
     crtc*: XcbRandrCrtc
     mmWidth* {.importc: "mm_width".}: uint32
     mmHeight* {.importc: "mm_height".}: uint32
-    connection*: uint8
+    connection*: XcbRandrConnection
     subpixelOrder* {.importc: "subpixel_order".}: uint8
     numCrtcs* {.importc: "num_crtcs".}: uint16
     numModes* {.importc: "num_modes".}: uint16
@@ -900,7 +900,7 @@ type
     crtc*: XcbRandrCrtc
     mode*: XcbRandrMode
     rotation*: uint16
-    connection*: uint8
+    connection*: XcbRandrConnection
     subpixelOrder* {.importc: "subpixel_order".}: uint8
 
   XcbRandrOutputChangeIterator* {.importc: "xcb_randr_output_change_iterator_t", bycopy.} = object
@@ -1160,8 +1160,8 @@ proc values*(R: ptr XcbRandrConfigureOutputPropertyRequest): ptr UncheckedArray[
 proc valuesLength*(R: ptr XcbRandrConfigureOutputPropertyRequest): cint {.importc: "xcb_randr_configure_output_property_values_length".}
 proc valuesEnd*(R: ptr XcbRandrConfigureOutputPropertyRequest): XcbGenericIterator {.importc: "xcb_randr_configure_output_property_values_end".}
 proc changeOutputPropertySizeof*(buffer: pointer): cint {.importc: "xcb_randr_change_output_property_sizeof".}
-proc changePropertyChecked*(c: ptr XcbConnection; output: XcbRandrOutput; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: uint8; numUnits: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_output_property_checked".}
-proc changeProperty*(c: ptr XcbConnection; output: XcbRandrOutput; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: uint8; numUnits: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_output_property".}
+proc changePropertyChecked*(c: ptr XcbConnection; output: XcbRandrOutput; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: XcbPropMode; numUnits: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_output_property_checked".}
+proc changeProperty*(c: ptr XcbConnection; output: XcbRandrOutput; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: XcbPropMode; numUnits: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_output_property".}
 proc data*(R: ptr XcbRandrChangeOutputPropertyRequest): pointer {.importc: "xcb_randr_change_output_property_data".}
 proc dataLength*(R: ptr XcbRandrChangeOutputPropertyRequest): cint {.importc: "xcb_randr_change_output_property_data_length".}
 proc dataEnd*(R: ptr XcbRandrChangeOutputPropertyRequest): XcbGenericIterator {.importc: "xcb_randr_change_output_property_data_end".}
@@ -1329,8 +1329,8 @@ proc values*(R: ptr XcbRandrConfigureProviderPropertyRequest): ptr UncheckedArra
 proc valuesLength*(R: ptr XcbRandrConfigureProviderPropertyRequest): cint {.importc: "xcb_randr_configure_provider_property_values_length".}
 proc valuesEnd*(R: ptr XcbRandrConfigureProviderPropertyRequest): XcbGenericIterator {.importc: "xcb_randr_configure_provider_property_values_end".}
 proc changeProviderPropertySizeof*(buffer: pointer): cint {.importc: "xcb_randr_change_provider_property_sizeof".}
-proc changePropertyChecked*(c: ptr XcbConnection; provider: XcbRandrProvider; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: uint8; numItems: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_provider_property_checked".}
-proc changeProperty*(c: ptr XcbConnection; provider: XcbRandrProvider; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: uint8; numItems: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_provider_property".}
+proc changePropertyChecked*(c: ptr XcbConnection; provider: XcbRandrProvider; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: XcbPropMode; numItems: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_provider_property_checked".}
+proc changeProperty*(c: ptr XcbConnection; provider: XcbRandrProvider; property: XcbAtom; `type`: XcbAtom; format: uint8; mode: XcbPropMode; numItems: uint32; data: pointer): XcbVoidCookie {.discardable, importc: "xcb_randr_change_provider_property".}
 proc data*(R: ptr XcbRandrChangeProviderPropertyRequest): pointer {.importc: "xcb_randr_change_provider_property_data".}
 proc dataLength*(R: ptr XcbRandrChangeProviderPropertyRequest): cint {.importc: "xcb_randr_change_provider_property_data_length".}
 proc dataEnd*(R: ptr XcbRandrChangeProviderPropertyRequest): XcbGenericIterator {.importc: "xcb_randr_change_provider_property_data_end".}
