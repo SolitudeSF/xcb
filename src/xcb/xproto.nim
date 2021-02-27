@@ -190,11 +190,11 @@ type
   XcbKeycode* {.importc: "xcb_keycode_t".} = distinct uint8
   XcbKeycode32* {.importc: "xcb_keycode32_t".} = distinct uint32
   XcbButton* {.importc: "xcb_button_t".} = distinct uint8
-  XcbKeyReleaseEvent* {.importc: "xcb_key_release_event_t".} = distinct XcbKeyPressEvent
-  XcbButtonReleaseEvent* {.importc: "xcb_button_release_event_t".} = distinct XcbButtonPressEvent
-  XcbLeaveNotifyEvent* {.importc: "xcb_leave_notify_event_t".} = distinct XcbEnterNotifyEvent
-  XcbFocusOutEvent* {.importc: "xcb_focus_out_event_t".} = distinct XcbFocusInEvent
-  XcbCirculateRequestEvent* {.importc: "xcb_circulate_request_event_t".} = distinct XcbCirculateNotifyEvent
+  XcbKeyReleaseEvent* {.importc: "xcb_key_release_event_t".} = XcbKeyPressEvent
+  XcbButtonReleaseEvent* {.importc: "xcb_button_release_event_t".} = XcbButtonPressEvent
+  XcbLeaveNotifyEvent* {.importc: "xcb_leave_notify_event_t".} = XcbEnterNotifyEvent
+  XcbFocusOutEvent* {.importc: "xcb_focus_out_event_t".} = XcbFocusInEvent
+  XcbCirculateRequestEvent* {.importc: "xcb_circulate_request_event_t".} = XcbCirculateNotifyEvent
   XcbWindowError* {.importc: "xcb_window_error_t".} = XcbValueError
   XcbPixmapError* {.importc: "xcb_pixmap_error_t".} = XcbValueError
   XcbAtomError* {.importc: "xcb_atom_error_t".} = XcbValueError
