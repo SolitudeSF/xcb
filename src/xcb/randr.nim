@@ -1,4 +1,4 @@
-import ./xcb, ./render
+import ./xcb, ./render, private/importutil
 
 const
   xcbRandrMajorVersion* = 1
@@ -55,98 +55,99 @@ const
   xcbRandrFreeLease* = 46
   xcbRandrNotify* = 1
 
-{.passl: "-lxcb-randr".}
-{.push header: "xcb/randr.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-randr".}
+  {.push header: "xcb/randr.h".}
 
-var xcbRandrId* {.extern: "xcb_randr_id".}: XcbExtension
+  var xcbRandrId* {.extern: "xcb_randr_id".}: XcbExtension
 
 type
-  XcbRandrMode* {.importc: "xcb_randr_mode_t".} = distinct uint32
-  XcbRandrCrtc* {.importc: "xcb_randr_crtc_t".} = distinct uint32
-  XcbRandrOutput* {.importc: "xcb_randr_output_t".} = distinct uint32
-  XcbRandrProvider* {.importc: "xcb_randr_provider_t".} = distinct uint32
-  XcbRandrLease* {.importc: "xcb_randr_lease_t".} = distinct uint32
+  XcbRandrMode* {.rename: "xcb_randr_mode_t".} = distinct uint32
+  XcbRandrCrtc* {.rename: "xcb_randr_crtc_t".} = distinct uint32
+  XcbRandrOutput* {.rename: "xcb_randr_output_t".} = distinct uint32
+  XcbRandrProvider* {.rename: "xcb_randr_provider_t".} = distinct uint32
+  XcbRandrLease* {.rename: "xcb_randr_lease_t".} = distinct uint32
 
-  XcbRandrModeIterator* {.importc: "xcb_randr_mode_iterator_t", bycopy.} = object
+  XcbRandrModeIterator* {.rename: "xcb_randr_mode_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrMode]
     rem*: cint
     index*: cint
 
-  XcbRandrCrtcIterator* {.importc: "xcb_randr_crtc_iterator_t", bycopy.} = object
+  XcbRandrCrtcIterator* {.rename: "xcb_randr_crtc_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrCrtc]
     rem*: cint
     index*: cint
 
-  XcbRandrOutputIterator* {.importc: "xcb_randr_output_iterator_t", bycopy.} = object
+  XcbRandrOutputIterator* {.rename: "xcb_randr_output_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrOutput]
     rem*: cint
     index*: cint
 
-  XcbRandrProviderIterator* {.importc: "xcb_randr_provider_iterator_t", bycopy.} = object
+  XcbRandrProviderIterator* {.rename: "xcb_randr_provider_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrProvider]
     rem*: cint
     index*: cint
 
-  XcbRandrLeaseIterator* {.importc: "xcb_randr_lease_iterator_t", bycopy.} = object
+  XcbRandrLeaseIterator* {.rename: "xcb_randr_lease_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrLease]
     rem*: cint
     index*: cint
 
-  XcbRandrBadOutputError* {.importc: "xcb_randr_bad_output_error_t", bycopy.} = object
+  XcbRandrBadOutputError* {.rename: "xcb_randr_bad_output_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRandrBadCrtcError* {.importc: "xcb_randr_bad_crtc_error_t", bycopy.} = object
+  XcbRandrBadCrtcError* {.rename: "xcb_randr_bad_crtc_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRandrBadModeError* {.importc: "xcb_randr_bad_mode_error_t", bycopy.} = object
+  XcbRandrBadModeError* {.rename: "xcb_randr_bad_mode_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRandrBadProviderError* {.importc: "xcb_randr_bad_provider_error_t", bycopy.} = object
+  XcbRandrBadProviderError* {.rename: "xcb_randr_bad_provider_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRandrRotation* {.importc: "xcb_randr_rotation_t".} = enum
+  XcbRandrRotation* {.rename: "xcb_randr_rotation_t".} = enum
     xcbRandrRotationRotate0 = 1, xcbRandrRotationRotate90 = 2,
     xcbRandrRotationRotate180 = 4, xcbRandrRotationRotate270 = 8,
     xcbRandrRotationReflectX = 16, xcbRandrRotationReflectY = 32
 
-  XcbRandrScreenSize* {.importc: "xcb_randr_screen_size_t", bycopy.} = object
+  XcbRandrScreenSize* {.rename: "xcb_randr_screen_size_t", bycopy.} = object
     width*: uint16
     height*: uint16
     mwidth*: uint16
     mheight*: uint16
 
-  XcbRandrScreenSizeIterator* {.importc: "xcb_randr_screen_size_iterator_t", bycopy.} = object
+  XcbRandrScreenSizeIterator* {.rename: "xcb_randr_screen_size_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrScreenSize]
     rem*: cint
     index*: cint
 
-  XcbRandrRefreshRates* {.importc: "xcb_randr_refresh_rates_t", bycopy.} = object
+  XcbRandrRefreshRates* {.rename: "xcb_randr_refresh_rates_t", bycopy.} = object
     nRates*: uint16
 
-  XcbRandrRefreshRatesIterator* {.importc: "xcb_randr_refresh_rates_iterator_t", bycopy.} = object
+  XcbRandrRefreshRatesIterator* {.rename: "xcb_randr_refresh_rates_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrRefreshRates]
     rem*: cint
     index*: cint
 
-  XcbRandrQueryVersionCookie* {.importc: "xcb_randr_query_version_cookie_t", bycopy.} = object
+  XcbRandrQueryVersionCookie* {.rename: "xcb_randr_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrQueryVersionRequest* {.importc: "xcb_randr_query_version_request_t", bycopy.} = object
+  XcbRandrQueryVersionRequest* {.rename: "xcb_randr_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbRandrQueryVersionReply* {.importc: "xcb_randr_query_version_reply_t", bycopy.} = object
+  XcbRandrQueryVersionReply* {.rename: "xcb_randr_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -155,14 +156,14 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbRandrSetConfig* {.importc: "xcb_randr_set_config_t".} = enum
+  XcbRandrSetConfig* {.rename: "xcb_randr_set_config_t".} = enum
     xcbRandrSetConfigSuccess = 0, xcbRandrSetConfigInvalidConfigTime = 1,
     xcbRandrSetConfigInvalidTime = 2, xcbRandrSetConfigFailed = 3
 
-  XcbRandrSetScreenConfigCookie* {.importc: "xcb_randr_set_screen_config_cookie_t", bycopy.} = object
+  XcbRandrSetScreenConfigCookie* {.rename: "xcb_randr_set_screen_config_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrSetScreenConfigRequest* {.importc: "xcb_randr_set_screen_config_request_t", bycopy.} = object
+  XcbRandrSetScreenConfigRequest* {.rename: "xcb_randr_set_screen_config_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -174,7 +175,7 @@ type
     rate*: uint16
     pad0: array[2, uint8]
 
-  XcbRandrSetScreenConfigReply* {.importc: "xcb_randr_set_screen_config_reply_t", bycopy.} = object
+  XcbRandrSetScreenConfigReply* {.rename: "xcb_randr_set_screen_config_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -185,7 +186,7 @@ type
     subpixelOrder* {.importc: "subpixel_order".}: uint16
     pad0: array[10, uint8]
 
-  XcbRandrNotifyMask* {.importc: "xcb_randr_notify_mask_t".} = enum
+  XcbRandrNotifyMask* {.rename: "xcb_randr_notify_mask_t".} = enum
     xcbRandrNotifyMaskScreenChange = 1, xcbRandrNotifyMaskCrtcChange = 2,
     xcbRandrNotifyMaskOutputChange = 4,
     xcbRandrNotifyMaskOutputProperty = 8,
@@ -193,7 +194,7 @@ type
     xcbRandrNotifyMaskProviderProperty = 32,
     xcbRandrNotifyMaskResourceChange = 64, xcbRandrNotifyMaskLease = 128
 
-  XcbRandrSelectInputRequest* {.importc: "xcb_randr_select_input_request_t", bycopy.} = object
+  XcbRandrSelectInputRequest* {.rename: "xcb_randr_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -201,16 +202,16 @@ type
     enable*: uint16
     pad0: array[2, uint8]
 
-  XcbRandrGetScreenInfoCookie* {.importc: "xcb_randr_get_screen_info_cookie_t", bycopy.} = object
+  XcbRandrGetScreenInfoCookie* {.rename: "xcb_randr_get_screen_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetScreenInfoRequest* {.importc: "xcb_randr_get_screen_info_request_t", bycopy.} = object
+  XcbRandrGetScreenInfoRequest* {.rename: "xcb_randr_get_screen_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetScreenInfoReply* {.importc: "xcb_randr_get_screen_info_reply_t", bycopy.} = object
+  XcbRandrGetScreenInfoReply* {.rename: "xcb_randr_get_screen_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     rotations*: uint8
     sequence*: uint16
@@ -225,16 +226,16 @@ type
     nInfo*: uint16
     pad0: array[2, uint8]
 
-  XcbRandrGetScreenSizeRangeCookie* {.importc: "xcb_randr_get_screen_size_range_cookie_t", bycopy.} = object
+  XcbRandrGetScreenSizeRangeCookie* {.rename: "xcb_randr_get_screen_size_range_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetScreenSizeRangeRequest* {.importc: "xcb_randr_get_screen_size_range_request_t", bycopy.} = object
+  XcbRandrGetScreenSizeRangeRequest* {.rename: "xcb_randr_get_screen_size_range_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetScreenSizeRangeReply* {.importc: "xcb_randr_get_screen_size_range_reply_t", bycopy.} = object
+  XcbRandrGetScreenSizeRangeReply* {.rename: "xcb_randr_get_screen_size_range_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -245,7 +246,7 @@ type
     maxHeight* {.importc: "max_height".}: uint16
     pad1: array[16, uint8]
 
-  XcbRandrSetScreenSizeRequest* {.importc: "xcb_randr_set_screen_size_request_t", bycopy.} = object
+  XcbRandrSetScreenSizeRequest* {.rename: "xcb_randr_set_screen_size_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -255,7 +256,7 @@ type
     mmWidth* {.importc: "mm_width".}: uint32
     mmHeight* {.importc: "mm_height".}: uint32
 
-  XcbRandrModeFlag* {.importc: "xcb_randr_mode_flag_t".} = enum
+  XcbRandrModeFlag* {.rename: "xcb_randr_mode_flag_t".} = enum
     xcbRandrModeFlagHsyncPositive = 1, xcbRandrModeFlagHsyncNegative = 2,
     xcbRandrModeFlagVsyncPositive = 4, xcbRandrModeFlagVsyncNegative = 8,
     xcbRandrModeFlagInterlace = 16, xcbRandrModeFlagDoubleScan = 32,
@@ -265,7 +266,7 @@ type
     xcbRandrModeFlagPixelMultiplex = 2048,
     xcbRandrModeFlagDoubleClock = 4096, xcbRandrModeFlagHalveClock = 8192
 
-  XcbRandrModeInfo* {.importc: "xcb_randr_mode_info_t", bycopy.} = object
+  XcbRandrModeInfo* {.rename: "xcb_randr_mode_info_t", bycopy.} = object
     id*: uint32
     width*: uint16
     height*: uint16
@@ -280,21 +281,21 @@ type
     nameLen* {.importc: "name_len".}: uint16
     modeFlags* {.importc: "mode_flags".}: uint32
 
-  XcbRandrModeInfoIterator* {.importc: "xcb_randr_mode_info_iterator_t", bycopy.} = object
+  XcbRandrModeInfoIterator* {.rename: "xcb_randr_mode_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrModeInfo]
     rem*: cint
     index*: cint
 
-  XcbRandrGetScreenResourcesCookie* {.importc: "xcb_randr_get_screen_resources_cookie_t", bycopy.} = object
+  XcbRandrGetScreenResourcesCookie* {.rename: "xcb_randr_get_screen_resources_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetScreenResourcesRequest* {.importc: "xcb_randr_get_screen_resources_request_t", bycopy.} = object
+  XcbRandrGetScreenResourcesRequest* {.rename: "xcb_randr_get_screen_resources_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetScreenResourcesReply* {.importc: "xcb_randr_get_screen_resources_reply_t", bycopy.} = object
+  XcbRandrGetScreenResourcesReply* {.rename: "xcb_randr_get_screen_resources_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -307,21 +308,21 @@ type
     namesLen* {.importc: "names_len".}: uint16
     pad1: array[8, uint8]
 
-  XcbRandrConnection* {.importc: "xcb_randr_connection_t", size: 1.} = enum
+  XcbRandrConnection* {.rename: "xcb_randr_connection_t", size: 1.} = enum
     xcbRandrConnectionConnected = 0, xcbRandrConnectionDisconnected = 1,
     xcbRandrConnectionUnknown = 2
 
-  XcbRandrGetOutputInfoCookie* {.importc: "xcb_randr_get_output_info_cookie_t", bycopy.} = object
+  XcbRandrGetOutputInfoCookie* {.rename: "xcb_randr_get_output_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetOutputInfoRequest* {.importc: "xcb_randr_get_output_info_request_t", bycopy.} = object
+  XcbRandrGetOutputInfoRequest* {.rename: "xcb_randr_get_output_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     output*: XcbRandrOutput
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
 
-  XcbRandrGetOutputInfoReply* {.importc: "xcb_randr_get_output_info_reply_t", bycopy.} = object
+  XcbRandrGetOutputInfoReply* {.rename: "xcb_randr_get_output_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -338,16 +339,16 @@ type
     numClones* {.importc: "num_clones".}: uint16
     nameLen* {.importc: "name_len".}: uint16
 
-  XcbRandrListOutputPropertiesCookie* {.importc: "xcb_randr_list_output_properties_cookie_t", bycopy.} = object
+  XcbRandrListOutputPropertiesCookie* {.rename: "xcb_randr_list_output_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrListOutputPropertiesRequest* {.importc: "xcb_randr_list_output_properties_request_t", bycopy.} = object
+  XcbRandrListOutputPropertiesRequest* {.rename: "xcb_randr_list_output_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     output*: XcbRandrOutput
 
-  XcbRandrListOutputPropertiesReply* {.importc: "xcb_randr_list_output_properties_reply_t", bycopy.} = object
+  XcbRandrListOutputPropertiesReply* {.rename: "xcb_randr_list_output_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -355,17 +356,17 @@ type
     numAtoms* {.importc: "num_atoms".}: uint16
     pad1: array[22, uint8]
 
-  XcbRandrQueryOutputPropertyCookie* {.importc: "xcb_randr_query_output_property_cookie_t", bycopy.} = object
+  XcbRandrQueryOutputPropertyCookie* {.rename: "xcb_randr_query_output_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrQueryOutputPropertyRequest* {.importc: "xcb_randr_query_output_property_request_t", bycopy.} = object
+  XcbRandrQueryOutputPropertyRequest* {.rename: "xcb_randr_query_output_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     output*: XcbRandrOutput
     property*: XcbAtom
 
-  XcbRandrQueryOutputPropertyReply* {.importc: "xcb_randr_query_output_property_reply_t", bycopy.} = object
+  XcbRandrQueryOutputPropertyReply* {.rename: "xcb_randr_query_output_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -375,7 +376,7 @@ type
     immutable*: uint8
     pad1: array[21, uint8]
 
-  XcbRandrConfigureOutputPropertyRequest* {.importc: "xcb_randr_configure_output_property_request_t", bycopy.} = object
+  XcbRandrConfigureOutputPropertyRequest* {.rename: "xcb_randr_configure_output_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -385,7 +386,7 @@ type
     range*: uint8
     pad0: array[2, uint8]
 
-  XcbRandrChangeOutputPropertyRequest* {.importc: "xcb_randr_change_output_property_request_t", bycopy.} = object
+  XcbRandrChangeOutputPropertyRequest* {.rename: "xcb_randr_change_output_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -397,17 +398,17 @@ type
     pad0: array[2, uint8]
     numUnits* {.importc: "num_units".}: uint32
 
-  XcbRandrDeleteOutputPropertyRequest* {.importc: "xcb_randr_delete_output_property_request_t", bycopy.} = object
+  XcbRandrDeleteOutputPropertyRequest* {.rename: "xcb_randr_delete_output_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     output*: XcbRandrOutput
     property*: XcbAtom
 
-  XcbRandrGetOutputPropertyCookie* {.importc: "xcb_randr_get_output_property_cookie_t", bycopy.} = object
+  XcbRandrGetOutputPropertyCookie* {.rename: "xcb_randr_get_output_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetOutputPropertyRequest* {.importc: "xcb_randr_get_output_property_request_t", bycopy.} = object
+  XcbRandrGetOutputPropertyRequest* {.rename: "xcb_randr_get_output_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -420,7 +421,7 @@ type
     pending*: uint8
     pad0: array[2, uint8]
 
-  XcbRandrGetOutputPropertyReply* {.importc: "xcb_randr_get_output_property_reply_t", bycopy.} = object
+  XcbRandrGetOutputPropertyReply* {.rename: "xcb_randr_get_output_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     format*: uint8
     sequence*: uint16
@@ -430,17 +431,17 @@ type
     numItems* {.importc: "num_items".}: uint32
     pad0: array[12, uint8]
 
-  XcbRandrCreateModeCookie* {.importc: "xcb_randr_create_mode_cookie_t", bycopy.} = object
+  XcbRandrCreateModeCookie* {.rename: "xcb_randr_create_mode_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrCreateModeRequest* {.importc: "xcb_randr_create_mode_request_t", bycopy.} = object
+  XcbRandrCreateModeRequest* {.rename: "xcb_randr_create_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     modeInfo* {.importc: "mode_info".}: XcbRandrModeInfo
 
-  XcbRandrCreateModeReply* {.importc: "xcb_randr_create_mode_reply_t", bycopy.} = object
+  XcbRandrCreateModeReply* {.rename: "xcb_randr_create_mode_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -448,37 +449,37 @@ type
     mode*: XcbRandrMode
     pad1: array[20, uint8]
 
-  XcbRandrDestroyModeRequest* {.importc: "xcb_randr_destroy_mode_request_t", bycopy.} = object
+  XcbRandrDestroyModeRequest* {.rename: "xcb_randr_destroy_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     mode*: XcbRandrMode
 
-  XcbRandrAddOutputModeRequest* {.importc: "xcb_randr_add_output_mode_request_t", bycopy.} = object
-    majorOpcode* {.importc: "major_opcode".}: uint8
-    minorOpcode* {.importc: "minor_opcode".}: uint8
-    length*: uint16
-    output*: XcbRandrOutput
-    mode*: XcbRandrMode
-
-  XcbRandrDeleteOutputModeRequest* {.importc: "xcb_randr_delete_output_mode_request_t", bycopy.} = object
+  XcbRandrAddOutputModeRequest* {.rename: "xcb_randr_add_output_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     output*: XcbRandrOutput
     mode*: XcbRandrMode
 
-  XcbRandrGetCrtcInfoCookie* {.importc: "xcb_randr_get_crtc_info_cookie_t", bycopy.} = object
+  XcbRandrDeleteOutputModeRequest* {.rename: "xcb_randr_delete_output_mode_request_t", bycopy.} = object
+    majorOpcode* {.importc: "major_opcode".}: uint8
+    minorOpcode* {.importc: "minor_opcode".}: uint8
+    length*: uint16
+    output*: XcbRandrOutput
+    mode*: XcbRandrMode
+
+  XcbRandrGetCrtcInfoCookie* {.rename: "xcb_randr_get_crtc_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetCrtcInfoRequest* {.importc: "xcb_randr_get_crtc_info_request_t", bycopy.} = object
+  XcbRandrGetCrtcInfoRequest* {.rename: "xcb_randr_get_crtc_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     crtc*: XcbRandrCrtc
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
 
-  XcbRandrGetCrtcInfoReply* {.importc: "xcb_randr_get_crtc_info_reply_t", bycopy.} = object
+  XcbRandrGetCrtcInfoReply* {.rename: "xcb_randr_get_crtc_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -494,10 +495,10 @@ type
     numOutputs* {.importc: "num_outputs".}: uint16
     numPossibleOutputs* {.importc: "num_possible_outputs".}: uint16
 
-  XcbRandrSetCrtcConfigCookie* {.importc: "xcb_randr_set_crtc_config_cookie_t", bycopy.} = object
+  XcbRandrSetCrtcConfigCookie* {.rename: "xcb_randr_set_crtc_config_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrSetCrtcConfigRequest* {.importc: "xcb_randr_set_crtc_config_request_t", bycopy.} = object
+  XcbRandrSetCrtcConfigRequest* {.rename: "xcb_randr_set_crtc_config_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -510,7 +511,7 @@ type
     rotation*: uint16
     pad0: array[2, uint8]
 
-  XcbRandrSetCrtcConfigReply* {.importc: "xcb_randr_set_crtc_config_reply_t", bycopy.} = object
+  XcbRandrSetCrtcConfigReply* {.rename: "xcb_randr_set_crtc_config_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -518,16 +519,16 @@ type
     timestamp*: XcbTimestamp
     pad0: array[20, uint8]
 
-  XcbRandrGetCrtcGammaSizeCookie* {.importc: "xcb_randr_get_crtc_gamma_size_cookie_t", bycopy.} = object
+  XcbRandrGetCrtcGammaSizeCookie* {.rename: "xcb_randr_get_crtc_gamma_size_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetCrtcGammaSizeRequest* {.importc: "xcb_randr_get_crtc_gamma_size_request_t", bycopy.} = object
+  XcbRandrGetCrtcGammaSizeRequest* {.rename: "xcb_randr_get_crtc_gamma_size_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     crtc*: XcbRandrCrtc
 
-  XcbRandrGetCrtcGammaSizeReply* {.importc: "xcb_randr_get_crtc_gamma_size_reply_t", bycopy.} = object
+  XcbRandrGetCrtcGammaSizeReply* {.rename: "xcb_randr_get_crtc_gamma_size_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -535,16 +536,16 @@ type
     size*: uint16
     pad1: array[22, uint8]
 
-  XcbRandrGetCrtcGammaCookie* {.importc: "xcb_randr_get_crtc_gamma_cookie_t", bycopy.} = object
+  XcbRandrGetCrtcGammaCookie* {.rename: "xcb_randr_get_crtc_gamma_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetCrtcGammaRequest* {.importc: "xcb_randr_get_crtc_gamma_request_t", bycopy.} = object
+  XcbRandrGetCrtcGammaRequest* {.rename: "xcb_randr_get_crtc_gamma_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     crtc*: XcbRandrCrtc
 
-  XcbRandrGetCrtcGammaReply* {.importc: "xcb_randr_get_crtc_gamma_reply_t", bycopy.} = object
+  XcbRandrGetCrtcGammaReply* {.rename: "xcb_randr_get_crtc_gamma_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -552,7 +553,7 @@ type
     size*: uint16
     pad1: array[22, uint8]
 
-  XcbRandrSetCrtcGammaRequest* {.importc: "xcb_randr_set_crtc_gamma_request_t", bycopy.} = object
+  XcbRandrSetCrtcGammaRequest* {.rename: "xcb_randr_set_crtc_gamma_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -560,16 +561,16 @@ type
     size*: uint16
     pad0: array[2, uint8]
 
-  XcbRandrGetScreenResourcesCurrentCookie* {.importc: "xcb_randr_get_screen_resources_current_cookie_t", bycopy.} = object
+  XcbRandrGetScreenResourcesCurrentCookie* {.rename: "xcb_randr_get_screen_resources_current_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetScreenResourcesCurrentRequest* {.importc: "xcb_randr_get_screen_resources_current_request_t", bycopy.} = object
+  XcbRandrGetScreenResourcesCurrentRequest* {.rename: "xcb_randr_get_screen_resources_current_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetScreenResourcesCurrentReply* {.importc: "xcb_randr_get_screen_resources_current_reply_t", bycopy.} = object
+  XcbRandrGetScreenResourcesCurrentReply* {.rename: "xcb_randr_get_screen_resources_current_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -582,11 +583,11 @@ type
     namesLen* {.importc: "names_len".}: uint16
     pad1: array[8, uint8]
 
-  XcbRandrTransform* {.importc: "xcb_randr_transform_t".} = enum
+  XcbRandrTransform* {.rename: "xcb_randr_transform_t".} = enum
     xcbRandrTransformUnit = 1, xcbRandrTransformScaleUp = 2,
     xcbRandrTransformScaleDown = 4, xcbRandrTransformProjective = 8
 
-  XcbRandrSetCrtcTransformRequest* {.importc: "xcb_randr_set_crtc_transform_request_t", bycopy.} = object
+  XcbRandrSetCrtcTransformRequest* {.rename: "xcb_randr_set_crtc_transform_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -595,16 +596,16 @@ type
     filterLen* {.importc: "filter_len".}: uint16
     pad0: array[2, uint8]
 
-  XcbRandrGetCrtcTransformCookie* {.importc: "xcb_randr_get_crtc_transform_cookie_t", bycopy.} = object
+  XcbRandrGetCrtcTransformCookie* {.rename: "xcb_randr_get_crtc_transform_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetCrtcTransformRequest* {.importc: "xcb_randr_get_crtc_transform_request_t", bycopy.} = object
+  XcbRandrGetCrtcTransformRequest* {.rename: "xcb_randr_get_crtc_transform_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     crtc*: XcbRandrCrtc
 
-  XcbRandrGetCrtcTransformReply* {.importc: "xcb_randr_get_crtc_transform_reply_t", bycopy.} = object
+  XcbRandrGetCrtcTransformReply* {.rename: "xcb_randr_get_crtc_transform_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -619,16 +620,16 @@ type
     currentLen* {.importc: "current_len".}: uint16
     currentNparams* {.importc: "current_nparams".}: uint16
 
-  XcbRandrGetPanningCookie* {.importc: "xcb_randr_get_panning_cookie_t", bycopy.} = object
+  XcbRandrGetPanningCookie* {.rename: "xcb_randr_get_panning_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetPanningRequest* {.importc: "xcb_randr_get_panning_request_t", bycopy.} = object
+  XcbRandrGetPanningRequest* {.rename: "xcb_randr_get_panning_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     crtc*: XcbRandrCrtc
 
-  XcbRandrGetPanningReply* {.importc: "xcb_randr_get_panning_reply_t", bycopy.} = object
+  XcbRandrGetPanningReply* {.rename: "xcb_randr_get_panning_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -647,10 +648,10 @@ type
     borderRight* {.importc: "border_right".}: int16
     borderBottom* {.importc: "border_bottom".}: int16
 
-  XcbRandrSetPanningCookie* {.importc: "xcb_randr_set_panning_cookie_t", bycopy.} = object
+  XcbRandrSetPanningCookie* {.rename: "xcb_randr_set_panning_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrSetPanningRequest* {.importc: "xcb_randr_set_panning_request_t", bycopy.} = object
+  XcbRandrSetPanningRequest* {.rename: "xcb_randr_set_panning_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -669,46 +670,46 @@ type
     borderRight* {.importc: "border_right".}: int16
     borderBottom* {.importc: "border_bottom".}: int16
 
-  XcbRandrSetPanningReply* {.importc: "xcb_randr_set_panning_reply_t", bycopy.} = object
+  XcbRandrSetPanningReply* {.rename: "xcb_randr_set_panning_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
     timestamp*: XcbTimestamp
 
-  XcbRandrSetOutputPrimaryRequest* {.importc: "xcb_randr_set_output_primary_request_t", bycopy.} = object
+  XcbRandrSetOutputPrimaryRequest* {.rename: "xcb_randr_set_output_primary_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     output*: XcbRandrOutput
 
-  XcbRandrGetOutputPrimaryCookie* {.importc: "xcb_randr_get_output_primary_cookie_t", bycopy.} = object
+  XcbRandrGetOutputPrimaryCookie* {.rename: "xcb_randr_get_output_primary_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetOutputPrimaryRequest* {.importc: "xcb_randr_get_output_primary_request_t", bycopy.} = object
+  XcbRandrGetOutputPrimaryRequest* {.rename: "xcb_randr_get_output_primary_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetOutputPrimaryReply* {.importc: "xcb_randr_get_output_primary_reply_t", bycopy.} = object
+  XcbRandrGetOutputPrimaryReply* {.rename: "xcb_randr_get_output_primary_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     output*: XcbRandrOutput
 
-  XcbRandrGetProvidersCookie* {.importc: "xcb_randr_get_providers_cookie_t", bycopy.} = object
+  XcbRandrGetProvidersCookie* {.rename: "xcb_randr_get_providers_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetProvidersRequest* {.importc: "xcb_randr_get_providers_request_t", bycopy.} = object
+  XcbRandrGetProvidersRequest* {.rename: "xcb_randr_get_providers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrGetProvidersReply* {.importc: "xcb_randr_get_providers_reply_t", bycopy.} = object
+  XcbRandrGetProvidersReply* {.rename: "xcb_randr_get_providers_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -717,23 +718,23 @@ type
     numProviders* {.importc: "num_providers".}: uint16
     pad1: array[18, uint8]
 
-  XcbRandrProviderCapability* {.importc: "xcb_randr_provider_capability_t".} = enum
+  XcbRandrProviderCapability* {.rename: "xcb_randr_provider_capability_t".} = enum
     xcbRandrProviderCapabilitySourceOutput = 1,
     xcbRandrProviderCapabilitySinkOutput = 2,
     xcbRandrProviderCapabilitySourceOffload = 4,
     xcbRandrProviderCapabilitySinkOffload = 8
 
-  XcbRandrGetProviderInfoCookie* {.importc: "xcb_randr_get_provider_info_cookie_t", bycopy.} = object
+  XcbRandrGetProviderInfoCookie* {.rename: "xcb_randr_get_provider_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetProviderInfoRequest* {.importc: "xcb_randr_get_provider_info_request_t", bycopy.} = object
+  XcbRandrGetProviderInfoRequest* {.rename: "xcb_randr_get_provider_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     provider*: XcbRandrProvider
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
 
-  XcbRandrGetProviderInfoReply* {.importc: "xcb_randr_get_provider_info_reply_t", bycopy.} = object
+  XcbRandrGetProviderInfoReply* {.rename: "xcb_randr_get_provider_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
@@ -746,7 +747,7 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad0: array[8, uint8]
 
-  XcbRandrSetProviderOffloadSinkRequest* {.importc: "xcb_randr_set_provider_offload_sink_request_t", bycopy.} = object
+  XcbRandrSetProviderOffloadSinkRequest* {.rename: "xcb_randr_set_provider_offload_sink_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -754,7 +755,7 @@ type
     sinkProvider* {.importc: "sink_provider".}: XcbRandrProvider
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
 
-  XcbRandrSetProviderOutputSourceRequest* {.importc: "xcb_randr_set_provider_output_source_request_t", bycopy.} = object
+  XcbRandrSetProviderOutputSourceRequest* {.rename: "xcb_randr_set_provider_output_source_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -762,16 +763,16 @@ type
     sourceProvider* {.importc: "source_provider".}: XcbRandrProvider
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
 
-  XcbRandrListProviderPropertiesCookie* {.importc: "xcb_randr_list_provider_properties_cookie_t", bycopy.} = object
+  XcbRandrListProviderPropertiesCookie* {.rename: "xcb_randr_list_provider_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrListProviderPropertiesRequest* {.importc: "xcb_randr_list_provider_properties_request_t", bycopy.} = object
+  XcbRandrListProviderPropertiesRequest* {.rename: "xcb_randr_list_provider_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     provider*: XcbRandrProvider
 
-  XcbRandrListProviderPropertiesReply* {.importc: "xcb_randr_list_provider_properties_reply_t", bycopy.} = object
+  XcbRandrListProviderPropertiesReply* {.rename: "xcb_randr_list_provider_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -779,17 +780,17 @@ type
     numAtoms* {.importc: "num_atoms".}: uint16
     pad1: array[22, uint8]
 
-  XcbRandrQueryProviderPropertyCookie* {.importc: "xcb_randr_query_provider_property_cookie_t", bycopy.} = object
+  XcbRandrQueryProviderPropertyCookie* {.rename: "xcb_randr_query_provider_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrQueryProviderPropertyRequest* {.importc: "xcb_randr_query_provider_property_request_t", bycopy.} = object
+  XcbRandrQueryProviderPropertyRequest* {.rename: "xcb_randr_query_provider_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     provider*: XcbRandrProvider
     property*: XcbAtom
 
-  XcbRandrQueryProviderPropertyReply* {.importc: "xcb_randr_query_provider_property_reply_t", bycopy.} = object
+  XcbRandrQueryProviderPropertyReply* {.rename: "xcb_randr_query_provider_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -799,7 +800,7 @@ type
     immutable*: uint8
     pad1: array[21, uint8]
 
-  XcbRandrConfigureProviderPropertyRequest* {.importc: "xcb_randr_configure_provider_property_request_t", bycopy.} = object
+  XcbRandrConfigureProviderPropertyRequest* {.rename: "xcb_randr_configure_provider_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -809,7 +810,7 @@ type
     range*: uint8
     pad0: array[2, uint8]
 
-  XcbRandrChangeProviderPropertyRequest* {.importc: "xcb_randr_change_provider_property_request_t", bycopy.} = object
+  XcbRandrChangeProviderPropertyRequest* {.rename: "xcb_randr_change_provider_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -821,17 +822,17 @@ type
     pad0: array[2, uint8]
     numItems* {.importc: "num_items".}: uint32
 
-  XcbRandrDeleteProviderPropertyRequest* {.importc: "xcb_randr_delete_provider_property_request_t", bycopy.} = object
+  XcbRandrDeleteProviderPropertyRequest* {.rename: "xcb_randr_delete_provider_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     provider*: XcbRandrProvider
     property*: XcbAtom
 
-  XcbRandrGetProviderPropertyCookie* {.importc: "xcb_randr_get_provider_property_cookie_t", bycopy.} = object
+  XcbRandrGetProviderPropertyCookie* {.rename: "xcb_randr_get_provider_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetProviderPropertyRequest* {.importc: "xcb_randr_get_provider_property_request_t", bycopy.} = object
+  XcbRandrGetProviderPropertyRequest* {.rename: "xcb_randr_get_provider_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -844,7 +845,7 @@ type
     pending*: uint8
     pad0: array[2, uint8]
 
-  XcbRandrGetProviderPropertyReply* {.importc: "xcb_randr_get_provider_property_reply_t", bycopy.} = object
+  XcbRandrGetProviderPropertyReply* {.rename: "xcb_randr_get_provider_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     format*: uint8
     sequence*: uint16
@@ -854,7 +855,7 @@ type
     numItems* {.importc: "num_items".}: uint32
     pad0: array[12, uint8]
 
-  XcbRandrScreenChangeNotifyEvent* {.importc: "xcb_randr_screen_change_notify_event_t", bycopy.} = object
+  XcbRandrScreenChangeNotifyEvent* {.rename: "xcb_randr_screen_change_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     rotation*: uint8
     sequence*: uint16
@@ -869,13 +870,13 @@ type
     mwidth*: uint16
     mheight*: uint16
 
-  XcbRandrNotify* {.importc: "xcb_randr_notify_t".} = enum
+  XcbRandrNotify* {.rename: "xcb_randr_notify_t".} = enum
     xcbRandrNotifyCrtcChange = 0, xcbRandrNotifyOutputChange = 1,
     xcbRandrNotifyOutputProperty = 2, xcbRandrNotifyProviderChange = 3,
     xcbRandrNotifyProviderProperty = 4, xcbRandrNotifyResourceChange = 5,
     xcbRandrNotifyLease = 6
 
-  XcbRandrCrtcChange* {.importc: "xcb_randr_crtc_change_t", bycopy.} = object
+  XcbRandrCrtcChange* {.rename: "xcb_randr_crtc_change_t", bycopy.} = object
     timestamp*: XcbTimestamp
     window*: XcbWindow
     crtc*: XcbRandrCrtc
@@ -887,12 +888,12 @@ type
     width*: uint16
     height*: uint16
 
-  XcbRandrCrtcChangeIterator* {.importc: "xcb_randr_crtc_change_iterator_t", bycopy.} = object
+  XcbRandrCrtcChangeIterator* {.rename: "xcb_randr_crtc_change_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrCrtcChange]
     rem*: cint
     index*: cint
 
-  XcbRandrOutputChange* {.importc: "xcb_randr_output_change_t", bycopy.} = object
+  XcbRandrOutputChange* {.rename: "xcb_randr_output_change_t", bycopy.} = object
     timestamp*: XcbTimestamp
     configTimestamp* {.importc: "config_timestamp".}: XcbTimestamp
     window*: XcbWindow
@@ -903,12 +904,12 @@ type
     connection*: XcbRandrConnection
     subpixelOrder* {.importc: "subpixel_order".}: uint8
 
-  XcbRandrOutputChangeIterator* {.importc: "xcb_randr_output_change_iterator_t", bycopy.} = object
+  XcbRandrOutputChangeIterator* {.rename: "xcb_randr_output_change_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrOutputChange]
     rem*: cint
     index*: cint
 
-  XcbRandrOutputProperty* {.importc: "xcb_randr_output_property_t", bycopy.} = object
+  XcbRandrOutputProperty* {.rename: "xcb_randr_output_property_t", bycopy.} = object
     window*: XcbWindow
     output*: XcbRandrOutput
     atom*: XcbAtom
@@ -916,23 +917,23 @@ type
     status*: uint8
     pad0: array[11, uint8]
 
-  XcbRandrOutputPropertyIterator* {.importc: "xcb_randr_output_property_iterator_t", bycopy.} = object
+  XcbRandrOutputPropertyIterator* {.rename: "xcb_randr_output_property_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrOutputProperty]
     rem*: cint
     index*: cint
 
-  XcbRandrProviderChange* {.importc: "xcb_randr_provider_change_t", bycopy.} = object
+  XcbRandrProviderChange* {.rename: "xcb_randr_provider_change_t", bycopy.} = object
     timestamp*: XcbTimestamp
     window*: XcbWindow
     provider*: XcbRandrProvider
     pad0: array[16, uint8]
 
-  XcbRandrProviderChangeIterator* {.importc: "xcb_randr_provider_change_iterator_t", bycopy.} = object
+  XcbRandrProviderChangeIterator* {.rename: "xcb_randr_provider_change_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrProviderChange]
     rem*: cint
     index*: cint
 
-  XcbRandrProviderProperty* {.importc: "xcb_randr_provider_property_t", bycopy.} = object
+  XcbRandrProviderProperty* {.rename: "xcb_randr_provider_property_t", bycopy.} = object
     window*: XcbWindow
     provider*: XcbRandrProvider
     atom*: XcbAtom
@@ -940,22 +941,22 @@ type
     state*: uint8
     pad0: array[11, uint8]
 
-  XcbRandrProviderPropertyIterator* {.importc: "xcb_randr_provider_property_iterator_t", bycopy.} = object
+  XcbRandrProviderPropertyIterator* {.rename: "xcb_randr_provider_property_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrProviderProperty]
     rem*: cint
     index*: cint
 
-  XcbRandrResourceChange* {.importc: "xcb_randr_resource_change_t", bycopy.} = object
+  XcbRandrResourceChange* {.rename: "xcb_randr_resource_change_t", bycopy.} = object
     timestamp*: XcbTimestamp
     window*: XcbWindow
     pad0: array[20, uint8]
 
-  XcbRandrResourceChangeIterator* {.importc: "xcb_randr_resource_change_iterator_t", bycopy.} = object
+  XcbRandrResourceChangeIterator* {.rename: "xcb_randr_resource_change_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrResourceChange]
     rem*: cint
     index*: cint
 
-  XcbRandrMonitorInfo* {.importc: "xcb_randr_monitor_info_t", bycopy.} = object
+  XcbRandrMonitorInfo* {.rename: "xcb_randr_monitor_info_t", bycopy.} = object
     name*: XcbAtom
     primary*: uint8
     automatic*: uint8
@@ -967,22 +968,22 @@ type
     widthInMillimeters* {.importc: "width_in_millimeters".}: uint32
     heightInMillimeters* {.importc: "height_in_millimeters".}: uint32
 
-  XcbRandrMonitorInfoIterator* {.importc: "xcb_randr_monitor_info_iterator_t", bycopy.} = object
+  XcbRandrMonitorInfoIterator* {.rename: "xcb_randr_monitor_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrMonitorInfo]
     rem*: cint
     index*: cint
 
-  XcbRandrGetMonitorsCookie* {.importc: "xcb_randr_get_monitors_cookie_t", bycopy.} = object
+  XcbRandrGetMonitorsCookie* {.rename: "xcb_randr_get_monitors_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrGetMonitorsRequest* {.importc: "xcb_randr_get_monitors_request_t", bycopy.} = object
+  XcbRandrGetMonitorsRequest* {.rename: "xcb_randr_get_monitors_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     getActive* {.importc: "get_active".}: uint8
 
-  XcbRandrGetMonitorsReply* {.importc: "xcb_randr_get_monitors_reply_t", bycopy.} = object
+  XcbRandrGetMonitorsReply* {.rename: "xcb_randr_get_monitors_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -992,23 +993,23 @@ type
     nOutputs*: uint32
     pad1: array[12, uint8]
 
-  XcbRandrSetMonitorRequest* {.importc: "xcb_randr_set_monitor_request_t", bycopy.} = object
+  XcbRandrSetMonitorRequest* {.rename: "xcb_randr_set_monitor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbRandrDeleteMonitorRequest* {.importc: "xcb_randr_delete_monitor_request_t", bycopy.} = object
+  XcbRandrDeleteMonitorRequest* {.rename: "xcb_randr_delete_monitor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     name*: XcbAtom
 
-  XcbRandrCreateLeaseCookie* {.importc: "xcb_randr_create_lease_cookie_t", bycopy.} = object
+  XcbRandrCreateLeaseCookie* {.rename: "xcb_randr_create_lease_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRandrCreateLeaseRequest* {.importc: "xcb_randr_create_lease_request_t", bycopy.} = object
+  XcbRandrCreateLeaseRequest* {.rename: "xcb_randr_create_lease_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1017,33 +1018,33 @@ type
     numCrtcs* {.importc: "num_crtcs".}: uint16
     numOutputs* {.importc: "num_outputs".}: uint16
 
-  XcbRandrCreateLeaseReply* {.importc: "xcb_randr_create_lease_reply_t", bycopy.} = object
+  XcbRandrCreateLeaseReply* {.rename: "xcb_randr_create_lease_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbRandrFreeLeaseRequest* {.importc: "xcb_randr_free_lease_request_t", bycopy.} = object
+  XcbRandrFreeLeaseRequest* {.rename: "xcb_randr_free_lease_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     lid*: XcbRandrLease
     terminate*: uint8
 
-  XcbRandrLeaseNotify* {.importc: "xcb_randr_lease_notify_t", bycopy.} = object
+  XcbRandrLeaseNotify* {.rename: "xcb_randr_lease_notify_t", bycopy.} = object
     timestamp*: XcbTimestamp
     window*: XcbWindow
     lease*: XcbRandrLease
     created*: uint8
     pad0: array[15, uint8]
 
-  XcbRandrLeaseNotifyIterator* {.importc: "xcb_randr_lease_notify_iterator_t", bycopy.} = object
+  XcbRandrLeaseNotifyIterator* {.rename: "xcb_randr_lease_notify_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrLeaseNotify]
     rem*: cint
     index*: cint
 
-  XcbRandrNotifyData* {.importc: "xcb_randr_notify_data_t", bycopy, union.} = object
+  XcbRandrNotifyData* {.rename: "xcb_randr_notify_data_t", bycopy, union.} = object
     cc*: XcbRandrCrtcChange
     oc*: XcbRandrOutputChange
     op*: XcbRandrOutputProperty
@@ -1052,17 +1053,19 @@ type
     rc*: XcbRandrResourceChange
     lc*: XcbRandrLeaseNotify
 
-  XcbRandrNotifyDataIterator* {.importc: "xcb_randr_notify_data_iterator_t", bycopy.} = object
+  XcbRandrNotifyDataIterator* {.rename: "xcb_randr_notify_data_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRandrNotifyData]
     rem*: cint
     index*: cint
 
-  XcbRandrNotifyEvent* {.importc: "xcb_randr_notify_event_t", bycopy.} = object
+  XcbRandrNotifyEvent* {.rename: "xcb_randr_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     subCode*: uint8
     sequence*: uint16
     u*: XcbRandrNotifyData
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-randr.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbRandrModeIterator) {.importc: "xcb_randr_mode_next".}

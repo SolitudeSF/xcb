@@ -1,10 +1,11 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-ewmh".}
-{.push header: "xcb/xcb_ewmh.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-ewmh".}
+  {.push header: "xcb/xcb_ewmh.h".}
 
 type
-  XcbEwmhConnection* {.importc: "xcb_ewmh_connection_t", bycopy.} = object
+  XcbEwmhConnection* {.rename: "xcb_ewmh_connection_t", bycopy.} = object
     connection*: ptr XcbConnection
     screens*: ptr UncheckedArray[ptr XcbScreen]
     nbScreens* {.importc: "nb_screens".}: cint
@@ -92,70 +93,70 @@ type
     netWmActionAbove* {.importc: "NET_WM_ACTION_ABOVE".}: XcbAtom
     netWmActionBelow* {.importc: "NET_WM_ACTION_BELOW".}: XcbAtom
 
-  XcbEwmhGetAtomsReply* {.importc: "xcb_ewmh_get_atoms_reply_t", bycopy.} = object
+  XcbEwmhGetAtomsReply* {.rename: "xcb_ewmh_get_atoms_reply_t", bycopy.} = object
     atomsLen* {.importc: "atoms_len".}: uint32
     atoms*: ptr XcbAtom
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
-  XcbEwmhGetWindowsReply* {.importc: "xcb_ewmh_get_windows_reply_t", bycopy.} = object
+  XcbEwmhGetWindowsReply* {.rename: "xcb_ewmh_get_windows_reply_t", bycopy.} = object
     windowsLen* {.importc: "windows_len".}: uint32
     windows*: ptr XcbWindow
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
-  XcbEwmhGetUtf8StringsReply* {.importc: "xcb_ewmh_get_utf8_strings_reply_t", bycopy.} = object
+  XcbEwmhGetUtf8StringsReply* {.rename: "xcb_ewmh_get_utf8_strings_reply_t", bycopy.} = object
     stringsLen* {.importc: "strings_len".}: uint32
     strings*: cstring
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
-  XcbEwmhCoordinates* {.importc: "xcb_ewmh_coordinates_t", bycopy.} = object
+  XcbEwmhCoordinates* {.rename: "xcb_ewmh_coordinates_t", bycopy.} = object
     x*: uint32
     y*: uint32
 
-  XcbEwmhGetDesktopViewportReply* {.importc: "xcb_ewmh_get_desktop_viewport_reply_t", bycopy.} = object
+  XcbEwmhGetDesktopViewportReply* {.rename: "xcb_ewmh_get_desktop_viewport_reply_t", bycopy.} = object
     desktopViewportLen* {.importc: "desktop_viewport_len".}: uint32
     desktopViewport* {.importc: "desktop_viewport".}: ptr XcbEwmhCoordinates
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
-  XcbEwmhGeometry* {.importc: "xcb_ewmh_geometry_t", bycopy.} = object
+  XcbEwmhGeometry* {.rename: "xcb_ewmh_geometry_t", bycopy.} = object
     x*: uint32
     y*: uint32
     width*: uint32
     height*: uint32
 
-  XcbEwmhGetWorkareaReply* {.importc: "xcb_ewmh_get_workarea_reply_t", bycopy.} = object
+  XcbEwmhGetWorkareaReply* {.rename: "xcb_ewmh_get_workarea_reply_t", bycopy.} = object
     workareaLen* {.importc: "workarea_len".}: uint32
     workarea*: ptr XcbEwmhGeometry
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
 
-  XcbEwmhClientSourceType* {.importc: "xcb_ewmh_client_source_type_t".} = enum
+  XcbEwmhClientSourceType* {.rename: "xcb_ewmh_client_source_type_t".} = enum
     xcbEwmhClientSourceTypeNone = 0,
     xcbEwmhClientSourceTypeNormal = 1,
     xcbEwmhClientSourceTypeOther = 2
 
-  XcbEwmhDesktopLayoutOrientation* {.importc: "xcb_ewmh_desktop_layout_orientation_t".} = enum
+  XcbEwmhDesktopLayoutOrientation* {.rename: "xcb_ewmh_desktop_layout_orientation_t".} = enum
     xcbEwmhWmOrientationHorz = 0,
     xcbEwmhWmOrientationVert = 1
 
-  XcbEwmhDesktopLayoutStartingCorner* {.importc: "xcb_ewmh_desktop_layout_starting_corner_t".} = enum
+  XcbEwmhDesktopLayoutStartingCorner* {.rename: "xcb_ewmh_desktop_layout_starting_corner_t".} = enum
     xcbEwmhWmTopleft = 0,
     xcbEwmhWmTopright = 1,
     xcbEwmhWmBottomright = 2,
     xcbEwmhWmBottomleft = 3
 
-  XcbEwmhGetDesktopLayoutReply* {.importc: "xcb_ewmh_get_desktop_layout_reply_t", bycopy.} = object
+  XcbEwmhGetDesktopLayoutReply* {.rename: "xcb_ewmh_get_desktop_layout_reply_t", bycopy.} = object
     orientation*: uint32
     columns*: uint32
     rows*: uint32
     startingCorner* {.importc: "starting_corner".}: uint32
 
-  XcbEwmhMoveresizeWindowOptFlags* {.importc: "xcb_ewmh_moveresize_window_opt_flags_t".} = enum
+  XcbEwmhMoveresizeWindowOptFlags* {.rename: "xcb_ewmh_moveresize_window_opt_flags_t".} = enum
     xcbEwmhMoveresizeWindowX = 1 shl 8,
     xcbEwmhMoveresizeWindowY = 1 shl 9,
     xcbEwmhMoveresizeWindowWidth = 1 shl 10,
     xcbEwmhMoveresizeWindowHeight = 1 shl 11
 
-  XcbEwmhMoveresizeDirection* {.importc: "xcb_ewmh_moveresize_direction_t".} = enum
+  XcbEwmhMoveresizeDirection* {.rename: "xcb_ewmh_moveresize_direction_t".} = enum
     xcbEwmhWmMoveresizeSizeTopleft = 0,
     xcbEwmhWmMoveresizeSizeTop = 1,
     xcbEwmhWmMoveresizeSizeTopright = 2,
@@ -169,12 +170,12 @@ type
     xcbEwmhWmMoveresizeMoveKeyboard = 10,
     xcbEwmhWmMoveresizeCancel = 11
 
-  XcbEwmhWmStateAction* {.importc: "xcb_ewmh_wm_state_action_t".} = enum
+  XcbEwmhWmStateAction* {.rename: "xcb_ewmh_wm_state_action_t".} = enum
     xcbEwmhWmStateRemove = 0,
     xcbEwmhWmStateAdd = 1,
     xcbEwmhWmStateToggle = 2
 
-  XcbEwmhWmStrutPartial* {.importc: "xcb_ewmh_wm_strut_partial_t", bycopy.} = object
+  XcbEwmhWmStrutPartial* {.rename: "xcb_ewmh_wm_strut_partial_t", bycopy.} = object
     left*: uint32
     right*: uint32
     top*: uint32
@@ -188,29 +189,31 @@ type
     bottomStartX* {.importc: "bottom_start_x".}: uint32
     bottomEndX* {.importc: "bottom_end_x".}: uint32
 
-  XcbEwmhWmIconIterator* {.importc: "xcb_ewmh_wm_icon_iterator_t", bycopy.} = object
+  XcbEwmhWmIconIterator* {.rename: "xcb_ewmh_wm_icon_iterator_t", bycopy.} = object
     width*: uint32
     height*: uint32
     data*: ptr UncheckedArray[uint32]
     rem*: cuint
     index*: cuint
 
-  XcbEwmhGetWmIconReply* {.importc: "xcb_ewmh_get_wm_icon_reply_t", bycopy.} = object
+  XcbEwmhGetWmIconReply* {.rename: "xcb_ewmh_get_wm_icon_reply_t", bycopy.} = object
     numIcons* {.importc: "num_icons".}: cuint
     reply* {.importc: "reply".}: ptr XcbGetPropertyReply
 
-  XcbEwmhGetExtentsReply* {.importc: "xcb_ewmh_get_extents_reply_t", bycopy.} = object
+  XcbEwmhGetExtentsReply* {.rename: "xcb_ewmh_get_extents_reply_t", bycopy.} = object
     left*: uint32
     right*: uint32
     top*: uint32
     bottom*: uint32
 
-  XcbEwmhGetWmFullscreenMonitorsReply* {.importc: "xcb_ewmh_get_wm_fullscreen_monitors_reply_t", bycopy.} = object
+  XcbEwmhGetWmFullscreenMonitorsReply* {.rename: "xcb_ewmh_get_wm_fullscreen_monitors_reply_t", bycopy.} = object
     top*: uint32
     bottom*: uint32
     left*: uint32
     right*: uint32
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-ewmh.so(|.2)".}
 {.push cdecl.}
 
 proc initAtoms*(c: ptr XcbConnection; ewmh: ptr XcbEwmhConnection): ptr XcbInternAtomCookie {.importc: "xcb_ewmh_init_atoms".}

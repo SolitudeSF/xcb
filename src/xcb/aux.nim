@@ -1,10 +1,11 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-util".}
-{.push header: "xcb/xcb_aux.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-util".}
+  {.push header: "xcb/xcb_aux.h".}
 
 type
-  XcbParamsCw* {.importc: "xcb_params_cw_t", bycopy.} = object
+  XcbParamsCw* {.rename: "xcb_params_cw_t", bycopy.} = object
     backPixmap* {.importc: "back_pixmap".}: uint32
     backPixel* {.importc: "back_pixel".}: uint32
     borderPixmap* {.importc: "border_pixmap".}: uint32
@@ -21,7 +22,7 @@ type
     colormap*: uint32
     cursor*: uint32
 
-  XcbParamsConfigureWindow* {.importc: "xcb_params_configure_window_t", bycopy.} = object
+  XcbParamsConfigureWindow* {.rename: "xcb_params_configure_window_t", bycopy.} = object
     x*: int32
     y*: int32
     width*: uint32
@@ -30,7 +31,7 @@ type
     sibling*: uint32
     stackMode* {.importc: "stack_mode".}: uint32
 
-  XcbParamsGc* {.importc: "xcb_params_gc_t", bycopy.} = object
+  XcbParamsGc* {.rename: "xcb_params_gc_t", bycopy.} = object
     function*: uint32
     planeMask* {.importc: "plane_mask".}: uint32
     foreground*: uint32
@@ -55,7 +56,7 @@ type
     dashList* {.importc: "dash_list".}: uint32
     arcMode* {.importc: "arc_mode".}: uint32
 
-  XcbParamsKeyboard* {.importc: "xcb_params_keyboard_t", bycopy.} = object
+  XcbParamsKeyboard* {.rename: "xcb_params_keyboard_t", bycopy.} = object
     keyClickPercent* {.importc: "key_click_percent".}: uint32
     bellPercent* {.importc: "bell_percent".}: uint32
     bellPitch* {.importc: "bell_pitch".}: uint32
@@ -65,6 +66,8 @@ type
     key*: uint32
     autoRepeatMode* {.importc: "auto_repeat_mode".}: uint32
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-util.so(|.1)".}
 {.push cdecl.}
 
 proc auxCreateWindow*(c: ptr XcbConnection; depth: uint8; wid: XcbWindow; parent: XcbWindow; x, y: int16; width, height, borderWidth, class: uint16; visual: XcbVisualid; mask: uint32; params: ptr XcbParamsCw): XcbVoidCookie {.discardable, importc: "xcb_aux_create_window".}

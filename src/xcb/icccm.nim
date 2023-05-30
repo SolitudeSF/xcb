@@ -1,27 +1,28 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-icccm".}
-{.push header: "xcb/xcb_icccm.h".}
+when not xcbDynlib
+  {.passl: "-lxcb-icccm".}
+  {.push header: "xcb/xcb_icccm.h".}
 
 type
-  XcbIcccmGetTextPropertyReply* {.importc: "xcb_icccm_get_text_property_reply_t", bycopy.} = object
+  XcbIcccmGetTextPropertyReply* {.rename: "xcb_icccm_get_text_property_reply_t", bycopy.} = object
     reply* {.importc: "_reply".}: ptr XcbGetPropertyReply
     encoding*: XcbAtom
     nameLen* {.importc: "name_len".}: uint32
     name*: cstring
     format*: uint8
 
-  XcbIcccmGetWmColormapWindowsReply* {.importc: "xcb_icccm_get_wm_colormap_windows_reply_t", bycopy.} = object
+  XcbIcccmGetWmColormapWindowsReply* {.rename: "xcb_icccm_get_wm_colormap_windows_reply_t", bycopy.} = object
     windowsLen* {.importc: "windows_len".}: uint32
     windows*: ptr XcbWindow
     reply* {.importc: "_reply".}: ptr XcbGetPropertyReply
 
-  XcbIcccmGetWmClassReply* {.importc: "xcb_icccm_get_wm_class_reply_t", bycopy.} = object
+  XcbIcccmGetWmClassReply* {.rename: "xcb_icccm_get_wm_class_reply_t", bycopy.} = object
     instanceName* {.importc: "instance_name".}: cstring
     className* {.importc: "class_name".}: cstring
     reply* {.importc: "_reply".}: ptr XcbGetPropertyReply
 
-  XcbIcccmSizeHintsFlags* {.importc: "xcb_icccm_size_hints_flags_t".} = enum
+  XcbIcccmSizeHintsFlags* {.rename: "xcb_icccm_size_hints_flags_t".} = enum
     xcbIcccmSizeHintUsPosition = 1 shl 0, xcbIcccmSizeHintUsSize = 1 shl 1,
     xcbIcccmSizeHintPPosition = 1 shl 2, xcbIcccmSizeHintPSize = 1 shl 3,
     xcbIcccmSizeHintPMinSize = 1 shl 4,
@@ -30,7 +31,7 @@ type
     xcbIcccmSizeHintPAspect = 1 shl 7, xcbIcccmSizeHintBaseSize = 1 shl 8,
     xcbIcccmSizeHintPWinGravity = 1 shl 9
 
-  XcbSizeHints* {.importc: "xcb_size_hints_t", bycopy.} = object
+  XcbSizeHints* {.rename: "xcb_size_hints_t", bycopy.} = object
     flags*: uint32
     x*: int32
     y*: int32
@@ -50,7 +51,7 @@ type
     baseHeight* {.importc: "base_height".}: int32
     winGravity* {.importc: "win_gravity".}: uint32
 
-  XcbIcccmWmHints* {.importc: "xcb_icccm_wm_hints_t", bycopy.} = object
+  XcbIcccmWmHints* {.rename: "xcb_icccm_wm_hints_t", bycopy.} = object
     flags*: int32
     input*: uint32
     initialState* {.importc: "initial_state".}: int32
@@ -61,11 +62,11 @@ type
     iconMask* {.importc: "icon_mask".}: XcbPixmap
     windowGroup* {.importc: "window_group".}: XcbWindow
 
-  XcbIcccmWmState* {.importc: "xcb_icccm_wm_state_t".} = enum
+  XcbIcccmWmState* {.rename: "xcb_icccm_wm_state_t".} = enum
     xcbIcccmWmStateWithdrawn = 0, xcbIcccmWmStateNormal = 1,
     xcbIcccmWmStateIconic = 3
 
-  XcbIcccmWm* {.importc: "xcb_icccm_wm_t".} = enum
+  XcbIcccmWm* {.rename: "xcb_icccm_wm_t".} = enum
     xcbIcccmWmHintInput = 1 shl 0,
     xcbIcccmWmHintState = 1 shl 1,
     xcbIcccmWmHintIconPixmap = 1 shl 2,
@@ -75,7 +76,7 @@ type
     xcbIcccmWmHintWindowGroup = 1 shl 6,
     xcbIcccmWmHintXUrgency = 1 shl 8
 
-  XcbIcccmGetWmProtocolsReply* {.importc: "xcb_icccm_get_wm_protocols_reply_t", bycopy.} = object
+  XcbIcccmGetWmProtocolsReply* {.rename: "xcb_icccm_get_wm_protocols_reply_t", bycopy.} = object
     atomsLen* {.importc: "atoms_len".}: uint32
     atoms*: ptr XcbAtom
     reply* {.importc: "_reply".}: ptr XcbGetPropertyReply
@@ -90,7 +91,10 @@ const
       XCB_ICCCM_WM_HINT_ICON_POSITION.ord or XCB_ICCCM_WM_HINT_ICON_MASK.ord or
       XCB_ICCCM_WM_HINT_WINDOW_GROUP.ord
 
-{.push cdecl, header: "xcb/xcb_icccm.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb-icccm.so(|.4)".}
+else:
+  {.push cdecl, header: "xcb/xcb_icccm.h".}
 
 proc getTextProperty*(c: ptr XcbConnection; window: XcbWindow; property: XcbAtom): XcbGetPropertyCookie {.importc: "xcb_icccm_get_text_property".}
 proc getTextPropertyUnchecked*(c: ptr XcbConnection; window: XcbWindow; property: XcbAtom): XcbGetPropertyCookie {.importc: "xcb_icccm_get_text_property_unchecked".}

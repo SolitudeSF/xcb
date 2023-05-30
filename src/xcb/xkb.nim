@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbXkbMajorVersion* = 1
@@ -41,23 +41,24 @@ const
   xcbXkbAccessXNotify* = 10
   xcbXkbExtensionDeviceNotify* = 11
 
-{.passl: "-lxcb-xkb".}
-{.push header: "xcb/xkb.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xkb".}
+  {.push header: "xcb/xkb.h".}
 
-var xcbXkbId* {.extern: "xcb_xkb_id".}: XcbExtension
+  var xcbXkbId* {.extern: "xcb_xkb_id".}: XcbExtension
 
 type
-  XcbXkbDeviceSpec* {.importc: "xcb_xkb_device_spec_t".} = distinct uint16
-  XcbXkbLedClassSpec* {.importc: "xcb_xkb_led_class_spec_t".} = distinct uint16
-  XcbXkbBellClassSpec* {.importc: "xcb_xkb_bell_class_spec_t".} = distinct uint16
-  XcbXkbIdSpec* {.importc: "xcb_xkb_id_spec_t".} = distinct uint16
-  XcbXkbString8* {.importc: "xcb_xkb_string8_t".} = char
+  XcbXkbDeviceSpec* {.rename: "xcb_xkb_device_spec_t".} = distinct uint16
+  XcbXkbLedClassSpec* {.rename: "xcb_xkb_led_class_spec_t".} = distinct uint16
+  XcbXkbBellClassSpec* {.rename: "xcb_xkb_bell_class_spec_t".} = distinct uint16
+  XcbXkbIdSpec* {.rename: "xcb_xkb_id_spec_t".} = distinct uint16
+  XcbXkbString8* {.rename: "xcb_xkb_string8_t".} = char
 
-  XcbXkbConst* {.importc: "xcb_xkb_const_t".} = enum
+  XcbXkbConst* {.rename: "xcb_xkb_const_t".} = enum
     xcbXkbConstKeyNameLength = 4, xcbXkbConstPerKeyBitArraySize = 32,
     xcbXkbConstMaxLegalKeyCode = 255
 
-  XcbXkbEventType* {.importc: "xcb_xkb_event_type_t".} = enum
+  XcbXkbEventType* {.rename: "xcb_xkb_event_type_t".} = enum
     xcbXkbEventTypeNewKeyboardNotify = 1, xcbXkbEventTypeMapNotify = 2,
     xcbXkbEventTypeStateNotify = 4, xcbXkbEventTypeControlsNotify = 8,
     xcbXkbEventTypeIndicatorStateNotify = 16,
@@ -68,27 +69,27 @@ type
     xcbXkbEventTypeAccessXNotify = 1024,
     xcbXkbEventTypeExtensionDeviceNotify = 2048
 
-  XcbXkbNknDetail* {.importc: "xcb_xkb_nkn_detail_t".} = enum
+  XcbXkbNknDetail* {.rename: "xcb_xkb_nkn_detail_t".} = enum
     xcbXkbNknDetailKeycodes = 1, xcbXkbNknDetailGeometry = 2,
     xcbXkbNknDetailDeviceId = 4
 
-  XcbXkbAxnDetail* {.importc: "xcb_xkb_axn_detail_t".} = enum
+  XcbXkbAxnDetail* {.rename: "xcb_xkb_axn_detail_t".} = enum
     xcbXkbAxnDetailSkPress = 1, xcbXkbAxnDetailSkAccept = 2,
     xcbXkbAxnDetailSkReject = 4, xcbXkbAxnDetailSkRelease = 8,
     xcbXkbAxnDetailBkAccept = 16, xcbXkbAxnDetailBkReject = 32,
     xcbXkbAxnDetailAxkWarning = 64
 
-  XcbXkbMapPart* {.importc: "xcb_xkb_map_part_t".} = enum
+  XcbXkbMapPart* {.rename: "xcb_xkb_map_part_t".} = enum
     xcbXkbMapPartKeyTypes = 1, xcbXkbMapPartKeySyms = 2,
     xcbXkbMapPartModifierMap = 4, xcbXkbMapPartExplicitComponents = 8,
     xcbXkbMapPartKeyActions = 16, xcbXkbMapPartKeyBehaviors = 32,
     xcbXkbMapPartVirtualMods = 64, xcbXkbMapPartVirtualModMap = 128
 
-  XcbXkbSetMapFlags* {.importc: "xcb_xkb_set_map_flags_t".} = enum
+  XcbXkbSetMapFlags* {.rename: "xcb_xkb_set_map_flags_t".} = enum
     xcbXkbSetMapFlagsResizeTypes = 1,
     xcbXkbSetMapFlagsRecomputeActions = 2
 
-  XcbXkbStatePart* {.importc: "xcb_xkb_state_part_t".} = enum
+  XcbXkbStatePart* {.rename: "xcb_xkb_state_part_t".} = enum
     xcbXkbStatePartModifierState = 1, xcbXkbStatePartModifierBase = 2,
     xcbXkbStatePartModifierLatch = 4, xcbXkbStatePartModifierLock = 8,
     xcbXkbStatePartGroupState = 16, xcbXkbStatePartGroupBase = 32,
@@ -99,7 +100,7 @@ type
     xcbXkbStatePartCompatLookupMods = 4096,
     xcbXkbStatePartPointerButtons = 8192
 
-  XcbXkbBoolCtrl* {.importc: "xcb_xkb_bool_ctrl_t".} = enum
+  XcbXkbBoolCtrl* {.rename: "xcb_xkb_bool_ctrl_t".} = enum
     xcbXkbBoolCtrlRepeatKeys = 1, xcbXkbBoolCtrlSlowKeys = 2,
     xcbXkbBoolCtrlBounceKeys = 4, xcbXkbBoolCtrlStickyKeys = 8,
     xcbXkbBoolCtrlMouseKeys = 16, xcbXkbBoolCtrlMouseKeysAccel = 32,
@@ -111,14 +112,14 @@ type
     xcbXkbBoolCtrlOverlay2Mask = 2048,
     xcbXkbBoolCtrlIgnoreGroupLockMask = 4096
 
-  XcbXkbControl* {.importc: "xcb_xkb_control_t".} = enum
+  XcbXkbControl* {.rename: "xcb_xkb_control_t".} = enum
     xcbXkbControlGroupsWrap = 134217728,
     xcbXkbControlInternalMods = 268435456,
     xcbXkbControlIgnoreLockMods = 536870912,
     xcbXkbControlPerKeyRepeat = 1073741824,
     xcbXkbControlControlsEnabled = 2147483648'i64
 
-  XcbXkbAxOption* {.importc: "xcb_xkb_ax_option_t".} = enum
+  XcbXkbAxOption* {.rename: "xcb_xkb_ax_option_t".} = enum
     xcbXkbAxOptionSkPressFb = 1, xcbXkbAxOptionSkAcceptFb = 2,
     xcbXkbAxOptionFeatureFb = 4, xcbXkbAxOptionSlowWarnFb = 8,
     xcbXkbAxOptionIndicatorFb = 16, xcbXkbAxOptionStickyKeysFb = 32,
@@ -126,118 +127,118 @@ type
     xcbXkbAxOptionSkReleaseFb = 256, xcbXkbAxOptionSkRejectFb = 512,
     xcbXkbAxOptionBkRejectFb = 1024, xcbXkbAxOptionDumbBell = 2048
 
-  XcbXkbDeviceSpecIterator* {.importc: "xcb_xkb_device_spec_iterator_t", bycopy.} = object
+  XcbXkbDeviceSpecIterator* {.rename: "xcb_xkb_device_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbDeviceSpec]
     rem*: cint
     index*: cint
 
-  XcbXkbLedClassResult* {.importc: "xcb_xkb_led_class_result_t".} = enum
+  XcbXkbLedClassResult* {.rename: "xcb_xkb_led_class_result_t".} = enum
     xcbXkbLedClassResultKbdFeedbackClass = 0,
     xcbXkbLedClassResultLedFeedbackClass = 4
 
-  XcbXkbLedClass* {.importc: "xcb_xkb_led_class_t".} = enum
+  XcbXkbLedClass* {.rename: "xcb_xkb_led_class_t".} = enum
     xcbXkbLedClassKbdFeedbackClass = 0,
     xcbXkbLedClassLedFeedbackClass = 4,
     xcbXkbLedClassDfltXiClass = 768, xcbXkbLedClassAllXiClasses = 1280
 
-  XcbXkbLedClassSpecIterator* {.importc: "xcb_xkb_led_class_spec_iterator_t", bycopy.} = object
+  XcbXkbLedClassSpecIterator* {.rename: "xcb_xkb_led_class_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbLedClassSpec]
     rem*: cint
     index*: cint
 
-  XcbXkbBellClassResult* {.importc: "xcb_xkb_bell_class_result_t".} = enum
+  XcbXkbBellClassResult* {.rename: "xcb_xkb_bell_class_result_t".} = enum
     xcbXkbBellClassResultKbdFeedbackClass = 0,
     xcbXkbBellClassResultBellFeedbackClass = 5
 
-  XcbXkbBellClass* {.importc: "xcb_xkb_bell_class_t".} = enum
+  XcbXkbBellClass* {.rename: "xcb_xkb_bell_class_t".} = enum
     xcbXkbBellClassKbdFeedbackClass = 0,
     xcbXkbBellClassBellFeedbackClass = 5,
     xcbXkbBellClassDfltXiClass = 768
 
-  XcbXkbBellClassSpecIterator* {.importc: "xcb_xkb_bell_class_spec_iterator_t", bycopy.} = object
+  XcbXkbBellClassSpecIterator* {.rename: "xcb_xkb_bell_class_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbBellClassSpec]
     rem*: cint
     index*: cint
 
-  XcbXkbId* {.importc: "xcb_xkb_id_t".} = enum
+  XcbXkbId* {.rename: "xcb_xkb_id_t".} = enum
     xcbXkbIdUseCoreKbd = 256, xcbXkbIdUseCorePtr = 512,
     xcbXkbIdDfltXiClass = 768, xcbXkbIdDfltXiId = 1024,
     xcbXkbIdAllXiClass = 1280, xcbXkbIdAllXiId = 1536,
     xcbXkbIdXiNone = 65280
 
-  XcbXkbIdSpecIterator* {.importc: "xcb_xkb_id_spec_iterator_t", bycopy.} = object
+  XcbXkbIdSpecIterator* {.rename: "xcb_xkb_id_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbIdSpec]
     rem*: cint
     index*: cint
 
-  XcbXkbGroup* {.importc: "xcb_xkb_group_t".} = enum
+  XcbXkbGroup* {.rename: "xcb_xkb_group_t".} = enum
     xcbXkbGroup1 = 0, xcbXkbGroup2 = 1, xcbXkbGroup3 = 2, xcbXkbGroup4 = 3
 
-  XcbXkbGroups* {.importc: "xcb_xkb_groups_t".} = enum
+  XcbXkbGroups* {.rename: "xcb_xkb_groups_t".} = enum
     xcbXkbGroupsAny = 254, xcbXkbGroupsAll = 255
 
-  XcbXkbSetOfGroup* {.importc: "xcb_xkb_set_of_group_t".} = enum
+  XcbXkbSetOfGroup* {.rename: "xcb_xkb_set_of_group_t".} = enum
     xcbXkbSetOfGroupGroup1 = 1, xcbXkbSetOfGroupGroup2 = 2,
     xcbXkbSetOfGroupGroup3 = 4, xcbXkbSetOfGroupGroup4 = 8
 
-  XcbXkbSetOfGroups* {.importc: "xcb_xkb_set_of_groups_t".} = enum
+  XcbXkbSetOfGroups* {.rename: "xcb_xkb_set_of_groups_t".} = enum
     xcbXkbSetOfGroupsAny = 128
 
-  XcbXkbGroupsWrap* {.importc: "xcb_xkb_groups_wrap_t".} = enum
+  XcbXkbGroupsWrap* {.rename: "xcb_xkb_groups_wrap_t".} = enum
     xcbXkbGroupsWrapWrapIntoRange = 0,
     xcbXkbGroupsWrapClampIntoRange = 64,
     xcbXkbGroupsWrapRedirectIntoRange = 128
 
-  XcbXkbVModsHigh* {.importc: "xcb_xkb_v_mods_high_t".} = enum
+  XcbXkbVModsHigh* {.rename: "xcb_xkb_v_mods_high_t".} = enum
     xcbXkbVModsHigh8 = 1, xcbXkbVModsHigh9 = 2, xcbXkbVModsHigh10 = 4,
     xcbXkbVModsHigh11 = 8, xcbXkbVModsHigh12 = 16,
     xcbXkbVModsHigh13 = 32, xcbXkbVModsHigh14 = 64,
     xcbXkbVModsHigh15 = 128
 
-  XcbXkbVModsLow* {.importc: "xcb_xkb_v_mods_low_t".} = enum
+  XcbXkbVModsLow* {.rename: "xcb_xkb_v_mods_low_t".} = enum
     xcbXkbVModsLow0 = 1, xcbXkbVModsLow1 = 2, xcbXkbVModsLow2 = 4,
     xcbXkbVModsLow3 = 8, xcbXkbVModsLow4 = 16, xcbXkbVModsLow5 = 32,
     xcbXkbVModsLow6 = 64, xcbXkbVModsLow7 = 128
 
-  XcbXkbVMod* {.importc: "xcb_xkb_v_mod_t".} = enum
+  XcbXkbVMod* {.rename: "xcb_xkb_v_mod_t".} = enum
     xcbXkbVMod0 = 1, xcbXkbVMod1 = 2, xcbXkbVMod2 = 4, xcbXkbVMod3 = 8,
     xcbXkbVMod4 = 16, xcbXkbVMod5 = 32, xcbXkbVMod6 = 64,
     xcbXkbVMod7 = 128, xcbXkbVMod8 = 256, xcbXkbVMod9 = 512,
     xcbXkbVMod10 = 1024, xcbXkbVMod11 = 2048, xcbXkbVMod12 = 4096,
     xcbXkbVMod13 = 8192, xcbXkbVMod14 = 16384, xcbXkbVMod15 = 32768
 
-  XcbXkbExplicit* {.importc: "xcb_xkb_explicit_t".} = enum
+  XcbXkbExplicit* {.rename: "xcb_xkb_explicit_t".} = enum
     xcbXkbExplicitKeyType1 = 1, xcbXkbExplicitKeyType2 = 2,
     xcbXkbExplicitKeyType3 = 4, xcbXkbExplicitKeyType4 = 8,
     xcbXkbExplicitInterpret = 16, xcbXkbExplicitAutoRepeat = 32,
     xcbXkbExplicitBehavior = 64, xcbXkbExplicitVModMap = 128
 
-  XcbXkbSymInterpretMatch* {.importc: "xcb_xkb_sym_interpret_match_t".} = enum
+  XcbXkbSymInterpretMatch* {.rename: "xcb_xkb_sym_interpret_match_t".} = enum
     xcbXkbSymInterpretMatchNoneOf = 0,
     xcbXkbSymInterpretMatchAnyOfOrNone = 1,
     xcbXkbSymInterpretMatchAnyOf = 2, xcbXkbSymInterpretMatchAllOf = 3,
     xcbXkbSymInterpretMatchExactly = 4
 
-  XcbXkbSymInterpMatch* {.importc: "xcb_xkb_sym_interp_match_t".} = enum
+  XcbXkbSymInterpMatch* {.rename: "xcb_xkb_sym_interp_match_t".} = enum
     xcbXkbSymInterpMatchOpMask = 127,
     xcbXkbSymInterpMatchLevelOneOnly = 128
 
-  XcbXkbImFlag* {.importc: "xcb_xkb_im_flag_t".} = enum
+  XcbXkbImFlag* {.rename: "xcb_xkb_im_flag_t".} = enum
     xcbXkbImFlagLedDrivesKb = 32, xcbXkbImFlagNoAutomatic = 64,
     xcbXkbImFlagNoExplicit = 128
 
-  XcbXkbImModsWhich* {.importc: "xcb_xkb_im_mods_which_t".} = enum
+  XcbXkbImModsWhich* {.rename: "xcb_xkb_im_mods_which_t".} = enum
     xcbXkbImModsWhichUseBase = 1, xcbXkbImModsWhichUseLatched = 2,
     xcbXkbImModsWhichUseLocked = 4, xcbXkbImModsWhichUseEffective = 8,
     xcbXkbImModsWhichUseCompat = 16
 
-  XcbXkbImGroupsWhich* {.importc: "xcb_xkb_im_groups_which_t".} = enum
+  XcbXkbImGroupsWhich* {.rename: "xcb_xkb_im_groups_which_t".} = enum
     xcbXkbImGroupsWhichUseBase = 1, xcbXkbImGroupsWhichUseLatched = 2,
     xcbXkbImGroupsWhichUseLocked = 4,
     xcbXkbImGroupsWhichUseEffective = 8,
     xcbXkbImGroupsWhichUseCompat = 16
 
-  XcbXkbIndicatorMap* {.importc: "xcb_xkb_indicator_map_t", bycopy.} = object
+  XcbXkbIndicatorMap* {.rename: "xcb_xkb_indicator_map_t", bycopy.} = object
     flags*: uint8
     whichGroups*: uint8
     groups*: uint8
@@ -247,15 +248,15 @@ type
     vmods*: uint16
     ctrls*: uint32
 
-  XcbXkbIndicatorMapIterator* {.importc: "xcb_xkb_indicator_map_iterator_t", bycopy.} = object
+  XcbXkbIndicatorMapIterator* {.rename: "xcb_xkb_indicator_map_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbIndicatorMap]
     rem*: cint
     index*: cint
 
-  XcbXkbCmDetail* {.importc: "xcb_xkb_cm_detail_t".} = enum
+  XcbXkbCmDetail* {.rename: "xcb_xkb_cm_detail_t".} = enum
     xcbXkbCmDetailSymInterp = 1, xcbXkbCmDetailGroupCompat = 2
 
-  XcbXkbNameDetail* {.importc: "xcb_xkb_name_detail_t".} = enum
+  XcbXkbNameDetail* {.rename: "xcb_xkb_name_detail_t".} = enum
     xcbXkbNameDetailKeycodes = 1, xcbXkbNameDetailGeometry = 2,
     xcbXkbNameDetailSymbols = 4, xcbXkbNameDetailPhysSymbols = 8,
     xcbXkbNameDetailTypes = 16, xcbXkbNameDetailCompat = 32,
@@ -266,60 +267,60 @@ type
     xcbXkbNameDetailVirtualModNames = 2048,
     xcbXkbNameDetailGroupNames = 4096, xcbXkbNameDetailRgNames = 8192
 
-  XcbXkbGbnDetail* {.importc: "xcb_xkb_gbn_detail_t".} = enum
+  XcbXkbGbnDetail* {.rename: "xcb_xkb_gbn_detail_t".} = enum
     xcbXkbGbnDetailTypes = 1, xcbXkbGbnDetailCompatMap = 2,
     xcbXkbGbnDetailClientSymbols = 4, xcbXkbGbnDetailServerSymbols = 8,
     xcbXkbGbnDetailIndicatorMaps = 16, xcbXkbGbnDetailKeyNames = 32,
     xcbXkbGbnDetailGeometry = 64, xcbXkbGbnDetailOtherNames = 128
 
-  XcbXkbXiFeature* {.importc: "xcb_xkb_xi_feature_t".} = enum
+  XcbXkbXiFeature* {.rename: "xcb_xkb_xi_feature_t".} = enum
     xcbXkbXiFeatureKeyboards = 1, xcbXkbXiFeatureButtonActions = 2,
     xcbXkbXiFeatureIndicatorNames = 4, xcbXkbXiFeatureIndicatorMaps = 8,
     xcbXkbXiFeatureIndicatorState = 16
 
-  XcbXkbPerClientFlag* {.importc: "xcb_xkb_per_client_flag_t".} = enum
+  XcbXkbPerClientFlag* {.rename: "xcb_xkb_per_client_flag_t".} = enum
     xcbXkbPerClientFlagDetectableAutoRepeat = 1,
     xcbXkbPerClientFlagGrabsUseXkbState = 2,
     xcbXkbPerClientFlagAutoResetControls = 4,
     xcbXkbPerClientFlagLookupStateWhenGrabbed = 8,
     xcbXkbPerClientFlagSendEventUsesXkbState = 16
 
-  XcbXkbModDef* {.importc: "xcb_xkb_mod_def_t", bycopy.} = object
+  XcbXkbModDef* {.rename: "xcb_xkb_mod_def_t", bycopy.} = object
     mask*: uint8
     realMods*: uint8
     vmods*: uint16
 
-  XcbXkbModDefIterator* {.importc: "xcb_xkb_mod_def_iterator_t", bycopy.} = object
+  XcbXkbModDefIterator* {.rename: "xcb_xkb_mod_def_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbModDef]
     rem*: cint
     index*: cint
 
-  XcbXkbKeyName* {.importc: "xcb_xkb_key_name_t", bycopy.} = object
+  XcbXkbKeyName* {.rename: "xcb_xkb_key_name_t", bycopy.} = object
     name*: array[4, char]
 
-  XcbXkbKeyNameIterator* {.importc: "xcb_xkb_key_name_iterator_t", bycopy.} = object
+  XcbXkbKeyNameIterator* {.rename: "xcb_xkb_key_name_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeyName]
     rem*: cint
     index*: cint
 
-  XcbXkbKeyAlias* {.importc: "xcb_xkb_key_alias_t", bycopy.} = object
+  XcbXkbKeyAlias* {.rename: "xcb_xkb_key_alias_t", bycopy.} = object
     real*: array[4, char]
     alias*: array[4, char]
 
-  XcbXkbKeyAliasIterator* {.importc: "xcb_xkb_key_alias_iterator_t", bycopy.} = object
+  XcbXkbKeyAliasIterator* {.rename: "xcb_xkb_key_alias_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeyAlias]
     rem*: cint
     index*: cint
 
-  XcbXkbCountedString16* {.importc: "xcb_xkb_counted_string16_t", bycopy.} = object
+  XcbXkbCountedString16* {.rename: "xcb_xkb_counted_string16_t", bycopy.} = object
     length*: uint16
 
-  XcbXkbCountedString16Iterator* {.importc: "xcb_xkb_counted_string16_iterator_t", bycopy.} = object
+  XcbXkbCountedString16Iterator* {.rename: "xcb_xkb_counted_string16_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbCountedString16]
     rem*: cint
     index*: cint
 
-  XcbXkbKtMapEntry* {.importc: "xcb_xkb_kt_map_entry_t", bycopy.} = object
+  XcbXkbKtMapEntry* {.rename: "xcb_xkb_kt_map_entry_t", bycopy.} = object
     active*: uint8
     modsMask* {.importc: "mods_mask".}: uint8
     level*: uint8
@@ -327,12 +328,12 @@ type
     modsVmods* {.importc: "mods_vmods".}: uint16
     pad0: array[2, uint8]
 
-  XcbXkbKtMapEntryIterator* {.importc: "xcb_xkb_kt_map_entry_iterator_t", bycopy.} = object
+  XcbXkbKtMapEntryIterator* {.rename: "xcb_xkb_kt_map_entry_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKtMapEntry]
     rem*: cint
     index*: cint
 
-  XcbXkbKeyType* {.importc: "xcb_xkb_key_type_t", bycopy.} = object
+  XcbXkbKeyType* {.rename: "xcb_xkb_key_type_t", bycopy.} = object
     modsMask* {.importc: "mods_mask".}: uint8
     modsMods* {.importc: "mods_mods".}: uint8
     modsVmods* {.importc: "mods_vmods".}: uint16
@@ -341,95 +342,95 @@ type
     hasPreserve*: uint8
     pad0: uint8
 
-  XcbXkbKeyTypeIterator* {.importc: "xcb_xkb_key_type_iterator_t", bycopy.} = object
+  XcbXkbKeyTypeIterator* {.rename: "xcb_xkb_key_type_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeyType]
     rem*: cint
     index*: cint
 
-  XcbXkbKeySymMap* {.importc: "xcb_xkb_key_sym_map_t", bycopy.} = object
+  XcbXkbKeySymMap* {.rename: "xcb_xkb_key_sym_map_t", bycopy.} = object
     ktIndex* {.importc: "kt_index".}: array[4, uint8]
     groupInfo*: uint8
     width*: uint8
     nSyms*: uint16
 
-  XcbXkbKeySymMapIterator* {.importc: "xcb_xkb_key_sym_map_iterator_t", bycopy.} = object
+  XcbXkbKeySymMapIterator* {.rename: "xcb_xkb_key_sym_map_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeySymMap]
     rem*: cint
     index*: cint
 
-  XcbXkbCommonBehavior* {.importc: "xcb_xkb_common_behavior_t", bycopy.} = object
+  XcbXkbCommonBehavior* {.rename: "xcb_xkb_common_behavior_t", bycopy.} = object
     `type`*: uint8
     data*: uint8
 
-  XcbXkbCommonBehaviorIterator* {.importc: "xcb_xkb_common_behavior_iterator_t", bycopy.} = object
+  XcbXkbCommonBehaviorIterator* {.rename: "xcb_xkb_common_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbCommonBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbDefaultBehavior* {.importc: "xcb_xkb_default_behavior_t", bycopy.} = object
+  XcbXkbDefaultBehavior* {.rename: "xcb_xkb_default_behavior_t", bycopy.} = object
     `type`*: uint8
     pad0: uint8
 
-  XcbXkbDefaultBehaviorIterator* {.importc: "xcb_xkb_default_behavior_iterator_t", bycopy.} = object
+  XcbXkbDefaultBehaviorIterator* {.rename: "xcb_xkb_default_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbDefaultBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbLockBehavior* {.importc: "xcb_xkb_lock_behavior_t", bycopy.} = object
+  XcbXkbLockBehavior* {.rename: "xcb_xkb_lock_behavior_t", bycopy.} = object
     `type`*: uint8
     pad0: uint8
 
-  XcbXkbLockBehaviorIterator* {.importc: "xcb_xkb_lock_behavior_iterator_t", bycopy.} = object
+  XcbXkbLockBehaviorIterator* {.rename: "xcb_xkb_lock_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbLockBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbRadioGroupBehavior* {.importc: "xcb_xkb_radio_group_behavior_t", bycopy.} = object
+  XcbXkbRadioGroupBehavior* {.rename: "xcb_xkb_radio_group_behavior_t", bycopy.} = object
     `type`*: uint8
     group*: uint8
 
-  XcbXkbRadioGroupBehaviorIterator* {.importc: "xcb_xkb_radio_group_behavior_iterator_t", bycopy.} = object
+  XcbXkbRadioGroupBehaviorIterator* {.rename: "xcb_xkb_radio_group_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbRadioGroupBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbOverlayBehavior* {.importc: "xcb_xkb_overlay_behavior_t", bycopy.} = object
+  XcbXkbOverlayBehavior* {.rename: "xcb_xkb_overlay_behavior_t", bycopy.} = object
     `type`*: uint8
     key*: XcbKeycode
 
-  XcbXkbOverlayBehaviorIterator* {.importc: "xcb_xkb_overlay_behavior_iterator_t", bycopy.} = object
+  XcbXkbOverlayBehaviorIterator* {.rename: "xcb_xkb_overlay_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbOverlayBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbPermamentLockBehavior* {.importc: "xcb_xkb_permament_lock_behavior_t", bycopy.} = object
+  XcbXkbPermamentLockBehavior* {.rename: "xcb_xkb_permament_lock_behavior_t", bycopy.} = object
     `type`*: uint8
     pad0: uint8
 
-  XcbXkbPermamentLockBehaviorIterator* {.importc: "xcb_xkb_permament_lock_behavior_iterator_t", bycopy.} = object
+  XcbXkbPermamentLockBehaviorIterator* {.rename: "xcb_xkb_permament_lock_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbPermamentLockBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbPermamentRadioGroupBehavior* {.importc: "xcb_xkb_permament_radio_group_behavior_t", bycopy.} = object
+  XcbXkbPermamentRadioGroupBehavior* {.rename: "xcb_xkb_permament_radio_group_behavior_t", bycopy.} = object
     `type`*: uint8
     group*: uint8
 
-  XcbXkbPermamentRadioGroupBehaviorIterator* {.importc: "xcb_xkb_permament_radio_group_behavior_iterator_t", bycopy.} = object
+  XcbXkbPermamentRadioGroupBehaviorIterator* {.rename: "xcb_xkb_permament_radio_group_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbPermamentRadioGroupBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbPermamentOverlayBehavior* {.importc: "xcb_xkb_permament_overlay_behavior_t", bycopy.} = object
+  XcbXkbPermamentOverlayBehavior* {.rename: "xcb_xkb_permament_overlay_behavior_t", bycopy.} = object
     `type`*: uint8
     key*: XcbKeycode
 
-  XcbXkbPermamentOverlayBehaviorIterator* {.importc: "xcb_xkb_permament_overlay_behavior_iterator_t", bycopy.} = object
+  XcbXkbPermamentOverlayBehaviorIterator* {.rename: "xcb_xkb_permament_overlay_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbPermamentOverlayBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbBehavior* {.importc: "xcb_xkb_behavior_t", bycopy, union.} = object
+  XcbXkbBehavior* {.rename: "xcb_xkb_behavior_t", bycopy, union.} = object
     common*: XcbXkbCommonBehavior
     default* {.importc: "_default".}: XcbXkbDefaultBehavior
     lock*: XcbXkbLockBehavior
@@ -442,12 +443,12 @@ type
     permamentOverlay2*: XcbXkbPermamentOverlayBehavior
     `type`*: uint8
 
-  XcbXkbBehaviorIterator* {.importc: "xcb_xkb_behavior_iterator_t", bycopy.} = object
+  XcbXkbBehaviorIterator* {.rename: "xcb_xkb_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbBehaviorType* {.importc: "xcb_xkb_behavior_type_t".} = enum
+  XcbXkbBehaviorType* {.rename: "xcb_xkb_behavior_type_t".} = enum
     xcbXkbBehaviorTypeDefault = 0, xcbXkbBehaviorTypeLock = 1,
     xcbXkbBehaviorTypeRadioGroup = 2, xcbXkbBehaviorTypeOverlay1 = 3,
     xcbXkbBehaviorTypeOverlay2 = 4,
@@ -456,55 +457,55 @@ type
     xcbXkbBehaviorTypePermamentOverlay1 = 131,
     xcbXkbBehaviorTypePermamentOverlay2 = 132
 
-  XcbXkbSetBehavior* {.importc: "xcb_xkb_set_behavior_t", bycopy.} = object
+  XcbXkbSetBehavior* {.rename: "xcb_xkb_set_behavior_t", bycopy.} = object
     keycode*: XcbKeycode
     behavior*: XcbXkbBehavior
     pad0: uint8
 
-  XcbXkbSetBehaviorIterator* {.importc: "xcb_xkb_set_behavior_iterator_t", bycopy.} = object
+  XcbXkbSetBehaviorIterator* {.rename: "xcb_xkb_set_behavior_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSetBehavior]
     rem*: cint
     index*: cint
 
-  XcbXkbSetExplicit* {.importc: "xcb_xkb_set_explicit_t", bycopy.} = object
+  XcbXkbSetExplicit* {.rename: "xcb_xkb_set_explicit_t", bycopy.} = object
     keycode*: XcbKeycode
     explicit*: uint8
 
-  XcbXkbSetExplicitIterator* {.importc: "xcb_xkb_set_explicit_iterator_t", bycopy.} = object
+  XcbXkbSetExplicitIterator* {.rename: "xcb_xkb_set_explicit_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSetExplicit]
     rem*: cint
     index*: cint
 
-  XcbXkbKeyModMap* {.importc: "xcb_xkb_key_mod_map_t", bycopy.} = object
+  XcbXkbKeyModMap* {.rename: "xcb_xkb_key_mod_map_t", bycopy.} = object
     keycode*: XcbKeycode
     mods*: uint8
 
-  XcbXkbKeyModMapIterator* {.importc: "xcb_xkb_key_mod_map_iterator_t", bycopy.} = object
+  XcbXkbKeyModMapIterator* {.rename: "xcb_xkb_key_mod_map_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeyModMap]
     rem*: cint
     index*: cint
 
-  XcbXkbKeyVModMap* {.importc: "xcb_xkb_key_v_mod_map_t", bycopy.} = object
+  XcbXkbKeyVModMap* {.rename: "xcb_xkb_key_v_mod_map_t", bycopy.} = object
     keycode*: XcbKeycode
     pad0: uint8
     vmods*: uint16
 
-  XcbXkbKeyVModMapIterator* {.importc: "xcb_xkb_key_v_mod_map_iterator_t", bycopy.} = object
+  XcbXkbKeyVModMapIterator* {.rename: "xcb_xkb_key_v_mod_map_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKeyVModMap]
     rem*: cint
     index*: cint
 
-  XcbXkbKtSetMapEntry* {.importc: "xcb_xkb_kt_set_map_entry_t", bycopy.} = object
+  XcbXkbKtSetMapEntry* {.rename: "xcb_xkb_kt_set_map_entry_t", bycopy.} = object
     level*: uint8
     realMods*: uint8
     virtualMods*: uint16
 
-  XcbXkbKtSetMapEntryIterator* {.importc: "xcb_xkb_kt_set_map_entry_iterator_t", bycopy.} = object
+  XcbXkbKtSetMapEntryIterator* {.rename: "xcb_xkb_kt_set_map_entry_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKtSetMapEntry]
     rem*: cint
     index*: cint
 
-  XcbXkbSetKeyType* {.importc: "xcb_xkb_set_key_type_t", bycopy.} = object
+  XcbXkbSetKeyType* {.rename: "xcb_xkb_set_key_type_t", bycopy.} = object
     mask*: uint8
     realMods*: uint8
     virtualMods*: uint16
@@ -513,105 +514,105 @@ type
     preserve*: uint8
     pad0: uint8
 
-  XcbXkbSetKeyTypeIterator* {.importc: "xcb_xkb_set_key_type_iterator_t", bycopy.} = object
+  XcbXkbSetKeyTypeIterator* {.rename: "xcb_xkb_set_key_type_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSetKeyType]
     rem*: cint
     index*: cint
 
-  XcbXkbString8Iterator* {.importc: "xcb_xkb_string8_iterator_t", bycopy.} = object
+  XcbXkbString8Iterator* {.rename: "xcb_xkb_string8_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbString8]
     rem*: cint
     index*: cint
 
-  XcbXkbOutline* {.importc: "xcb_xkb_outline_t", bycopy.} = object
+  XcbXkbOutline* {.rename: "xcb_xkb_outline_t", bycopy.} = object
     nPoints*: uint8
     cornerRadius*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbOutlineIterator* {.importc: "xcb_xkb_outline_iterator_t", bycopy.} = object
+  XcbXkbOutlineIterator* {.rename: "xcb_xkb_outline_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbOutline]
     rem*: cint
     index*: cint
 
-  XcbXkbShape* {.importc: "xcb_xkb_shape_t", bycopy.} = object
+  XcbXkbShape* {.rename: "xcb_xkb_shape_t", bycopy.} = object
     name*: XcbAtom
     nOutlines*: uint8
     primaryNdx*: uint8
     approxNdx*: uint8
     pad0: uint8
 
-  XcbXkbShapeIterator* {.importc: "xcb_xkb_shape_iterator_t", bycopy.} = object
+  XcbXkbShapeIterator* {.rename: "xcb_xkb_shape_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbShape]
     rem*: cint
     index*: cint
 
-  XcbXkbKey* {.importc: "xcb_xkb_key_t", bycopy.} = object
+  XcbXkbKey* {.rename: "xcb_xkb_key_t", bycopy.} = object
     name*: array[4, XcbXkbString8]
     gap*: int16
     shapeNdx*: uint8
     colorNdx*: uint8
 
-  XcbXkbKeyIterator* {.importc: "xcb_xkb_key_iterator_t", bycopy.} = object
+  XcbXkbKeyIterator* {.rename: "xcb_xkb_key_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbKey]
     rem*: cint
     index*: cint
 
-  XcbXkbOverlayKey* {.importc: "xcb_xkb_overlay_key_t", bycopy.} = object
+  XcbXkbOverlayKey* {.rename: "xcb_xkb_overlay_key_t", bycopy.} = object
     over*: array[4, XcbXkbString8]
     under*: array[4, XcbXkbString8]
 
-  XcbXkbOverlayKeyIterator* {.importc: "xcb_xkb_overlay_key_iterator_t", bycopy.} = object
+  XcbXkbOverlayKeyIterator* {.rename: "xcb_xkb_overlay_key_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbOverlayKey]
     rem*: cint
     index*: cint
 
-  XcbXkbOverlayRow* {.importc: "xcb_xkb_overlay_row_t", bycopy.} = object
+  XcbXkbOverlayRow* {.rename: "xcb_xkb_overlay_row_t", bycopy.} = object
     rowUnder*: uint8
     nKeys*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbOverlayRowIterator* {.importc: "xcb_xkb_overlay_row_iterator_t", bycopy.} = object
+  XcbXkbOverlayRowIterator* {.rename: "xcb_xkb_overlay_row_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbOverlayRow]
     rem*: cint
     index*: cint
 
-  XcbXkbOverlay* {.importc: "xcb_xkb_overlay_t", bycopy.} = object
+  XcbXkbOverlay* {.rename: "xcb_xkb_overlay_t", bycopy.} = object
     name*: XcbAtom
     nRows*: uint8
     pad0: array[3, uint8]
 
-  XcbXkbOverlayIterator* {.importc: "xcb_xkb_overlay_iterator_t", bycopy.} = object
+  XcbXkbOverlayIterator* {.rename: "xcb_xkb_overlay_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbOverlay]
     rem*: cint
     index*: cint
 
-  XcbXkbRow* {.importc: "xcb_xkb_row_t", bycopy.} = object
+  XcbXkbRow* {.rename: "xcb_xkb_row_t", bycopy.} = object
     top*: int16
     left*: int16
     nKeys*: uint8
     vertical*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbRowIterator* {.importc: "xcb_xkb_row_iterator_t", bycopy.} = object
+  XcbXkbRowIterator* {.rename: "xcb_xkb_row_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbRow]
     rem*: cint
     index*: cint
 
-  XcbXkbDoodadType* {.importc: "xcb_xkb_doodad_type_t".} = enum
+  XcbXkbDoodadType* {.rename: "xcb_xkb_doodad_type_t".} = enum
     xcbXkbDoodadTypeOutline = 1, xcbXkbDoodadTypeSolid = 2,
     xcbXkbDoodadTypeText = 3, xcbXkbDoodadTypeIndicator = 4,
     xcbXkbDoodadTypeLogo = 5
 
-  XcbXkbListing* {.importc: "xcb_xkb_listing_t", bycopy.} = object
+  XcbXkbListing* {.rename: "xcb_xkb_listing_t", bycopy.} = object
     flags*: uint16
     length*: uint16
 
-  XcbXkbListingIterator* {.importc: "xcb_xkb_listing_iterator_t", bycopy.} = object
+  XcbXkbListingIterator* {.rename: "xcb_xkb_listing_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbListing]
     rem*: cint
     index*: cint
 
-  XcbXkbDeviceLedInfo* {.importc: "xcb_xkb_device_led_info_t", bycopy.} = object
+  XcbXkbDeviceLedInfo* {.rename: "xcb_xkb_device_led_info_t", bycopy.} = object
     ledClass*: XcbXkbLedClassSpec
     ledID*: XcbXkbIdSpec
     namesPresent*: uint32
@@ -619,16 +620,16 @@ type
     physIndicators*: uint32
     state*: uint32
 
-  XcbXkbDeviceLedInfoIterator* {.importc: "xcb_xkb_device_led_info_iterator_t", bycopy.} = object
+  XcbXkbDeviceLedInfoIterator* {.rename: "xcb_xkb_device_led_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbDeviceLedInfo]
     rem*: cint
     index*: cint
 
-  XcbXkbError* {.importc: "xcb_xkb_error_t".} = enum
+  XcbXkbError* {.rename: "xcb_xkb_error_t".} = enum
     xcbXkbErrorBadId = 253, xcbXkbErrorBadClass = 254,
     xcbXkbErrorBadDevice = 255
 
-  XcbXkbKeyboardError* {.importc: "xcb_xkb_keyboard_error_t", bycopy.} = object
+  XcbXkbKeyboardError* {.rename: "xcb_xkb_keyboard_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -637,11 +638,11 @@ type
     majorOpcode*: uint8
     pad0: array[21, uint8]
 
-  XcbXkbSa* {.importc: "xcb_xkb_sa_t".} = enum
+  XcbXkbSa* {.rename: "xcb_xkb_sa_t".} = enum
     xcbXkbSaClearLocks = 1, xcbXkbSaLatchToLock = 2,
     xcbXkbSaUseModMapMods = 4
 
-  XcbXkbSaType* {.importc: "xcb_xkb_sa_type_t".} = enum
+  XcbXkbSaType* {.rename: "xcb_xkb_sa_type_t".} = enum
     xcbXkbSaTypeNoAction = 0, xcbXkbSaTypeSetMods = 1,
     xcbXkbSaTypeLatchMods = 2, xcbXkbSaTypeLockMods = 3,
     xcbXkbSaTypeSetGroup = 4, xcbXkbSaTypeLatchGroup = 5,
@@ -654,16 +655,16 @@ type
     xcbXkbSaTypeDeviceBtn = 18, xcbXkbSaTypeLockDeviceBtn = 19,
     xcbXkbSaTypeDeviceValuator = 20
 
-  XcbXkbSaNoAction* {.importc: "xcb_xkb_sa_no_action_t", bycopy.} = object
+  XcbXkbSaNoAction* {.rename: "xcb_xkb_sa_no_action_t", bycopy.} = object
     `type`*: uint8
     pad0: array[7, uint8]
 
-  XcbXkbSaNoActionIterator* {.importc: "xcb_xkb_sa_no_action_iterator_t", bycopy.} = object
+  XcbXkbSaNoActionIterator* {.rename: "xcb_xkb_sa_no_action_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaNoAction]
     rem*: cint
     index*: cint
 
-  XcbXkbSaSetMods* {.importc: "xcb_xkb_sa_set_mods_t", bycopy.} = object
+  XcbXkbSaSetMods* {.rename: "xcb_xkb_sa_set_mods_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     mask*: uint8
@@ -672,12 +673,12 @@ type
     vmodsLow*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbSaSetModsIterator* {.importc: "xcb_xkb_sa_set_mods_iterator_t", bycopy.} = object
+  XcbXkbSaSetModsIterator* {.rename: "xcb_xkb_sa_set_mods_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaSetMods]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLatchMods* {.importc: "xcb_xkb_sa_latch_mods_t", bycopy.} = object
+  XcbXkbSaLatchMods* {.rename: "xcb_xkb_sa_latch_mods_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     mask*: uint8
@@ -686,12 +687,12 @@ type
     vmodsLow*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbSaLatchModsIterator* {.importc: "xcb_xkb_sa_latch_mods_iterator_t", bycopy.} = object
+  XcbXkbSaLatchModsIterator* {.rename: "xcb_xkb_sa_latch_mods_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLatchMods]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLockMods* {.importc: "xcb_xkb_sa_lock_mods_t", bycopy.} = object
+  XcbXkbSaLockMods* {.rename: "xcb_xkb_sa_lock_mods_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     mask*: uint8
@@ -700,50 +701,50 @@ type
     vmodsLow*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbSaLockModsIterator* {.importc: "xcb_xkb_sa_lock_mods_iterator_t", bycopy.} = object
+  XcbXkbSaLockModsIterator* {.rename: "xcb_xkb_sa_lock_mods_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLockMods]
     rem*: cint
     index*: cint
 
-  XcbXkbSaSetGroup* {.importc: "xcb_xkb_sa_set_group_t", bycopy.} = object
+  XcbXkbSaSetGroup* {.rename: "xcb_xkb_sa_set_group_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     group*: int8
     pad0: array[5, uint8]
 
-  XcbXkbSaSetGroupIterator* {.importc: "xcb_xkb_sa_set_group_iterator_t", bycopy.} = object
+  XcbXkbSaSetGroupIterator* {.rename: "xcb_xkb_sa_set_group_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaSetGroup]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLatchGroup* {.importc: "xcb_xkb_sa_latch_group_t", bycopy.} = object
+  XcbXkbSaLatchGroup* {.rename: "xcb_xkb_sa_latch_group_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     group*: int8
     pad0: array[5, uint8]
 
-  XcbXkbSaLatchGroupIterator* {.importc: "xcb_xkb_sa_latch_group_iterator_t", bycopy.} = object
+  XcbXkbSaLatchGroupIterator* {.rename: "xcb_xkb_sa_latch_group_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLatchGroup]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLockGroup* {.importc: "xcb_xkb_sa_lock_group_t", bycopy.} = object
+  XcbXkbSaLockGroup* {.rename: "xcb_xkb_sa_lock_group_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     group*: int8
     pad0: array[5, uint8]
 
-  XcbXkbSaLockGroupIterator* {.importc: "xcb_xkb_sa_lock_group_iterator_t", bycopy.} = object
+  XcbXkbSaLockGroupIterator* {.rename: "xcb_xkb_sa_lock_group_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLockGroup]
     rem*: cint
     index*: cint
 
-  XcbXkbSaMovePtrFlag* {.importc: "xcb_xkb_sa_move_ptr_flag_t".} = enum
+  XcbXkbSaMovePtrFlag* {.rename: "xcb_xkb_sa_move_ptr_flag_t".} = enum
     xcbXkbSaMovePtrFlagNoAcceleration = 1,
     xcbXkbSaMovePtrFlagMoveAbsoluteX = 2,
     xcbXkbSaMovePtrFlagMoveAbsoluteY = 4
 
-  XcbXkbSaMovePtr* {.importc: "xcb_xkb_sa_move_ptr_t", bycopy.} = object
+  XcbXkbSaMovePtr* {.rename: "xcb_xkb_sa_move_ptr_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     xHigh*: int8
@@ -752,63 +753,63 @@ type
     yLow*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbSaMovePtrIterator* {.importc: "xcb_xkb_sa_move_ptr_iterator_t", bycopy.} = object
+  XcbXkbSaMovePtrIterator* {.rename: "xcb_xkb_sa_move_ptr_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaMovePtr]
     rem*: cint
     index*: cint
 
-  XcbXkbSaPtrBtn* {.importc: "xcb_xkb_sa_ptr_btn_t", bycopy.} = object
+  XcbXkbSaPtrBtn* {.rename: "xcb_xkb_sa_ptr_btn_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     count*: uint8
     button*: uint8
     pad0: array[4, uint8]
 
-  XcbXkbSaPtrBtnIterator* {.importc: "xcb_xkb_sa_ptr_btn_iterator_t", bycopy.} = object
+  XcbXkbSaPtrBtnIterator* {.rename: "xcb_xkb_sa_ptr_btn_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaPtrBtn]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLockPtrBtn* {.importc: "xcb_xkb_sa_lock_ptr_btn_t", bycopy.} = object
+  XcbXkbSaLockPtrBtn* {.rename: "xcb_xkb_sa_lock_ptr_btn_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     pad0: uint8
     button*: uint8
     pad1: array[4, uint8]
 
-  XcbXkbSaLockPtrBtnIterator* {.importc: "xcb_xkb_sa_lock_ptr_btn_iterator_t", bycopy.} = object
+  XcbXkbSaLockPtrBtnIterator* {.rename: "xcb_xkb_sa_lock_ptr_btn_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLockPtrBtn]
     rem*: cint
     index*: cint
 
-  XcbXkbSaSetPtrDfltFlag* {.importc: "xcb_xkb_sa_set_ptr_dflt_flag_t".} = enum
+  XcbXkbSaSetPtrDfltFlag* {.rename: "xcb_xkb_sa_set_ptr_dflt_flag_t".} = enum
     xcbXkbSaSetPtrDfltFlagAffectDfltButton = 1,
     xcbXkbSaSetPtrDfltFlagDfltBtnAbsolute = 4
 
-  XcbXkbSaSetPtrDflt* {.importc: "xcb_xkb_sa_set_ptr_dflt_t", bycopy.} = object
+  XcbXkbSaSetPtrDflt* {.rename: "xcb_xkb_sa_set_ptr_dflt_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     affect*: uint8
     value*: int8
     pad0: array[4, uint8]
 
-  XcbXkbSaSetPtrDfltIterator* {.importc: "xcb_xkb_sa_set_ptr_dflt_iterator_t", bycopy.} = object
+  XcbXkbSaSetPtrDfltIterator* {.rename: "xcb_xkb_sa_set_ptr_dflt_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaSetPtrDflt]
     rem*: cint
     index*: cint
 
-  XcbXkbSaIsoLockFlag* {.importc: "xcb_xkb_sa_iso_lock_flag_t".} = enum
+  XcbXkbSaIsoLockFlag* {.rename: "xcb_xkb_sa_iso_lock_flag_t".} = enum
     xcbXkbSaIsoLockFlagNoLock = 1, xcbXkbSaIsoLockFlagNoUnlock = 2,
     xcbXkbSaIsoLockFlagUseModMapMods = 4,
     xcbXkbSaIsoLockFlagIsoDfltIsGroup = 8
 
-  XcbXkbSaIsoLockNoAffect* {.importc: "xcb_xkb_sa_iso_lock_no_affect_t".} = enum
+  XcbXkbSaIsoLockNoAffect* {.rename: "xcb_xkb_sa_iso_lock_no_affect_t".} = enum
     xcbXkbSaIsoLockNoAffectCtrls = 8,
     xcbXkbSaIsoLockNoAffectPtr = 16,
     xcbXkbSaIsoLockNoAffectGroup = 32,
     xcbXkbSaIsoLockNoAffectMods = 64
 
-  XcbXkbSaIsoLock* {.importc: "xcb_xkb_sa_iso_lock_t", bycopy.} = object
+  XcbXkbSaIsoLock* {.rename: "xcb_xkb_sa_iso_lock_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     mask*: uint8
@@ -818,42 +819,42 @@ type
     vmodsHigh*: uint8
     vmodsLow*: uint8
 
-  XcbXkbSaIsoLockIterator* {.importc: "xcb_xkb_sa_iso_lock_iterator_t", bycopy.} = object
+  XcbXkbSaIsoLockIterator* {.rename: "xcb_xkb_sa_iso_lock_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaIsoLock]
     rem*: cint
     index*: cint
 
-  XcbXkbSaTerminate* {.importc: "xcb_xkb_sa_terminate_t", bycopy.} = object
+  XcbXkbSaTerminate* {.rename: "xcb_xkb_sa_terminate_t", bycopy.} = object
     `type`*: uint8
     pad0: array[7, uint8]
 
-  XcbXkbSaTerminateIterator* {.importc: "xcb_xkb_sa_terminate_iterator_t", bycopy.} = object
+  XcbXkbSaTerminateIterator* {.rename: "xcb_xkb_sa_terminate_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaTerminate]
     rem*: cint
     index*: cint
 
-  XcbXkbSwitchScreenFlag* {.importc: "xcb_xkb_switch_screen_flag_t".} = enum
+  XcbXkbSwitchScreenFlag* {.rename: "xcb_xkb_switch_screen_flag_t".} = enum
     xcbXkbSwitchScreenFlagApplication = 1,
     xcbXkbSwitchScreenFlagAbsolute = 4
 
-  XcbXkbSaSwitchScreen* {.importc: "xcb_xkb_sa_switch_screen_t", bycopy.} = object
+  XcbXkbSaSwitchScreen* {.rename: "xcb_xkb_sa_switch_screen_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     newScreen*: int8
     pad0: array[5, uint8]
 
-  XcbXkbSaSwitchScreenIterator* {.importc: "xcb_xkb_sa_switch_screen_iterator_t", bycopy.} = object
+  XcbXkbSaSwitchScreenIterator* {.rename: "xcb_xkb_sa_switch_screen_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaSwitchScreen]
     rem*: cint
     index*: cint
 
-  XcbXkbBoolCtrlsHigh* {.importc: "xcb_xkb_bool_ctrls_high_t".} = enum
+  XcbXkbBoolCtrlsHigh* {.rename: "xcb_xkb_bool_ctrls_high_t".} = enum
     xcbXkbBoolCtrlsHighAccessXFeedback = 1,
     xcbXkbBoolCtrlsHighAudibleBell = 2,
     xcbXkbBoolCtrlsHighOverlay1 = 4, xcbXkbBoolCtrlsHighOverlay2 = 8,
     xcbXkbBoolCtrlsHighIgnoreGroupLock = 16
 
-  XcbXkbBoolCtrlsLow* {.importc: "xcb_xkb_bool_ctrls_low_t".} = enum
+  XcbXkbBoolCtrlsLow* {.rename: "xcb_xkb_bool_ctrls_low_t".} = enum
     xcbXkbBoolCtrlsLowRepeatKeys = 1, xcbXkbBoolCtrlsLowSlowKeys = 2,
     xcbXkbBoolCtrlsLowBounceKeys = 4, xcbXkbBoolCtrlsLowStickyKeys = 8,
     xcbXkbBoolCtrlsLowMouseKeys = 16,
@@ -861,46 +862,46 @@ type
     xcbXkbBoolCtrlsLowAccessXKeys = 64,
     xcbXkbBoolCtrlsLowAccessXTimeout = 128
 
-  XcbXkbSaSetControls* {.importc: "xcb_xkb_sa_set_controls_t", bycopy.} = object
+  XcbXkbSaSetControls* {.rename: "xcb_xkb_sa_set_controls_t", bycopy.} = object
     `type`*: uint8
     pad0: array[3, uint8]
     boolCtrlsHigh*: uint8
     boolCtrlsLow*: uint8
     pad1: array[2, uint8]
 
-  XcbXkbSaSetControlsIterator* {.importc: "xcb_xkb_sa_set_controls_iterator_t", bycopy.} = object
+  XcbXkbSaSetControlsIterator* {.rename: "xcb_xkb_sa_set_controls_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaSetControls]
     rem*: cint
     index*: cint
 
-  XcbXkbSaLockControls* {.importc: "xcb_xkb_sa_lock_controls_t", bycopy.} = object
+  XcbXkbSaLockControls* {.rename: "xcb_xkb_sa_lock_controls_t", bycopy.} = object
     `type`*: uint8
     pad0: array[3, uint8]
     boolCtrlsHigh*: uint8
     boolCtrlsLow*: uint8
     pad1: array[2, uint8]
 
-  XcbXkbSaLockControlsIterator* {.importc: "xcb_xkb_sa_lock_controls_iterator_t", bycopy.} = object
+  XcbXkbSaLockControlsIterator* {.rename: "xcb_xkb_sa_lock_controls_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLockControls]
     rem*: cint
     index*: cint
 
-  XcbXkbActionMessageFlag* {.importc: "xcb_xkb_action_message_flag_t".} = enum
+  XcbXkbActionMessageFlag* {.rename: "xcb_xkb_action_message_flag_t".} = enum
     xcbXkbActionMessageFlagOnPress = 1,
     xcbXkbActionMessageFlagOnRelease = 2,
     xcbXkbActionMessageFlagGenKeyEvent = 4
 
-  XcbXkbSaActionMessage* {.importc: "xcb_xkb_sa_action_message_t", bycopy.} = object
+  XcbXkbSaActionMessage* {.rename: "xcb_xkb_sa_action_message_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     message*: array[6, uint8]
 
-  XcbXkbSaActionMessageIterator* {.importc: "xcb_xkb_sa_action_message_iterator_t", bycopy.} = object
+  XcbXkbSaActionMessageIterator* {.rename: "xcb_xkb_sa_action_message_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaActionMessage]
     rem*: cint
     index*: cint
 
-  XcbXkbSaRedirectKey* {.importc: "xcb_xkb_sa_redirect_key_t", bycopy.} = object
+  XcbXkbSaRedirectKey* {.rename: "xcb_xkb_sa_redirect_key_t", bycopy.} = object
     `type`*: uint8
     newkey*: XcbKeycode
     mask*: uint8
@@ -910,12 +911,12 @@ type
     vmodsHigh*: uint8
     vmodsLow*: uint8
 
-  XcbXkbSaRedirectKeyIterator* {.importc: "xcb_xkb_sa_redirect_key_iterator_t", bycopy.} = object
+  XcbXkbSaRedirectKeyIterator* {.rename: "xcb_xkb_sa_redirect_key_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaRedirectKey]
     rem*: cint
     index*: cint
 
-  XcbXkbSaDeviceBtn* {.importc: "xcb_xkb_sa_device_btn_t", bycopy.} = object
+  XcbXkbSaDeviceBtn* {.rename: "xcb_xkb_sa_device_btn_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     count*: uint8
@@ -923,15 +924,15 @@ type
     device*: uint8
     pad0: array[3, uint8]
 
-  XcbXkbSaDeviceBtnIterator* {.importc: "xcb_xkb_sa_device_btn_iterator_t", bycopy.} = object
+  XcbXkbSaDeviceBtnIterator* {.rename: "xcb_xkb_sa_device_btn_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaDeviceBtn]
     rem*: cint
     index*: cint
 
-  XcbXkbLockDeviceFlags* {.importc: "xcb_xkb_lock_device_flags_t".} = enum
+  XcbXkbLockDeviceFlags* {.rename: "xcb_xkb_lock_device_flags_t".} = enum
     xcbXkbLockDeviceFlagsNoLock = 1, xcbXkbLockDeviceFlagsNoUnlock = 2
 
-  XcbXkbSaLockDeviceBtn* {.importc: "xcb_xkb_sa_lock_device_btn_t", bycopy.} = object
+  XcbXkbSaLockDeviceBtn* {.rename: "xcb_xkb_sa_lock_device_btn_t", bycopy.} = object
     `type`*: uint8
     flags*: uint8
     pad0: uint8
@@ -939,18 +940,18 @@ type
     device*: uint8
     pad1: array[3, uint8]
 
-  XcbXkbSaLockDeviceBtnIterator* {.importc: "xcb_xkb_sa_lock_device_btn_iterator_t", bycopy.} = object
+  XcbXkbSaLockDeviceBtnIterator* {.rename: "xcb_xkb_sa_lock_device_btn_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaLockDeviceBtn]
     rem*: cint
     index*: cint
 
-  XcbXkbSaValWhat* {.importc: "xcb_xkb_sa_val_what_t".} = enum
+  XcbXkbSaValWhat* {.rename: "xcb_xkb_sa_val_what_t".} = enum
     xcbXkbSaValWhatIgnoreVal = 0, xcbXkbSaValWhatSetValMin = 1,
     xcbXkbSaValWhatSetValCenter = 2, xcbXkbSaValWhatSetValMax = 3,
     xcbXkbSaValWhatSetValRelative = 4,
     xcbXkbSaValWhatSetValAbsolute = 5
 
-  XcbXkbSaDeviceValuator* {.importc: "xcb_xkb_sa_device_valuator_t", bycopy.} = object
+  XcbXkbSaDeviceValuator* {.rename: "xcb_xkb_sa_device_valuator_t", bycopy.} = object
     `type`*: uint8
     device*: uint8
     val1what*: uint8
@@ -960,21 +961,21 @@ type
     val2index*: uint8
     val2value*: uint8
 
-  XcbXkbSaDeviceValuatorIterator* {.importc: "xcb_xkb_sa_device_valuator_iterator_t", bycopy.} = object
+  XcbXkbSaDeviceValuatorIterator* {.rename: "xcb_xkb_sa_device_valuator_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSaDeviceValuator]
     rem*: cint
     index*: cint
 
-  XcbXkbSiAction* {.importc: "xcb_xkb_si_action_t", bycopy.} = object
+  XcbXkbSiAction* {.rename: "xcb_xkb_si_action_t", bycopy.} = object
     `type`*: uint8
     data*: array[7, uint8]
 
-  XcbXkbSiActionIterator* {.importc: "xcb_xkb_si_action_iterator_t", bycopy.} = object
+  XcbXkbSiActionIterator* {.rename: "xcb_xkb_si_action_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSiAction]
     rem*: cint
     index*: cint
 
-  XcbXkbSymInterpret* {.importc: "xcb_xkb_sym_interpret_t", bycopy.} = object
+  XcbXkbSymInterpret* {.rename: "xcb_xkb_sym_interpret_t", bycopy.} = object
     sym*: XcbKeysym
     mods*: uint8
     match*: uint8
@@ -982,12 +983,12 @@ type
     flags*: uint8
     action*: XcbXkbSiAction
 
-  XcbXkbSymInterpretIterator* {.importc: "xcb_xkb_sym_interpret_iterator_t", bycopy.} = object
+  XcbXkbSymInterpretIterator* {.rename: "xcb_xkb_sym_interpret_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbSymInterpret]
     rem*: cint
     index*: cint
 
-  XcbXkbAction* {.importc: "xcb_xkb_action_t", bycopy, union.} = object
+  XcbXkbAction* {.rename: "xcb_xkb_action_t", bycopy, union.} = object
     noaction*: XcbXkbSaNoAction
     setmods*: XcbXkbSaSetMods
     latchmods*: XcbXkbSaLatchMods
@@ -1011,22 +1012,22 @@ type
     devval*: XcbXkbSaDeviceValuator
     `type`*: uint8
 
-  XcbXkbActionIterator* {.importc: "xcb_xkb_action_iterator_t", bycopy.} = object
+  XcbXkbActionIterator* {.rename: "xcb_xkb_action_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXkbAction]
     rem*: cint
     index*: cint
 
-  XcbXkbUseExtensionCookie* {.importc: "xcb_xkb_use_extension_cookie_t", bycopy.} = object
+  XcbXkbUseExtensionCookie* {.rename: "xcb_xkb_use_extension_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbUseExtensionRequest* {.importc: "xcb_xkb_use_extension_request_t", bycopy.} = object
+  XcbXkbUseExtensionRequest* {.rename: "xcb_xkb_use_extension_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     wantedMajor*: uint16
     wantedMinor*: uint16
 
-  XcbXkbUseExtensionReply* {.importc: "xcb_xkb_use_extension_reply_t", bycopy.} = object
+  XcbXkbUseExtensionReply* {.rename: "xcb_xkb_use_extension_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     supported*: uint8
     sequence*: uint16
@@ -1035,7 +1036,7 @@ type
     serverMinor*: uint16
     pad0: array[20, uint8]
 
-  XcbXkbSelectEventsDetails* {.importc: "xcb_xkb_select_events_details_t", bycopy.} = object
+  XcbXkbSelectEventsDetails* {.rename: "xcb_xkb_select_events_details_t", bycopy.} = object
     affectNewKeyboard*: uint16
     newKeyboardDetails*: uint16
     affectState*: uint16
@@ -1059,7 +1060,7 @@ type
     affectExtDev*: uint16
     extdevDetails*: uint16
 
-  XcbXkbSelectEventsRequest* {.importc: "xcb_xkb_select_events_request_t", bycopy.} = object
+  XcbXkbSelectEventsRequest* {.rename: "xcb_xkb_select_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1070,7 +1071,7 @@ type
     affectMap*: uint16
     map*: uint16
 
-  XcbXkbBellRequest* {.importc: "xcb_xkb_bell_request_t", bycopy.} = object
+  XcbXkbBellRequest* {.rename: "xcb_xkb_bell_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1087,17 +1088,17 @@ type
     name*: XcbAtom
     window*: XcbWindow
 
-  XcbXkbGetStateCookie* {.importc: "xcb_xkb_get_state_cookie_t", bycopy.} = object
+  XcbXkbGetStateCookie* {.rename: "xcb_xkb_get_state_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetStateRequest* {.importc: "xcb_xkb_get_state_request_t", bycopy.} = object
+  XcbXkbGetStateRequest* {.rename: "xcb_xkb_get_state_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceSpec*: XcbXkbDeviceSpec
     pad0: array[2, uint8]
 
-  XcbXkbGetStateReply* {.importc: "xcb_xkb_get_state_reply_t", bycopy.} = object
+  XcbXkbGetStateReply* {.rename: "xcb_xkb_get_state_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1119,7 +1120,7 @@ type
     ptrBtnState*: uint16
     pad1: array[6, uint8]
 
-  XcbXkbLatchLockStateRequest* {.importc: "xcb_xkb_latch_lock_state_request_t", bycopy.} = object
+  XcbXkbLatchLockStateRequest* {.rename: "xcb_xkb_latch_lock_state_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1134,17 +1135,17 @@ type
     latchGroup*: uint8
     groupLatch*: uint16
 
-  XcbXkbGetControlsCookie* {.importc: "xcb_xkb_get_controls_cookie_t", bycopy.} = object
+  XcbXkbGetControlsCookie* {.rename: "xcb_xkb_get_controls_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetControlsRequest* {.importc: "xcb_xkb_get_controls_request_t", bycopy.} = object
+  XcbXkbGetControlsRequest* {.rename: "xcb_xkb_get_controls_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceSpec*: XcbXkbDeviceSpec
     pad0: array[2, uint8]
 
-  XcbXkbGetControlsReply* {.importc: "xcb_xkb_get_controls_reply_t", bycopy.} = object
+  XcbXkbGetControlsReply* {.rename: "xcb_xkb_get_controls_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1178,7 +1179,7 @@ type
     enabledControls*: uint32
     perKeyRepeat*: array[32, uint8]
 
-  XcbXkbSetControlsRequest* {.importc: "xcb_xkb_set_controls_request_t", bycopy.} = object
+  XcbXkbSetControlsRequest* {.rename: "xcb_xkb_set_controls_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1214,10 +1215,10 @@ type
     accessXTimeoutOptionsValues*: uint16
     perKeyRepeat*: array[32, uint8]
 
-  XcbXkbGetMapCookie* {.importc: "xcb_xkb_get_map_cookie_t", bycopy.} = object
+  XcbXkbGetMapCookie* {.rename: "xcb_xkb_get_map_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetMapRequest* {.importc: "xcb_xkb_get_map_request_t", bycopy.} = object
+  XcbXkbGetMapRequest* {.rename: "xcb_xkb_get_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1241,7 +1242,7 @@ type
     nVModMapKeys*: uint8
     pad0: array[2, uint8]
 
-  XcbXkbGetMapMap* {.importc: "xcb_xkb_get_map_map_t", bycopy.} = object
+  XcbXkbGetMapMap* {.rename: "xcb_xkb_get_map_map_t", bycopy.} = object
     typesRtrn* {.importc: "types_rtrn".}: ptr XcbXkbKeyType
     symsRtrn* {.importc: "syms_rtrn".}: ptr XcbXkbKeySymMap
     actsRtrnCount* {.importc: "acts_rtrn_count".}: ptr uint8
@@ -1256,7 +1257,7 @@ type
     pad5: ptr uint8
     vmodmapRtrn* {.importc: "vmodmap_rtrn".}: ptr XcbXkbKeyVModMap
 
-  XcbXkbGetMapReply* {.importc: "xcb_xkb_get_map_reply_t", bycopy.} = object
+  XcbXkbGetMapReply* {.rename: "xcb_xkb_get_map_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1289,7 +1290,7 @@ type
     pad1: uint8
     virtualMods*: uint16
 
-  XcbXkbSetMapValues* {.importc: "xcb_xkb_set_map_values_t", bycopy.} = object
+  XcbXkbSetMapValues* {.rename: "xcb_xkb_set_map_values_t", bycopy.} = object
     types*: ptr XcbXkbSetKeyType
     syms*: ptr XcbXkbKeySymMap
     actionsCount*: ptr uint8
@@ -1300,7 +1301,7 @@ type
     modmap*: ptr XcbXkbKeyModMap
     vmodmap*: ptr XcbXkbKeyVModMap
 
-  XcbXkbSetMapRequest* {.importc: "xcb_xkb_set_map_request_t", bycopy.} = object
+  XcbXkbSetMapRequest* {.rename: "xcb_xkb_set_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1331,10 +1332,10 @@ type
     totalVModMapKeys*: uint8
     virtualMods*: uint16
 
-  XcbXkbGetCompatMapCookie* {.importc: "xcb_xkb_get_compat_map_cookie_t", bycopy.} = object
+  XcbXkbGetCompatMapCookie* {.rename: "xcb_xkb_get_compat_map_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetCompatMapRequest* {.importc: "xcb_xkb_get_compat_map_request_t", bycopy.} = object
+  XcbXkbGetCompatMapRequest* {.rename: "xcb_xkb_get_compat_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1344,7 +1345,7 @@ type
     firstSI*: uint16
     nSI*: uint16
 
-  XcbXkbGetCompatMapReply* {.importc: "xcb_xkb_get_compat_map_reply_t", bycopy.} = object
+  XcbXkbGetCompatMapReply* {.rename: "xcb_xkb_get_compat_map_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1356,7 +1357,7 @@ type
     nTotalSI*: uint16
     pad1: array[16, uint8]
 
-  XcbXkbSetCompatMapRequest* {.importc: "xcb_xkb_set_compat_map_request_t", bycopy.} = object
+  XcbXkbSetCompatMapRequest* {.rename: "xcb_xkb_set_compat_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1369,17 +1370,17 @@ type
     nSI*: uint16
     pad1: array[2, uint8]
 
-  XcbXkbGetIndicatorStateCookie* {.importc: "xcb_xkb_get_indicator_state_cookie_t", bycopy.} = object
+  XcbXkbGetIndicatorStateCookie* {.rename: "xcb_xkb_get_indicator_state_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetIndicatorStateRequest* {.importc: "xcb_xkb_get_indicator_state_request_t", bycopy.} = object
+  XcbXkbGetIndicatorStateRequest* {.rename: "xcb_xkb_get_indicator_state_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceSpec*: XcbXkbDeviceSpec
     pad0: array[2, uint8]
 
-  XcbXkbGetIndicatorStateReply* {.importc: "xcb_xkb_get_indicator_state_reply_t", bycopy.} = object
+  XcbXkbGetIndicatorStateReply* {.rename: "xcb_xkb_get_indicator_state_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1387,10 +1388,10 @@ type
     state*: uint32
     pad0: array[20, uint8]
 
-  XcbXkbGetIndicatorMapCookie* {.importc: "xcb_xkb_get_indicator_map_cookie_t", bycopy.} = object
+  XcbXkbGetIndicatorMapCookie* {.rename: "xcb_xkb_get_indicator_map_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetIndicatorMapRequest* {.importc: "xcb_xkb_get_indicator_map_request_t", bycopy.} = object
+  XcbXkbGetIndicatorMapRequest* {.rename: "xcb_xkb_get_indicator_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1398,7 +1399,7 @@ type
     pad0: array[2, uint8]
     which*: uint32
 
-  XcbXkbGetIndicatorMapReply* {.importc: "xcb_xkb_get_indicator_map_reply_t", bycopy.} = object
+  XcbXkbGetIndicatorMapReply* {.rename: "xcb_xkb_get_indicator_map_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1408,7 +1409,7 @@ type
     nIndicators*: uint8
     pad0: array[15, uint8]
 
-  XcbXkbSetIndicatorMapRequest* {.importc: "xcb_xkb_set_indicator_map_request_t", bycopy.} = object
+  XcbXkbSetIndicatorMapRequest* {.rename: "xcb_xkb_set_indicator_map_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1416,10 +1417,10 @@ type
     pad0: array[2, uint8]
     which*: uint32
 
-  XcbXkbGetNamedIndicatorCookie* {.importc: "xcb_xkb_get_named_indicator_cookie_t", bycopy.} = object
+  XcbXkbGetNamedIndicatorCookie* {.rename: "xcb_xkb_get_named_indicator_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetNamedIndicatorRequest* {.importc: "xcb_xkb_get_named_indicator_request_t", bycopy.} = object
+  XcbXkbGetNamedIndicatorRequest* {.rename: "xcb_xkb_get_named_indicator_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1429,7 +1430,7 @@ type
     pad0: array[2, uint8]
     indicator*: XcbAtom
 
-  XcbXkbGetNamedIndicatorReply* {.importc: "xcb_xkb_get_named_indicator_reply_t", bycopy.} = object
+  XcbXkbGetNamedIndicatorReply* {.rename: "xcb_xkb_get_named_indicator_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1450,7 +1451,7 @@ type
     supported*: uint8
     pad0: array[3, uint8]
 
-  XcbXkbSetNamedIndicatorRequest* {.importc: "xcb_xkb_set_named_indicator_request_t", bycopy.} = object
+  XcbXkbSetNamedIndicatorRequest* {.rename: "xcb_xkb_set_named_indicator_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1472,10 +1473,10 @@ type
     mapVmods* {.importc: "map_vmods".}: uint16
     mapCtrls* {.importc: "map_ctrls".}: uint32
 
-  XcbXkbGetNamesCookie* {.importc: "xcb_xkb_get_names_cookie_t", bycopy.} = object
+  XcbXkbGetNamesCookie* {.rename: "xcb_xkb_get_names_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetNamesRequest* {.importc: "xcb_xkb_get_names_request_t", bycopy.} = object
+  XcbXkbGetNamesRequest* {.rename: "xcb_xkb_get_names_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1483,7 +1484,7 @@ type
     pad0: array[2, uint8]
     which*: uint32
 
-  XcbXkbGetNamesValueList* {.importc: "xcb_xkb_get_names_value_list_t", bycopy.} = object
+  XcbXkbGetNamesValueList* {.rename: "xcb_xkb_get_names_value_list_t", bycopy.} = object
     keycodesName*: XcbAtom
     geometryName*: XcbAtom
     symbolsName*: XcbAtom
@@ -1501,7 +1502,7 @@ type
     keyAliases*: ptr XcbXkbKeyAlias
     radioGroupNames*: ptr XcbAtom
 
-  XcbXkbGetNamesReply* {.importc: "xcb_xkb_get_names_reply_t", bycopy.} = object
+  XcbXkbGetNamesReply* {.rename: "xcb_xkb_get_names_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1520,7 +1521,7 @@ type
     nKTLevels*: uint16
     pad0: array[4, uint8]
 
-  XcbXkbSetNamesValues* {.importc: "xcb_xkb_set_names_values_t", bycopy.} = object
+  XcbXkbSetNamesValues* {.rename: "xcb_xkb_set_names_values_t", bycopy.} = object
     keycodesName*: XcbAtom
     geometryName*: XcbAtom
     symbolsName*: XcbAtom
@@ -1537,7 +1538,7 @@ type
     keyAliases*: ptr XcbXkbKeyAlias
     radioGroupNames*: ptr XcbAtom
 
-  XcbXkbSetNamesRequest* {.importc: "xcb_xkb_set_names_request_t", bycopy.} = object
+  XcbXkbSetNamesRequest* {.rename: "xcb_xkb_set_names_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1557,10 +1558,10 @@ type
     pad0: uint8
     totalKTLevelNames*: uint16
 
-  XcbXkbPerClientFlagsCookie* {.importc: "xcb_xkb_per_client_flags_cookie_t", bycopy.} = object
+  XcbXkbPerClientFlagsCookie* {.rename: "xcb_xkb_per_client_flags_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbPerClientFlagsRequest* {.importc: "xcb_xkb_per_client_flags_request_t", bycopy.} = object
+  XcbXkbPerClientFlagsRequest* {.rename: "xcb_xkb_per_client_flags_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1572,7 +1573,7 @@ type
     autoCtrls*: uint32
     autoCtrlsValues*: uint32
 
-  XcbXkbPerClientFlagsReply* {.importc: "xcb_xkb_per_client_flags_reply_t", bycopy.} = object
+  XcbXkbPerClientFlagsReply* {.rename: "xcb_xkb_per_client_flags_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1583,17 +1584,17 @@ type
     autoCtrlsValues*: uint32
     pad0: array[8, uint8]
 
-  XcbXkbListComponentsCookie* {.importc: "xcb_xkb_list_components_cookie_t", bycopy.} = object
+  XcbXkbListComponentsCookie* {.rename: "xcb_xkb_list_components_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbListComponentsRequest* {.importc: "xcb_xkb_list_components_request_t", bycopy.} = object
+  XcbXkbListComponentsRequest* {.rename: "xcb_xkb_list_components_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceSpec*: XcbXkbDeviceSpec
     maxNames*: uint16
 
-  XcbXkbListComponentsReply* {.importc: "xcb_xkb_list_components_reply_t", bycopy.} = object
+  XcbXkbListComponentsReply* {.rename: "xcb_xkb_list_components_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1607,10 +1608,10 @@ type
     extra*: uint16
     pad0: array[10, uint8]
 
-  XcbXkbGetKbdByNameCookie* {.importc: "xcb_xkb_get_kbd_by_name_cookie_t", bycopy.} = object
+  XcbXkbGetKbdByNameCookie* {.rename: "xcb_xkb_get_kbd_by_name_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetKbdByNameRequest* {.importc: "xcb_xkb_get_kbd_by_name_request_t", bycopy.} = object
+  XcbXkbGetKbdByNameRequest* {.rename: "xcb_xkb_get_kbd_by_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1620,7 +1621,7 @@ type
     load*: uint8
     pad0: uint8
 
-  XcbXkbGetKbdByNameRepliesTypesMap* {.importc: "xcb_xkb_get_kbd_by_name_replies_types_map_t", bycopy.} = object
+  XcbXkbGetKbdByNameRepliesTypesMap* {.rename: "xcb_xkb_get_kbd_by_name_replies_types_map_t", bycopy.} = object
     typesRtrn* {.importc: "types_rtrn".}: ptr XcbXkbKeyType
     symsRtrn* {.importc: "syms_rtrn".}: ptr XcbXkbKeySymMap
     actsRtrnCount* {.importc: "acts_rtrn_count".}: ptr uint8
@@ -1631,7 +1632,7 @@ type
     modmapRtrn* {.importc: "modmap_rtrn".}: ptr XcbXkbKeyModMap
     vmodmapRtrn* {.importc: "vmodmap_rtrn".}: ptr XcbXkbKeyVModMap
 
-  XcbXkbGetKbdByNameRepliesKeyNamesValueList* {.importc: "xcb_xkb_get_kbd_by_name_replies_key_names_value_list_t", bycopy.} = object
+  XcbXkbGetKbdByNameRepliesKeyNamesValueList* {.rename: "xcb_xkb_get_kbd_by_name_replies_key_names_value_list_t", bycopy.} = object
     keycodesName*: XcbAtom
     geometryName*: XcbAtom
     symbolsName*: XcbAtom
@@ -1754,14 +1755,14 @@ type
 {.push header: "xcb/xkb.h".}
 
 type
-  XcbXkbGetKbdByNameReplies* {.importc: "xcb_xkb_get_kbd_by_name_replies_t", bycopy.} = object
+  XcbXkbGetKbdByNameReplies* {.rename: "xcb_xkb_get_kbd_by_name_replies_t", bycopy.} = object
     types*: XcbXkbGetKbdByNameRepliesTypes
     compatMap* {.importc: "compat_map".}: XcbXkbGetKbdByNameRepliesCompat
     indicatorMaps* {.importc: "indicator_maps".}: XcbXkbGetKbdByNameRepliesIndicator
     keyNames* {.importc: "key_names".}: XcbXkbGetKbdByNameRepliesNames
     geometry*: XcbXkbGetKbdByNameRepliesGeometry
 
-  XcbXkbGetKbdByNameReply* {.importc: "xcb_xkb_get_kbd_by_name_reply_t", bycopy.} = object
+  XcbXkbGetKbdByNameReply* {.rename: "xcb_xkb_get_kbd_by_name_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1774,10 +1775,10 @@ type
     reported*: uint16
     pad0: array[16, uint8]
 
-  XcbXkbGetDeviceInfoCookie* {.importc: "xcb_xkb_get_device_info_cookie_t", bycopy.} = object
+  XcbXkbGetDeviceInfoCookie* {.rename: "xcb_xkb_get_device_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbGetDeviceInfoRequest* {.importc: "xcb_xkb_get_device_info_request_t", bycopy.} = object
+  XcbXkbGetDeviceInfoRequest* {.rename: "xcb_xkb_get_device_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1790,7 +1791,7 @@ type
     ledClass*: XcbXkbLedClassSpec
     ledID*: XcbXkbIdSpec
 
-  XcbXkbGetDeviceInfoReply* {.importc: "xcb_xkb_get_device_info_reply_t", bycopy.} = object
+  XcbXkbGetDeviceInfoReply* {.rename: "xcb_xkb_get_device_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceID*: uint8
     sequence*: uint16
@@ -1811,7 +1812,7 @@ type
     devType*: XcbAtom
     nameLen*: uint16
 
-  XcbXkbSetDeviceInfoRequest* {.importc: "xcb_xkb_set_device_info_request_t", bycopy.} = object
+  XcbXkbSetDeviceInfoRequest* {.rename: "xcb_xkb_set_device_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1821,10 +1822,10 @@ type
     change*: uint16
     nDeviceLedFBs*: uint16
 
-  XcbXkbSetDebuggingFlagsCookie* {.importc: "xcb_xkb_set_debugging_flags_cookie_t", bycopy.} = object
+  XcbXkbSetDebuggingFlagsCookie* {.rename: "xcb_xkb_set_debugging_flags_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXkbSetDebuggingFlagsRequest* {.importc: "xcb_xkb_set_debugging_flags_request_t", bycopy.} = object
+  XcbXkbSetDebuggingFlagsRequest* {.rename: "xcb_xkb_set_debugging_flags_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1835,7 +1836,7 @@ type
     affectCtrls*: uint32
     ctrls*: uint32
 
-  XcbXkbSetDebuggingFlagsReply* {.importc: "xcb_xkb_set_debugging_flags_reply_t", bycopy.} = object
+  XcbXkbSetDebuggingFlagsReply* {.rename: "xcb_xkb_set_debugging_flags_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1846,7 +1847,7 @@ type
     supportedCtrls*: uint32
     pad1: array[8, uint8]
 
-  XcbXkbNewKeyboardNotifyEvent* {.importc: "xcb_xkb_new_keyboard_notify_event_t", bycopy.} = object
+  XcbXkbNewKeyboardNotifyEvent* {.rename: "xcb_xkb_new_keyboard_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1862,7 +1863,7 @@ type
     changed*: uint16
     pad0: array[14, uint8]
 
-  XcbXkbMapNotifyEvent* {.importc: "xcb_xkb_map_notify_event_t", bycopy.} = object
+  XcbXkbMapNotifyEvent* {.rename: "xcb_xkb_map_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1889,7 +1890,7 @@ type
     virtualMods*: uint16
     pad0: array[2, uint8]
 
-  XcbXkbStateNotifyEvent* {.importc: "xcb_xkb_state_notify_event_t", bycopy.} = object
+  XcbXkbStateNotifyEvent* {.rename: "xcb_xkb_state_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1915,7 +1916,7 @@ type
     requestMajor*: uint8
     requestMinor*: uint8
 
-  XcbXkbControlsNotifyEvent* {.importc: "xcb_xkb_controls_notify_event_t", bycopy.} = object
+  XcbXkbControlsNotifyEvent* {.rename: "xcb_xkb_controls_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1932,7 +1933,7 @@ type
     requestMinor*: uint8
     pad1: array[4, uint8]
 
-  XcbXkbIndicatorStateNotifyEvent* {.importc: "xcb_xkb_indicator_state_notify_event_t", bycopy.} = object
+  XcbXkbIndicatorStateNotifyEvent* {.rename: "xcb_xkb_indicator_state_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1943,7 +1944,7 @@ type
     stateChanged*: uint32
     pad1: array[12, uint8]
 
-  XcbXkbIndicatorMapNotifyEvent* {.importc: "xcb_xkb_indicator_map_notify_event_t", bycopy.} = object
+  XcbXkbIndicatorMapNotifyEvent* {.rename: "xcb_xkb_indicator_map_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1954,7 +1955,7 @@ type
     mapChanged*: uint32
     pad1: array[12, uint8]
 
-  XcbXkbNamesNotifyEvent* {.importc: "xcb_xkb_names_notify_event_t", bycopy.} = object
+  XcbXkbNamesNotifyEvent* {.rename: "xcb_xkb_names_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1976,7 +1977,7 @@ type
     changedIndicators*: uint32
     pad2: array[4, uint8]
 
-  XcbXkbCompatMapNotifyEvent* {.importc: "xcb_xkb_compat_map_notify_event_t", bycopy.} = object
+  XcbXkbCompatMapNotifyEvent* {.rename: "xcb_xkb_compat_map_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -1988,7 +1989,7 @@ type
     nTotalSI*: uint16
     pad0: array[16, uint8]
 
-  XcbXkbBellNotifyEvent* {.importc: "xcb_xkb_bell_notify_event_t", bycopy.} = object
+  XcbXkbBellNotifyEvent* {.rename: "xcb_xkb_bell_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -2004,7 +2005,7 @@ type
     eventOnly*: uint8
     pad0: array[7, uint8]
 
-  XcbXkbActionMessageEvent* {.importc: "xcb_xkb_action_message_event_t", bycopy.} = object
+  XcbXkbActionMessageEvent* {.rename: "xcb_xkb_action_message_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -2018,7 +2019,7 @@ type
     message*: array[8, XcbXkbString8]
     pad0: array[10, uint8]
 
-  XcbXkbAccessXNotifyEvent* {.importc: "xcb_xkb_access_x_notify_event_t", bycopy.} = object
+  XcbXkbAccessXNotifyEvent* {.rename: "xcb_xkb_access_x_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -2030,7 +2031,7 @@ type
     debounceDelay*: uint16
     pad0: array[16, uint8]
 
-  XcbXkbExtensionDeviceNotifyEvent* {.importc: "xcb_xkb_extension_device_notify_event_t", bycopy.} = object
+  XcbXkbExtensionDeviceNotifyEvent* {.rename: "xcb_xkb_extension_device_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xkbType*: uint8
     sequence*: uint16
@@ -2054,7 +2055,10 @@ const
   xcbXkbSaGroupAbsolute* = xcbXkbSaUseModMapMods
   xcbXkbSaIsoLockFlagGroupAbsolute* = xcbXkbSaIsoLockFlagUseModMapMods
 
-{.push cdecl, header: "xcb/xkb.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb-xkb.so(|.1)".}
+else:
+  {.push cdecl, header: "xcb/xkb.h".}
 
 proc typesMap*(R: ptr XcbXkbGetKbdByNameReplies): ptr XcbXkbGetKbdByNameRepliesTypesMap {.importc: "xcb_xkb_get_kbd_by_name_replies_types_map".}
 proc next*(i: ptr XcbXkbDeviceSpecIterator) {.importc: "xcb_xkb_device_spec_next".}

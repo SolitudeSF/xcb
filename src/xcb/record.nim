@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbRecordMajorVersion* = 1
@@ -13,49 +13,50 @@ const
   xcbRecordDisableContext* = 6
   xcbRecordFreeContext* = 7
 
-{.passl: "-lxcb-record".}
-{.push header: "xcb/record.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-record".}
+  {.push header: "xcb/record.h".}
 
-var xcbRecordId* {.extern: "xcb_record_id".}: XcbExtension
+  var xcbRecordId* {.extern: "xcb_record_id".}: XcbExtension
 
 type
-  XcbRecordContext* {.importc: "xcb_record_context_t".} = distinct uint32
-  XcbRecordElementHeader* {.importc: "xcb_record_element_header_t".} = distinct uint8
-  XcbRecordClientSpec* {.importc: "xcb_record_client_spec_t".} = distinct uint32
+  XcbRecordContext* {.rename: "xcb_record_context_t".} = distinct uint32
+  XcbRecordElementHeader* {.rename: "xcb_record_element_header_t".} = distinct uint8
+  XcbRecordClientSpec* {.rename: "xcb_record_client_spec_t".} = distinct uint32
 
-  XcbRecordContextIterator* {.importc: "xcb_record_context_iterator_t", bycopy.} = object
+  XcbRecordContextIterator* {.rename: "xcb_record_context_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordContext]
     rem*: cint
     index*: cint
 
-  XcbRecordRange8* {.importc: "xcb_record_range8_t", bycopy.} = object
+  XcbRecordRange8* {.rename: "xcb_record_range8_t", bycopy.} = object
     first*: uint8
     last*: uint8
 
-  XcbRecordRange8Iterator* {.importc: "xcb_record_range8_iterator_t", bycopy.} = object
+  XcbRecordRange8Iterator* {.rename: "xcb_record_range8_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordRange8]
     rem*: cint
     index*: cint
 
-  XcbRecordRange16* {.importc: "xcb_record_range16_t", bycopy.} = object
+  XcbRecordRange16* {.rename: "xcb_record_range16_t", bycopy.} = object
     first*: uint16
     last*: uint16
 
-  XcbRecordRange16Iterator* {.importc: "xcb_record_range16_iterator_t", bycopy.} = object
+  XcbRecordRange16Iterator* {.rename: "xcb_record_range16_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordRange16]
     rem*: cint
     index*: cint
 
-  XcbRecordExtRange* {.importc: "xcb_record_ext_range_t", bycopy.} = object
+  XcbRecordExtRange* {.rename: "xcb_record_ext_range_t", bycopy.} = object
     major*: XcbRecordRange8
     minor*: XcbRecordRange16
 
-  XcbRecordExtRangeIterator* {.importc: "xcb_record_ext_range_iterator_t", bycopy.} = object
+  XcbRecordExtRangeIterator* {.rename: "xcb_record_ext_range_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordExtRange]
     rem*: cint
     index*: cint
 
-  XcbRecordRange* {.importc: "xcb_record_range_t", bycopy.} = object
+  XcbRecordRange* {.rename: "xcb_record_range_t", bycopy.} = object
     coreRequests* {.importc: "core_requests".}: XcbRecordRange8
     coreReplies* {.importc: "core_replies".}: XcbRecordRange8
     extRequests* {.importc: "ext_requests".}: XcbRecordExtRange
@@ -66,55 +67,55 @@ type
     clientStarted* {.importc: "client_started".}: uint8
     clientDied* {.importc: "client_died".}: uint8
 
-  XcbRecordRangeIterator* {.importc: "xcb_record_range_iterator_t", bycopy.} = object
+  XcbRecordRangeIterator* {.rename: "xcb_record_range_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordRange]
     rem*: cint
     index*: cint
 
-  XcbRecordElementHeaderIterator* {.importc: "xcb_record_element_header_iterator_t", bycopy.} = object
+  XcbRecordElementHeaderIterator* {.rename: "xcb_record_element_header_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordElementHeader]
     rem*: cint
     index*: cint
 
-  XcbRecordHType* {.importc: "xcb_record_h_type_t".} = enum
+  XcbRecordHType* {.rename: "xcb_record_h_type_t".} = enum
     xcbRecordHTypeFromServerTime = 1, xcbRecordHTypeFromClientTime = 2,
     xcbRecordHTypeFromClientSequence = 4
 
-  XcbRecordClientSpecIterator* {.importc: "xcb_record_client_spec_iterator_t", bycopy.} = object
+  XcbRecordClientSpecIterator* {.rename: "xcb_record_client_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordClientSpec]
     rem*: cint
     index*: cint
 
-  XcbRecordCs* {.importc: "xcb_record_cs_t".} = enum
+  XcbRecordCs* {.rename: "xcb_record_cs_t".} = enum
     xcbRecordCsCurrentClients = 1, xcbRecordCsFutureClients = 2,
     xcbRecordCsAllClients = 3
 
-  XcbRecordClientInfo* {.importc: "xcb_record_client_info_t", bycopy.} = object
+  XcbRecordClientInfo* {.rename: "xcb_record_client_info_t", bycopy.} = object
     clientResource* {.importc: "client_resource".}: XcbRecordClientSpec
     numRanges* {.importc: "num_ranges".}: uint32
 
-  XcbRecordClientInfoIterator* {.importc: "xcb_record_client_info_iterator_t", bycopy.} = object
+  XcbRecordClientInfoIterator* {.rename: "xcb_record_client_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRecordClientInfo]
     rem*: cint
     index*: cint
 
-  XcbRecordBadContextError* {.importc: "xcb_record_bad_context_error_t", bycopy.} = object
+  XcbRecordBadContextError* {.rename: "xcb_record_bad_context_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
     invalidRecord* {.importc: "invalid_record".}: uint32
 
-  XcbRecordQueryVersionCookie* {.importc: "xcb_record_query_version_cookie_t", bycopy.} = object
+  XcbRecordQueryVersionCookie* {.rename: "xcb_record_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRecordQueryVersionRequest* {.importc: "xcb_record_query_version_request_t", bycopy.} = object
+  XcbRecordQueryVersionRequest* {.rename: "xcb_record_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint16
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbRecordQueryVersionReply* {.importc: "xcb_record_query_version_reply_t", bycopy.} = object
+  XcbRecordQueryVersionReply* {.rename: "xcb_record_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -122,7 +123,7 @@ type
     majorVersion* {.importc: "major_version".}: uint16
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbRecordCreateContextRequest* {.importc: "xcb_record_create_context_request_t", bycopy.} = object
+  XcbRecordCreateContextRequest* {.rename: "xcb_record_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -132,7 +133,7 @@ type
     numClientSpecs* {.importc: "num_client_specs".}: uint32
     numRanges* {.importc: "num_ranges".}: uint32
 
-  XcbRecordRegisterClientsRequest* {.importc: "xcb_record_register_clients_request_t", bycopy.} = object
+  XcbRecordRegisterClientsRequest* {.rename: "xcb_record_register_clients_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -142,23 +143,23 @@ type
     numClientSpecs* {.importc: "num_client_specs".}: uint32
     numRanges* {.importc: "num_ranges".}: uint32
 
-  XcbRecordUnregisterClientsRequest* {.importc: "xcb_record_unregister_clients_request_t", bycopy.} = object
+  XcbRecordUnregisterClientsRequest* {.rename: "xcb_record_unregister_clients_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbRecordContext
     numClientSpecs* {.importc: "num_client_specs".}: uint32
 
-  XcbRecordGetContextCookie* {.importc: "xcb_record_get_context_cookie_t", bycopy.} = object
+  XcbRecordGetContextCookie* {.rename: "xcb_record_get_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRecordGetContextRequest* {.importc: "xcb_record_get_context_request_t", bycopy.} = object
+  XcbRecordGetContextRequest* {.rename: "xcb_record_get_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbRecordContext
 
-  XcbRecordGetContextReply* {.importc: "xcb_record_get_context_reply_t", bycopy.} = object
+  XcbRecordGetContextReply* {.rename: "xcb_record_get_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     enabled*: uint8
     sequence*: uint16
@@ -168,16 +169,16 @@ type
     numInterceptedClients* {.importc: "num_intercepted_clients".}: uint32
     pad1: array[16, uint8]
 
-  XcbRecordEnableContextCookie* {.importc: "xcb_record_enable_context_cookie_t", bycopy.} = object
+  XcbRecordEnableContextCookie* {.rename: "xcb_record_enable_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRecordEnableContextRequest* {.importc: "xcb_record_enable_context_request_t", bycopy.} = object
+  XcbRecordEnableContextRequest* {.rename: "xcb_record_enable_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbRecordContext
 
-  XcbRecordEnableContextReply* {.importc: "xcb_record_enable_context_reply_t", bycopy.} = object
+  XcbRecordEnableContextReply* {.rename: "xcb_record_enable_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     category*: uint8
     sequence*: uint16
@@ -190,18 +191,20 @@ type
     recSequenceNum* {.importc: "rec_sequence_num".}: uint32
     pad1: array[8, uint8]
 
-  XcbRecordDisableContextRequest* {.importc: "xcb_record_disable_context_request_t", bycopy.} = object
+  XcbRecordDisableContextRequest* {.rename: "xcb_record_disable_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbRecordContext
 
-  XcbRecordFreeContextRequest* {.importc: "xcb_record_free_context_request_t", bycopy.} = object
+  XcbRecordFreeContextRequest* {.rename: "xcb_record_free_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbRecordContext
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-record.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbRecordContextIterator) {.importc: "xcb_record_context_next".}

@@ -1,4 +1,4 @@
-import ./xcb, ./render, ./shape
+import ./xcb, ./render, ./shape, private/importutil
 
 const
   xcbXfixesMajorVersion* = 5
@@ -40,25 +40,27 @@ const
   xcbXfixesCreatePointerBarrier* = 31
   xcbXfixesDeletePointerBarrier* = 32
 
-{.push header: "xcb/xfixes.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xfixes".}
+  {.push header: "xcb/xfixes.h".}
 
-var xcbXfixesId* {.extern: "xcb_xfixes_id".}: XcbExtension
+  var xcbXfixesId* {.extern: "xcb_xfixes_id".}: XcbExtension
 
 type
-  XcbXfixesBarrier* {.importc: "xcb_xfixes_barrier_t".} = distinct uint32
-  XcbXfixesRegion* {.importc: "xcb_xfixes_region_t".} = distinct uint32
+  XcbXfixesBarrier* {.rename: "xcb_xfixes_barrier_t".} = distinct uint32
+  XcbXfixesRegion* {.rename: "xcb_xfixes_region_t".} = distinct uint32
 
-  XcbXfixesQueryVersionCookie* {.importc: "xcb_xfixes_query_version_cookie_t", bycopy.} = object
+  XcbXfixesQueryVersionCookie* {.rename: "xcb_xfixes_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXfixesQueryVersionRequest* {.importc: "xcb_xfixes_query_version_request_t", bycopy.} = object
+  XcbXfixesQueryVersionRequest* {.rename: "xcb_xfixes_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint32
     clientMinorVersion* {.importc: "client_minor_version".}: uint32
 
-  XcbXfixesQueryVersionReply* {.importc: "xcb_xfixes_query_version_reply_t", bycopy.} = object
+  XcbXfixesQueryVersionReply* {.rename: "xcb_xfixes_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -67,16 +69,16 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbXfixesSaveSetMode* {.importc: "xcb_xfixes_save_set_mode_t".} = enum
+  XcbXfixesSaveSetMode* {.rename: "xcb_xfixes_save_set_mode_t".} = enum
     xcbXfixesSaveSetModeInsert = 0, xcbXfixesSaveSetModeDelete = 1
 
-  XcbXfixesSaveSetTarget* {.importc: "xcb_xfixes_save_set_target_t".} = enum
+  XcbXfixesSaveSetTarget* {.rename: "xcb_xfixes_save_set_target_t".} = enum
     xcbXfixesSaveSetTargetNearest = 0, xcbXfixesSaveSetTargetRoot = 1
 
-  XcbXfixesSaveSetMapping* {.importc: "xcb_xfixes_save_set_mapping_t".} = enum
+  XcbXfixesSaveSetMapping* {.rename: "xcb_xfixes_save_set_mapping_t".} = enum
     xcbXfixesSaveSetMappingMap = 0, xcbXfixesSaveSetMappingUnmap = 1
 
-  XcbXfixesChangeSaveSetRequest* {.importc: "xcb_xfixes_change_save_set_request_t", bycopy.} = object
+  XcbXfixesChangeSaveSetRequest* {.rename: "xcb_xfixes_change_save_set_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -86,17 +88,17 @@ type
     pad0: uint8
     window*: XcbWindow
 
-  XcbXfixesSelectionEvent* {.importc: "xcb_xfixes_selection_event_t".} = enum
+  XcbXfixesSelectionEvent* {.rename: "xcb_xfixes_selection_event_t".} = enum
     xcbXfixesSelectionEventSetSelectionOwner = 0,
     xcbXfixesSelectionEventSelectionWindowDestroy = 1,
     xcbXfixesSelectionEventSelectionClientClose = 2
 
-  XcbXfixesSelectionEventMask* {.importc: "xcb_xfixes_selection_event_mask_t".} = enum
+  XcbXfixesSelectionEventMask* {.rename: "xcb_xfixes_selection_event_mask_t".} = enum
     xcbXfixesSelectionEventMaskSetSelectionOwner = 1,
     xcbXfixesSelectionEventMaskSelectionWindowDestroy = 2,
     xcbXfixesSelectionEventMaskSelectionClientClose = 4
 
-  XcbXfixesSelectionNotifyEvent* {.importc: "xcb_xfixes_selection_notify_event_t", bycopy.} = object
+  XcbXfixesSelectionNotifyEvent* {.rename: "xcb_xfixes_selection_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     subtype*: uint8
     sequence*: uint16
@@ -107,7 +109,7 @@ type
     selectionTimestamp* {.importc: "selection_timestamp".}: XcbTimestamp
     pad0: array[8, uint8]
 
-  XcbXfixesSelectSelectionInputRequest* {.importc: "xcb_xfixes_select_selection_input_request_t", bycopy.} = object
+  XcbXfixesSelectSelectionInputRequest* {.rename: "xcb_xfixes_select_selection_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -115,13 +117,13 @@ type
     selection*: XcbAtom
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbXfixesCursorNotify* {.importc: "xcb_xfixes_cursor_notify_t".} = enum
+  XcbXfixesCursorNotify* {.rename: "xcb_xfixes_cursor_notify_t".} = enum
     xcbXfixesCursorNotifyDisplayCursor = 0
 
-  XcbXfixesCursorNotifyMask* {.importc: "xcb_xfixes_cursor_notify_mask_t".} = enum
+  XcbXfixesCursorNotifyMask* {.rename: "xcb_xfixes_cursor_notify_mask_t".} = enum
     xcbXfixesCursorNotifyMaskDisplayCursor = 1
 
-  XcbXfixesCursorNotifyEvent* {.importc: "xcb_xfixes_cursor_notify_event_t", bycopy.} = object
+  XcbXfixesCursorNotifyEvent* {.rename: "xcb_xfixes_cursor_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     subtype*: uint8
     sequence*: uint16
@@ -131,22 +133,22 @@ type
     name*: XcbAtom
     pad0: array[12, uint8]
 
-  XcbXfixesSelectCursorInputRequest* {.importc: "xcb_xfixes_select_cursor_input_request_t", bycopy.} = object
+  XcbXfixesSelectCursorInputRequest* {.rename: "xcb_xfixes_select_cursor_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbXfixesGetCursorImageCookie* {.importc: "xcb_xfixes_get_cursor_image_cookie_t", bycopy.} = object
+  XcbXfixesGetCursorImageCookie* {.rename: "xcb_xfixes_get_cursor_image_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXfixesGetCursorImageRequest* {.importc: "xcb_xfixes_get_cursor_image_request_t", bycopy.} = object
+  XcbXfixesGetCursorImageRequest* {.rename: "xcb_xfixes_get_cursor_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXfixesGetCursorImageReply* {.importc: "xcb_xfixes_get_cursor_image_reply_t", bycopy.} = object
+  XcbXfixesGetCursorImageReply* {.rename: "xcb_xfixes_get_cursor_image_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -160,33 +162,33 @@ type
     cursorSerial* {.importc: "cursor_serial".}: uint32
     pad1: array[8, uint8]
 
-  XcbXfixesRegionIterator* {.importc: "xcb_xfixes_region_iterator_t", bycopy.} = object
+  XcbXfixesRegionIterator* {.rename: "xcb_xfixes_region_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXfixesRegion]
     rem*: cint
     index*: cint
 
-  XcbXfixesBadRegionError* {.importc: "xcb_xfixes_bad_region_error_t", bycopy.} = object
+  XcbXfixesBadRegionError* {.rename: "xcb_xfixes_bad_region_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbXfixesRegionEnum* {.importc: "xcb_xfixes_region_enum_t".} = enum
+  XcbXfixesRegionEnum* {.rename: "xcb_xfixes_region_enum_t".} = enum
     xcbXfixesRegionNone = 0
 
-  XcbXfixesCreateRegionRequest* {.importc: "xcb_xfixes_create_region_request_t", bycopy.} = object
+  XcbXfixesCreateRegionRequest* {.rename: "xcb_xfixes_create_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
 
-  XcbXfixesCreateRegionFromBitmapRequest* {.importc: "xcb_xfixes_create_region_from_bitmap_request_t", bycopy.} = object
+  XcbXfixesCreateRegionFromBitmapRequest* {.rename: "xcb_xfixes_create_region_from_bitmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
     bitmap*: XcbPixmap
 
-  XcbXfixesCreateRegionFromWindowRequest* {.importc: "xcb_xfixes_create_region_from_window_request_t", bycopy.} = object
+  XcbXfixesCreateRegionFromWindowRequest* {.rename: "xcb_xfixes_create_region_from_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -195,40 +197,40 @@ type
     kind*: XcbShapeKind
     pad0: array[3, uint8]
 
-  XcbXfixesCreateRegionFromGcRequest* {.importc: "xcb_xfixes_create_region_from_gcrequest_t", bycopy.} = object
+  XcbXfixesCreateRegionFromGcRequest* {.rename: "xcb_xfixes_create_region_from_gcrequest_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
     gc*: XcbGcontext
 
-  XcbXfixesCreateRegionFromPictureRequest* {.importc: "xcb_xfixes_create_region_from_picture_request_t", bycopy.} = object
+  XcbXfixesCreateRegionFromPictureRequest* {.rename: "xcb_xfixes_create_region_from_picture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
     picture*: XcbRenderPicture
 
-  XcbXfixesDestroyRegionRequest* {.importc: "xcb_xfixes_destroy_region_request_t", bycopy.} = object
+  XcbXfixesDestroyRegionRequest* {.rename: "xcb_xfixes_destroy_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
 
-  XcbXfixesSetRegionRequest* {.importc: "xcb_xfixes_set_region_request_t", bycopy.} = object
+  XcbXfixesSetRegionRequest* {.rename: "xcb_xfixes_set_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
 
-  XcbXfixesCopyRegionRequest* {.importc: "xcb_xfixes_copy_region_request_t", bycopy.} = object
+  XcbXfixesCopyRegionRequest* {.rename: "xcb_xfixes_copy_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     source*: XcbXfixesRegion
     destination*: XcbXfixesRegion
 
-  XcbXfixesUnionRegionRequest* {.importc: "xcb_xfixes_union_region_request_t", bycopy.} = object
+  XcbXfixesUnionRegionRequest* {.rename: "xcb_xfixes_union_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -236,7 +238,7 @@ type
     source2*: XcbXfixesRegion
     destination*: XcbXfixesRegion
 
-  XcbXfixesIntersectRegionRequest* {.importc: "xcb_xfixes_intersect_region_request_t", bycopy.} = object
+  XcbXfixesIntersectRegionRequest* {.rename: "xcb_xfixes_intersect_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -244,7 +246,7 @@ type
     source2*: XcbXfixesRegion
     destination*: XcbXfixesRegion
 
-  XcbXfixesSubtractRegionRequest* {.importc: "xcb_xfixes_subtract_region_request_t", bycopy.} = object
+  XcbXfixesSubtractRegionRequest* {.rename: "xcb_xfixes_subtract_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -252,7 +254,7 @@ type
     source2*: XcbXfixesRegion
     destination*: XcbXfixesRegion
 
-  XcbXfixesInvertRegionRequest* {.importc: "xcb_xfixes_invert_region_request_t", bycopy.} = object
+  XcbXfixesInvertRegionRequest* {.rename: "xcb_xfixes_invert_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -260,7 +262,7 @@ type
     bounds*: XcbRectangle
     destination*: XcbXfixesRegion
 
-  XcbXfixesTranslateRegionRequest* {.importc: "xcb_xfixes_translate_region_request_t", bycopy.} = object
+  XcbXfixesTranslateRegionRequest* {.rename: "xcb_xfixes_translate_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -268,23 +270,23 @@ type
     dx*: int16
     dy*: int16
 
-  XcbXfixesRegionExtentsRequest* {.importc: "xcb_xfixes_region_extents_request_t", bycopy.} = object
+  XcbXfixesRegionExtentsRequest* {.rename: "xcb_xfixes_region_extents_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     source*: XcbXfixesRegion
     destination*: XcbXfixesRegion
 
-  XcbXfixesFetchRegionCookie* {.importc: "xcb_xfixes_fetch_region_cookie_t", bycopy.} = object
+  XcbXfixesFetchRegionCookie* {.rename: "xcb_xfixes_fetch_region_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXfixesFetchRegionRequest* {.importc: "xcb_xfixes_fetch_region_request_t", bycopy.} = object
+  XcbXfixesFetchRegionRequest* {.rename: "xcb_xfixes_fetch_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
 
-  XcbXfixesFetchRegionReply* {.importc: "xcb_xfixes_fetch_region_reply_t", bycopy.} = object
+  XcbXfixesFetchRegionReply* {.rename: "xcb_xfixes_fetch_region_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -292,7 +294,7 @@ type
     extents*: XcbRectangle
     pad1: array[16, uint8]
 
-  XcbXfixesSetGcClipRegionRequest* {.importc: "xcb_xfixes_set_gcclip_region_request_t", bycopy.} = object
+  XcbXfixesSetGcClipRegionRequest* {.rename: "xcb_xfixes_set_gcclip_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -301,7 +303,7 @@ type
     xOrigin* {.importc: "x_origin".}: int16
     yOrigin* {.importc: "y_origin".}: int16
 
-  XcbXfixesSetWindowShapeRegionRequest* {.importc: "xcb_xfixes_set_window_shape_region_request_t", bycopy.} = object
+  XcbXfixesSetWindowShapeRegionRequest* {.rename: "xcb_xfixes_set_window_shape_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -312,7 +314,7 @@ type
     yOffset* {.importc: "y_offset".}: int16
     region*: XcbXfixesRegion
 
-  XcbXfixesSetPictureClipRegionRequest* {.importc: "xcb_xfixes_set_picture_clip_region_request_t", bycopy.} = object
+  XcbXfixesSetPictureClipRegionRequest* {.rename: "xcb_xfixes_set_picture_clip_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -321,7 +323,7 @@ type
     xOrigin* {.importc: "x_origin".}: int16
     yOrigin* {.importc: "y_origin".}: int16
 
-  XcbXfixesSetCursorNameRequest* {.importc: "xcb_xfixes_set_cursor_name_request_t", bycopy.} = object
+  XcbXfixesSetCursorNameRequest* {.rename: "xcb_xfixes_set_cursor_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -329,16 +331,16 @@ type
     nbytes*: uint16
     pad0: array[2, uint8]
 
-  XcbXfixesGetCursorNameCookie* {.importc: "xcb_xfixes_get_cursor_name_cookie_t", bycopy.} = object
+  XcbXfixesGetCursorNameCookie* {.rename: "xcb_xfixes_get_cursor_name_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXfixesGetCursorNameRequest* {.importc: "xcb_xfixes_get_cursor_name_request_t", bycopy.} = object
+  XcbXfixesGetCursorNameRequest* {.rename: "xcb_xfixes_get_cursor_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cursor*: XcbCursor
 
-  XcbXfixesGetCursorNameReply* {.importc: "xcb_xfixes_get_cursor_name_reply_t", bycopy.} = object
+  XcbXfixesGetCursorNameReply* {.rename: "xcb_xfixes_get_cursor_name_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -347,15 +349,15 @@ type
     nbytes*: uint16
     pad1: array[18, uint8]
 
-  XcbXfixesGetCursorImageAndNameCookie* {.importc: "xcb_xfixes_get_cursor_image_and_name_cookie_t", bycopy.} = object
+  XcbXfixesGetCursorImageAndNameCookie* {.rename: "xcb_xfixes_get_cursor_image_and_name_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXfixesGetCursorImageAndNameRequest* {.importc: "xcb_xfixes_get_cursor_image_and_name_request_t", bycopy.} = object
+  XcbXfixesGetCursorImageAndNameRequest* {.rename: "xcb_xfixes_get_cursor_image_and_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXfixesGetCursorImageAndNameReply* {.importc: "xcb_xfixes_get_cursor_image_and_name_reply_t", bycopy.} = object
+  XcbXfixesGetCursorImageAndNameReply* {.rename: "xcb_xfixes_get_cursor_image_and_name_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -371,14 +373,14 @@ type
     nbytes*: uint16
     pad1: array[2, uint8]
 
-  XcbXfixesChangeCursorRequest* {.importc: "xcb_xfixes_change_cursor_request_t", bycopy.} = object
+  XcbXfixesChangeCursorRequest* {.rename: "xcb_xfixes_change_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     source*: XcbCursor
     destination*: XcbCursor
 
-  XcbXfixesChangeCursorByNameRequest* {.importc: "xcb_xfixes_change_cursor_byname_request_t", bycopy.} = object
+  XcbXfixesChangeCursorByNameRequest* {.rename: "xcb_xfixes_change_cursor_byname_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -386,7 +388,7 @@ type
     nbytes*: uint16
     pad0: array[2, uint8]
 
-  XcbXfixesExpandRegionRequest* {.importc: "xcb_xfixes_expand_region_request_t", bycopy.} = object
+  XcbXfixesExpandRegionRequest* {.rename: "xcb_xfixes_expand_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -397,30 +399,30 @@ type
     top*: uint16
     bottom*: uint16
 
-  XcbXfixesHideCursorRequest* {.importc: "xcb_xfixes_hide_cursor_request_t", bycopy.} = object
+  XcbXfixesHideCursorRequest* {.rename: "xcb_xfixes_hide_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbXfixesShowCursorRequest* {.importc: "xcb_xfixes_show_cursor_request_t", bycopy.} = object
+  XcbXfixesShowCursorRequest* {.rename: "xcb_xfixes_show_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbXfixesBarrierIterator* {.importc: "xcb_xfixes_barrier_iterator_t", bycopy.} = object
+  XcbXfixesBarrierIterator* {.rename: "xcb_xfixes_barrier_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXfixesBarrier]
     rem*: cint
     index*: cint
 
-  XcbXfixesBarrierDirections* {.importc: "xcb_xfixes_barrier_directions_t".} = enum
+  XcbXfixesBarrierDirections* {.rename: "xcb_xfixes_barrier_directions_t".} = enum
     xcbXfixesBarrierDirectionsPositiveX = 1,
     xcbXfixesBarrierDirectionsPositiveY = 2,
     xcbXfixesBarrierDirectionsNegativeX = 4,
     xcbXfixesBarrierDirectionsNegativeY = 8
 
-  XcbXfixesCreatePointerBarrierRequest* {.importc: "xcb_xfixes_create_pointer_barrier_request_t", bycopy.} = object
+  XcbXfixesCreatePointerBarrierRequest* {.rename: "xcb_xfixes_create_pointer_barrier_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -434,13 +436,14 @@ type
     pad0: array[2, uint8]
     numDevices* {.importc: "num_devices".}: uint16
 
-  XcbXfixesDeletePointerBarrierRequest* {.importc: "xcb_xfixes_delete_pointer_barrier_request_t", bycopy.} = object
+  XcbXfixesDeletePointerBarrierRequest* {.rename: "xcb_xfixes_delete_pointer_barrier_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     barrier*: XcbXfixesBarrier
 
-{.passl: "-lxcb-xfixes".}
+when xcbDynlib:
+  {.push dynlib: "libxcb-xfixes.so(|.0)".}
 {.push cdecl.}
 
 proc xfixesQueryVersion*(c: ptr XcbConnection; clientMajorVersion: uint32; clientMinorVersion: uint32): XcbXfixesQueryVersionCookie {.importc: "xcb_xfixes_query_version".}

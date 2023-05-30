@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbResMajorVersion* = 1
@@ -10,92 +10,93 @@ const
   xcbResQueryClientIds* = 4
   xcbResQueryResourceBytes* = 5
 
-{.passl: "-lxcb-res".}
-{.push header: "xcb/res.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-res".}
+  {.push header: "xcb/res.h".}
 
-var xcbResId* {.extern: "xcb_res_id".}: XcbExtension
+  var xcbResId* {.extern: "xcb_res_id".}: XcbExtension
 
 type
-  XcbResClient* {.importc: "xcb_res_client_t", bycopy.} = object
+  XcbResClient* {.rename: "xcb_res_client_t", bycopy.} = object
     resourceBase* {.importc: "resource_base".}: uint32
     resourceMask* {.importc: "resource_mask".}: uint32
 
-  XcbResClientIterator* {.importc: "xcb_res_client_iterator_t", bycopy.} = object
+  XcbResClientIterator* {.rename: "xcb_res_client_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResClient]
     rem*: cint
     index*: cint
 
-  XcbResType* {.importc: "xcb_res_type_t", bycopy.} = object
+  XcbResType* {.rename: "xcb_res_type_t", bycopy.} = object
     resourceType* {.importc: "resource_type".}: XcbAtom
     count*: uint32
 
-  XcbResTypeIterator* {.importc: "xcb_res_type_iterator_t", bycopy.} = object
+  XcbResTypeIterator* {.rename: "xcb_res_type_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResType]
     rem*: cint
     index*: cint
 
-  XcbResClientIdMask* {.importc: "xcb_res_client_id_mask_t".} = enum
+  XcbResClientIdMask* {.rename: "xcb_res_client_id_mask_t".} = enum
     xcbResClientIdMaskClientXid = 1,
     xcbResClientIdMaskLocalClientPid = 2
 
-  XcbResClientIdSpec* {.importc: "xcb_res_client_id_spec_t", bycopy.} = object
+  XcbResClientIdSpec* {.rename: "xcb_res_client_id_spec_t", bycopy.} = object
     client*: uint32
     mask*: uint32
 
-  XcbResClientIdSpecIterator* {.importc: "xcb_res_client_id_spec_iterator_t", bycopy.} = object
+  XcbResClientIdSpecIterator* {.rename: "xcb_res_client_id_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResClientIdSpec]
     rem*: cint
     index*: cint
 
-  XcbResClientIdValue* {.importc: "xcb_res_client_id_value_t", bycopy.} = object
+  XcbResClientIdValue* {.rename: "xcb_res_client_id_value_t", bycopy.} = object
     spec*: XcbResClientIdSpec
     length*: uint32
 
-  XcbResClientIdValueIterator* {.importc: "xcb_res_client_id_value_iterator_t", bycopy.} = object
+  XcbResClientIdValueIterator* {.rename: "xcb_res_client_id_value_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResClientIdValue]
     rem*: cint
     index*: cint
 
-  XcbResResourceIdSpec* {.importc: "xcb_res_resource_id_spec_t", bycopy.} = object
+  XcbResResourceIdSpec* {.rename: "xcb_res_resource_id_spec_t", bycopy.} = object
     resource*: uint32
     `type`*: uint32
 
-  XcbResResourceIdSpecIterator* {.importc: "xcb_res_resource_id_spec_iterator_t", bycopy.} = object
+  XcbResResourceIdSpecIterator* {.rename: "xcb_res_resource_id_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResResourceIdSpec]
     rem*: cint
     index*: cint
 
-  XcbResResourceSizeSpec* {.importc: "xcb_res_resource_size_spec_t", bycopy.} = object
+  XcbResResourceSizeSpec* {.rename: "xcb_res_resource_size_spec_t", bycopy.} = object
     spec*: XcbResResourceIdSpec
     bytes*: uint32
     refCount* {.importc: "ref_count".}: uint32
     useCount* {.importc: "use_count".}: uint32
 
-  XcbResResourceSizeSpecIterator* {.importc: "xcb_res_resource_size_spec_iterator_t", bycopy.} = object
+  XcbResResourceSizeSpecIterator* {.rename: "xcb_res_resource_size_spec_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResResourceSizeSpec]
     rem*: cint
     index*: cint
 
-  XcbResResourceSizeValue* {.importc: "xcb_res_resource_size_value_t", bycopy.} = object
+  XcbResResourceSizeValue* {.rename: "xcb_res_resource_size_value_t", bycopy.} = object
     size*: XcbResResourceSizeSpec
     numCrossReferences* {.importc: "num_cross_references".}: uint32
 
-  XcbResResourceSizeValueIterator* {.importc: "xcb_res_resource_size_value_iterator_t", bycopy.} = object
+  XcbResResourceSizeValueIterator* {.rename: "xcb_res_resource_size_value_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbResResourceSizeValue]
     rem*: cint
     index*: cint
 
-  XcbResQueryVersionCookie* {.importc: "xcb_res_query_version_cookie_t", bycopy.} = object
+  XcbResQueryVersionCookie* {.rename: "xcb_res_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryVersionRequest* {.importc: "xcb_res_query_version_request_t", bycopy.} = object
+  XcbResQueryVersionRequest* {.rename: "xcb_res_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajor* {.importc: "client_major".}: uint8
     clientMinor* {.importc: "client_minor".}: uint8
 
-  XcbResQueryVersionReply* {.importc: "xcb_res_query_version_reply_t", bycopy.} = object
+  XcbResQueryVersionReply* {.rename: "xcb_res_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -103,15 +104,15 @@ type
     serverMajor* {.importc: "server_major".}: uint16
     serverMinor* {.importc: "server_minor".}: uint16
 
-  XcbResQueryClientsCookie* {.importc: "xcb_res_query_clients_cookie_t", bycopy.} = object
+  XcbResQueryClientsCookie* {.rename: "xcb_res_query_clients_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryClientsRequest* {.importc: "xcb_res_query_clients_request_t", bycopy.} = object
+  XcbResQueryClientsRequest* {.rename: "xcb_res_query_clients_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbResQueryClientsReply* {.importc: "xcb_res_query_clients_reply_t", bycopy.} = object
+  XcbResQueryClientsReply* {.rename: "xcb_res_query_clients_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -119,16 +120,16 @@ type
     numClients* {.importc: "num_clients".}: uint32
     pad1: array[20, uint8]
 
-  XcbResQueryClientResourcesCookie* {.importc: "xcb_res_query_client_resources_cookie_t", bycopy.} = object
+  XcbResQueryClientResourcesCookie* {.rename: "xcb_res_query_client_resources_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryClientResourcesRequest* {.importc: "xcb_res_query_client_resources_request_t", bycopy.} = object
+  XcbResQueryClientResourcesRequest* {.rename: "xcb_res_query_client_resources_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     xid*: uint32
 
-  XcbResQueryClientResourcesReply* {.importc: "xcb_res_query_client_resources_reply_t", bycopy.} = object
+  XcbResQueryClientResourcesReply* {.rename: "xcb_res_query_client_resources_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -136,16 +137,16 @@ type
     numTypes* {.importc: "num_types".}: uint32
     pad1: array[20, uint8]
 
-  XcbResQueryClientPixmapBytesCookie* {.importc: "xcb_res_query_client_pixmap_bytes_cookie_t", bycopy.} = object
+  XcbResQueryClientPixmapBytesCookie* {.rename: "xcb_res_query_client_pixmap_bytes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryClientPixmapBytesRequest* {.importc: "xcb_res_query_client_pixmap_bytes_request_t", bycopy.} = object
+  XcbResQueryClientPixmapBytesRequest* {.rename: "xcb_res_query_client_pixmap_bytes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     xid*: uint32
 
-  XcbResQueryClientPixmapBytesReply* {.importc: "xcb_res_query_client_pixmap_bytes_reply_t", bycopy.} = object
+  XcbResQueryClientPixmapBytesReply* {.rename: "xcb_res_query_client_pixmap_bytes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -153,16 +154,16 @@ type
     bytes*: uint32
     bytesOverflow* {.importc: "bytes_overflow".}: uint32
 
-  XcbResQueryClientIdsCookie* {.importc: "xcb_res_query_client_ids_cookie_t", bycopy.} = object
+  XcbResQueryClientIdsCookie* {.rename: "xcb_res_query_client_ids_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryClientIdsRequest* {.importc: "xcb_res_query_client_ids_request_t", bycopy.} = object
+  XcbResQueryClientIdsRequest* {.rename: "xcb_res_query_client_ids_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     numSpecs* {.importc: "num_specs".}: uint32
 
-  XcbResQueryClientIdsReply* {.importc: "xcb_res_query_client_ids_reply_t", bycopy.} = object
+  XcbResQueryClientIdsReply* {.rename: "xcb_res_query_client_ids_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -170,17 +171,17 @@ type
     numIds* {.importc: "num_ids".}: uint32
     pad1: array[20, uint8]
 
-  XcbResQueryResourceBytesCookie* {.importc: "xcb_res_query_resource_bytes_cookie_t", bycopy.} = object
+  XcbResQueryResourceBytesCookie* {.rename: "xcb_res_query_resource_bytes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbResQueryResourceBytesRequest* {.importc: "xcb_res_query_resource_bytes_request_t", bycopy.} = object
+  XcbResQueryResourceBytesRequest* {.rename: "xcb_res_query_resource_bytes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     client*: uint32
     numSpecs* {.importc: "num_specs".}: uint32
 
-  XcbResQueryResourceBytesReply* {.importc: "xcb_res_query_resource_bytes_reply_t", bycopy.} = object
+  XcbResQueryResourceBytesReply* {.rename: "xcb_res_query_resource_bytes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -188,6 +189,8 @@ type
     numSizes* {.importc: "num_sizes".}: uint32
     pad1: array[20, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-res.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbResClientIterator) {.importc: "xcb_res_client_next".}

@@ -1,4 +1,4 @@
-import ./xcb, ./xfixes
+import ./xcb, ./xfixes, private/importutil
 
 const
   xcbDamageMajorVersion* = 1
@@ -11,40 +11,41 @@ const
   xcbDamageAdd* = 4
   xcbDamageNotify* = 0
 
-{.passl: "-lxcb-damage".}
-{.push header: "xcb/damage.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-damage".}
+  {.push header: "xcb/damage.h".}
 
-var xcbDamageId* {.extern: "xcb_damage_id".}: XcbExtension
+  var xcbDamageId* {.extern: "xcb_damage_id".}: XcbExtension
 
 type
-  XcbDamageDamage* {.importc: "xcb_damage_damage_t".} = distinct uint32
+  XcbDamageDamage* {.rename: "xcb_damage_damage_t".} = distinct uint32
 
-  XcbDamageDamageIterator* {.importc: "xcb_damage_damage_iterator_t", bycopy.} = object
+  XcbDamageDamageIterator* {.rename: "xcb_damage_damage_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbDamageDamage]
     rem*: cint
     index*: cint
 
-  XcbDamageReportLevel* {.importc: "xcb_damage_report_level_t".} = enum
+  XcbDamageReportLevel* {.rename: "xcb_damage_report_level_t".} = enum
     xcbDamageReportLevelRawRectangles = 0,
     xcbDamageReportLevelDeltaRectangles = 1,
     xcbDamageReportLevelBoundingBox = 2, xcbDamageReportLevelNonEmpty = 3
 
-  XcbDamageBadDamageError* {.importc: "xcb_damage_bad_damage_error_t", bycopy.} = object
+  XcbDamageBadDamageError* {.rename: "xcb_damage_bad_damage_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbDamageQueryVersionCookie* {.importc: "xcb_damage_query_version_cookie_t", bycopy.} = object
+  XcbDamageQueryVersionCookie* {.rename: "xcb_damage_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDamageQueryVersionRequest* {.importc: "xcb_damage_query_version_request_t", bycopy.} = object
+  XcbDamageQueryVersionRequest* {.rename: "xcb_damage_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint32
     clientMinorVersion* {.importc: "client_minor_version".}: uint32
 
-  XcbDamageQueryVersionReply* {.importc: "xcb_damage_query_version_reply_t", bycopy.} = object
+  XcbDamageQueryVersionReply* {.rename: "xcb_damage_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -53,7 +54,7 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbDamageCreateRequest* {.importc: "xcb_damage_create_request_t", bycopy.} = object
+  XcbDamageCreateRequest* {.rename: "xcb_damage_create_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -62,13 +63,13 @@ type
     level*: uint8
     pad0: array[3, uint8]
 
-  XcbDamageDestroyRequest* {.importc: "xcb_damage_destroy_request_t", bycopy.} = object
+  XcbDamageDestroyRequest* {.rename: "xcb_damage_destroy_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     damage*: XcbDamageDamage
 
-  XcbDamageSubtractRequest* {.importc: "xcb_damage_subtract_request_t", bycopy.} = object
+  XcbDamageSubtractRequest* {.rename: "xcb_damage_subtract_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -76,14 +77,14 @@ type
     repair*: XcbXfixesRegion
     parts*: XcbXfixesRegion
 
-  XcbDamageAddRequest* {.importc: "xcb_damage_add_request_t", bycopy.} = object
+  XcbDamageAddRequest* {.rename: "xcb_damage_add_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     region*: XcbXfixesRegion
 
-  XcbDamageNotifyEvent* {.importc: "xcb_damage_notify_event_t", bycopy.} = object
+  XcbDamageNotifyEvent* {.rename: "xcb_damage_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     level*: uint8
     sequence*: uint16
@@ -93,6 +94,8 @@ type
     area*: XcbRectangle
     geometry*: XcbRectangle
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-damage.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbDamageDamageIterator) {.importc: "xcb_damage_damage_next".}

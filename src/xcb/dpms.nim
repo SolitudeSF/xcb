@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbDpmsMajorVersion* = 0
@@ -12,23 +12,24 @@ const
   xcbDpmsForceLevel* = 6
   xcbDpmsInfo* = 7
 
-{.passl: "-lxcb-dpms".}
-{.push header: "xcb/dpms.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-dpms".}
+  {.push header: "xcb/dpms.h".}
 
-var xcbDpmsId* {.extern: "xcb_dpms_id".}: XcbExtension
+  var xcbDpmsId* {.extern: "xcb_dpms_id".}: XcbExtension
 
 type
-  XcbDpmsGetVersionCookie* {.importc: "xcb_dpms_get_version_cookie_t", bycopy.} = object
+  XcbDpmsGetVersionCookie* {.rename: "xcb_dpms_get_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDpmsGetVersionRequest* {.importc: "xcb_dpms_get_version_request_t", bycopy.} = object
+  XcbDpmsGetVersionRequest* {.rename: "xcb_dpms_get_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint16
     clientMinorVersion* {.importc: "client_minor_version".}: uint16
 
-  XcbDpmsGetVersionReply* {.importc: "xcb_dpms_get_version_reply_t", bycopy.} = object
+  XcbDpmsGetVersionReply* {.rename: "xcb_dpms_get_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -36,15 +37,15 @@ type
     serverMajorVersion* {.importc: "server_major_version".}: uint16
     serverMinorVersion* {.importc: "server_minor_version".}: uint16
 
-  XcbDpmsCapableCookie* {.importc: "xcb_dpms_capable_cookie_t", bycopy.} = object
+  XcbDpmsCapableCookie* {.rename: "xcb_dpms_capable_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDpmsCapableRequest* {.importc: "xcb_dpms_capable_request_t", bycopy.} = object
+  XcbDpmsCapableRequest* {.rename: "xcb_dpms_capable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbDpmsCapableReply* {.importc: "xcb_dpms_capable_reply_t", bycopy.} = object
+  XcbDpmsCapableReply* {.rename: "xcb_dpms_capable_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -52,15 +53,15 @@ type
     capable*: uint8
     pad1: array[23, uint8]
 
-  XcbDpmsGetTimeoutsCookie* {.importc: "xcb_dpms_get_timeouts_cookie_t", bycopy.} = object
+  XcbDpmsGetTimeoutsCookie* {.rename: "xcb_dpms_get_timeouts_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDpmsGetTimeoutsRequest* {.importc: "xcb_dpms_get_timeouts_request_t", bycopy.} = object
+  XcbDpmsGetTimeoutsRequest* {.rename: "xcb_dpms_get_timeouts_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbDpmsGetTimeoutsReply* {.importc: "xcb_dpms_get_timeouts_reply_t", bycopy.} = object
+  XcbDpmsGetTimeoutsReply* {.rename: "xcb_dpms_get_timeouts_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -70,7 +71,7 @@ type
     offTimeout* {.importc: "off_timeout".}: uint16
     pad1: array[18, uint8]
 
-  XcbDpmsSetTimeoutsRequest* {.importc: "xcb_dpms_set_timeouts_request_t", bycopy.} = object
+  XcbDpmsSetTimeoutsRequest* {.rename: "xcb_dpms_set_timeouts_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -78,35 +79,35 @@ type
     suspendTimeout* {.importc: "suspend_timeout".}: uint16
     offTimeout* {.importc: "off_timeout".}: uint16
 
-  XcbDpmsEnableRequest* {.importc: "xcb_dpms_enable_request_t", bycopy.} = object
+  XcbDpmsEnableRequest* {.rename: "xcb_dpms_enable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbDpmsDisableRequest* {.importc: "xcb_dpms_disable_request_t", bycopy.} = object
+  XcbDpmsDisableRequest* {.rename: "xcb_dpms_disable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbDpmsDpmsMode* {.importc: "xcb_dpms_dpms_mode_t".} = enum
+  XcbDpmsDpmsMode* {.rename: "xcb_dpms_dpms_mode_t".} = enum
     xcbDpmsDpmsModeOn = 0, xcbDpmsDpmsModeStandby = 1,
     xcbDpmsDpmsModeSuspend = 2, xcbDpmsDpmsModeOff = 3
 
-  XcbDpmsForceLevelRequest* {.importc: "xcb_dpms_force_level_request_t", bycopy.} = object
+  XcbDpmsForceLevelRequest* {.rename: "xcb_dpms_force_level_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     powerLevel* {.importc: "power_level".}: uint16
 
-  XcbDpmsInfoCookie* {.importc: "xcb_dpms_info_cookie_t", bycopy.} = object
+  XcbDpmsInfoCookie* {.rename: "xcb_dpms_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDpmsInfoRequest* {.importc: "xcb_dpms_info_request_t", bycopy.} = object
+  XcbDpmsInfoRequest* {.rename: "xcb_dpms_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbDpmsInfoReply* {.importc: "xcb_dpms_info_reply_t", bycopy.} = object
+  XcbDpmsInfoReply* {.rename: "xcb_dpms_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -115,6 +116,8 @@ type
     state*: uint8
     pad1: array[21, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-dpms.so(|.0)".}
 {.push cdecl.}
 
 proc dpmsGetVersion*(c: ptr XcbConnection; clientMajorVersion: uint16; clientMinorVersion: uint16): XcbDpmsGetVersionCookie {.importc: "xcb_dpms_get_version".}

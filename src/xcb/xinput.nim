@@ -1,4 +1,4 @@
-import ./xcb, ./xfixes
+import ./xcb, ./xfixes, private/importutil
 
 const
   xcbInputMajorVersion* = 2
@@ -113,58 +113,59 @@ const
   xcbInputDeviceBusy* = 3
   xcbInputClass* = 4
 
-{.passl: "-lxcb-xinput".}
-{.push header: "xcb/xinput.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xinput".}
+  {.push header: "xcb/xinput.h".}
 
-var xcbInputId* {.extern: "xcb_input_id".}: XcbExtension
+  var xcbInputId* {.extern: "xcb_input_id".}: XcbExtension
 
 type
-  XcbInputEventClass* {.importc: "xcb_input_event_class_t".} = distinct uint32
-  XcbInputKeyCode* {.importc: "xcb_input_key_code_t".} = distinct uint8
-  XcbInputDeviceId* {.importc: "xcb_input_device_id_t".} = distinct uint16
-  XcbInputEventTypeBase* {.importc: "xcb_input_event_type_base_t".} = distinct uint8
-  XcbInputFp1616* {.importc: "xcb_input_fp1616_t".} = distinct int32
+  XcbInputEventClass* {.rename: "xcb_input_event_class_t".} = distinct uint32
+  XcbInputKeyCode* {.rename: "xcb_input_key_code_t".} = distinct uint8
+  XcbInputDeviceId* {.rename: "xcb_input_device_id_t".} = distinct uint16
+  XcbInputEventTypeBase* {.rename: "xcb_input_event_type_base_t".} = distinct uint8
+  XcbInputFp1616* {.rename: "xcb_input_fp1616_t".} = distinct int32
 
-  XcbInputEventClassIterator* {.importc: "xcb_input_event_class_iterator_t", bycopy.} = object
+  XcbInputEventClassIterator* {.rename: "xcb_input_event_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputEventClass]
     rem*: cint
     index*: cint
 
-  XcbInputKeyCodeIterator* {.importc: "xcb_input_key_code_iterator_t", bycopy.} = object
+  XcbInputKeyCodeIterator* {.rename: "xcb_input_key_code_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKeyCode]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceIdIterator* {.importc: "xcb_input_device_id_iterator_t", bycopy.} = object
+  XcbInputDeviceIdIterator* {.rename: "xcb_input_device_id_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceId]
     rem*: cint
     index*: cint
 
-  XcbInputFp1616Iterator* {.importc: "xcb_input_fp1616_iterator_t", bycopy.} = object
+  XcbInputFp1616Iterator* {.rename: "xcb_input_fp1616_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputFp1616]
     rem*: cint
     index*: cint
 
-  XcbInputFp3232* {.importc: "xcb_input_fp3232_t", bycopy.} = object
+  XcbInputFp3232* {.rename: "xcb_input_fp3232_t", bycopy.} = object
     integral*: int32
     frac*: uint32
 
-  XcbInputFp3232Iterator* {.importc: "xcb_input_fp3232_iterator_t", bycopy.} = object
+  XcbInputFp3232Iterator* {.rename: "xcb_input_fp3232_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputFp3232]
     rem*: cint
     index*: cint
 
-  XcbInputGetExtensionVersionCookie* {.importc: "xcb_input_get_extension_version_cookie_t", bycopy.} = object
+  XcbInputGetExtensionVersionCookie* {.rename: "xcb_input_get_extension_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetExtensionVersionRequest* {.importc: "xcb_input_get_extension_version_request_t", bycopy.} = object
+  XcbInputGetExtensionVersionRequest* {.rename: "xcb_input_get_extension_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     nameLen* {.importc: "name_len".}: uint16
     pad0: array[2, uint8]
 
-  XcbInputGetExtensionVersionReply* {.importc: "xcb_input_get_extension_version_reply_t", bycopy.} = object
+  XcbInputGetExtensionVersionReply* {.rename: "xcb_input_get_extension_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -174,34 +175,34 @@ type
     present*: uint8
     pad0: array[19, uint8]
 
-  XcbInputDeviceUse* {.importc: "xcb_input_device_use_t".} = enum
+  XcbInputDeviceUse* {.rename: "xcb_input_device_use_t".} = enum
     xcbInputDeviceUseIsXPointer = 0, xcbInputDeviceUseIsXKeyboard = 1,
     xcbInputDeviceUseIsXExtensionDevice = 2,
     xcbInputDeviceUseIsXExtensionKeyboard = 3,
     xcbInputDeviceUseIsXExtensionPointer = 4
 
-  XcbInputInputClass* {.importc: "xcb_input_input_class_t".} = enum
+  XcbInputInputClass* {.rename: "xcb_input_input_class_t".} = enum
     xcbInputInputClassKey = 0, xcbInputInputClassButton = 1,
     xcbInputInputClassValuator = 2, xcbInputInputClassFeedback = 3,
     xcbInputInputClassProximity = 4, xcbInputInputClassFocus = 5,
     xcbInputInputClassOther = 6
 
-  XcbInputValuatorMode* {.importc: "xcb_input_valuator_mode_t".} = enum
+  XcbInputValuatorMode* {.rename: "xcb_input_valuator_mode_t".} = enum
     xcbInputValuatorModeRelative = 0, xcbInputValuatorModeAbsolute = 1
 
-  XcbInputDeviceInfo* {.importc: "xcb_input_device_info_t", bycopy.} = object
+  XcbInputDeviceInfo* {.rename: "xcb_input_device_info_t", bycopy.} = object
     deviceType* {.importc: "device_type".}: XcbAtom
     deviceId* {.importc: "device_id".}: uint8
     numClassInfo* {.importc: "num_class_info".}: uint8
     deviceUse* {.importc: "device_use".}: uint8
     pad0: uint8
 
-  XcbInputDeviceInfoIterator* {.importc: "xcb_input_device_info_iterator_t", bycopy.} = object
+  XcbInputDeviceInfoIterator* {.rename: "xcb_input_device_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceInfo]
     rem*: cint
     index*: cint
 
-  XcbInputKeyInfo* {.importc: "xcb_input_key_info_t", bycopy.} = object
+  XcbInputKeyInfo* {.rename: "xcb_input_key_info_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     minKeycode* {.importc: "min_keycode".}: XcbInputKeyCode
@@ -209,39 +210,39 @@ type
     numKeys* {.importc: "num_keys".}: uint16
     pad0: array[2, uint8]
 
-  XcbInputKeyInfoIterator* {.importc: "xcb_input_key_info_iterator_t", bycopy.} = object
+  XcbInputKeyInfoIterator* {.rename: "xcb_input_key_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKeyInfo]
     rem*: cint
     index*: cint
 
-  XcbInputButtonInfo* {.importc: "xcb_input_button_info_t", bycopy.} = object
+  XcbInputButtonInfo* {.rename: "xcb_input_button_info_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     numButtons* {.importc: "num_buttons".}: uint16
 
-  XcbInputButtonInfoIterator* {.importc: "xcb_input_button_info_iterator_t", bycopy.} = object
+  XcbInputButtonInfoIterator* {.rename: "xcb_input_button_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputButtonInfo]
     rem*: cint
     index*: cint
 
-  XcbInputAxisInfo* {.importc: "xcb_input_axis_info_t", bycopy.} = object
+  XcbInputAxisInfo* {.rename: "xcb_input_axis_info_t", bycopy.} = object
     resolution*: uint32
     minimum*: int32
     maximum*: int32
 
-  XcbInputAxisInfoIterator* {.importc: "xcb_input_axis_info_iterator_t", bycopy.} = object
+  XcbInputAxisInfoIterator* {.rename: "xcb_input_axis_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputAxisInfo]
     rem*: cint
     index*: cint
 
-  XcbInputValuatorInfo* {.importc: "xcb_input_valuator_info_t", bycopy.} = object
+  XcbInputValuatorInfo* {.rename: "xcb_input_valuator_info_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     axesLen* {.importc: "axes_len".}: uint8
     mode*: uint8
     motionSize* {.importc: "motion_size".}: uint32
 
-  XcbInputValuatorInfoIterator* {.importc: "xcb_input_valuator_info_iterator_t", bycopy.} = object
+  XcbInputValuatorInfoIterator* {.rename: "xcb_input_valuator_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputValuatorInfo]
     rem*: cint
     index*: cint
@@ -268,37 +269,37 @@ type
 {.push header: "xcb/xinput.h".}
 
 type
-  XcbInputInputInfoInfo* {.importc: "xcb_input_input_info_info_t", bycopy.} = object
+  XcbInputInputInfoInfo* {.rename: "xcb_input_input_info_info_t", bycopy.} = object
     key*: XcbInputInputInfoKey
     button*: XcbInputInputInfoButton
     valuator*: XcbInputInputInfoValuator
 
-  XcbInputInputInfo* {.importc: "xcb_input_input_info_t", bycopy.} = object
+  XcbInputInputInfo* {.rename: "xcb_input_input_info_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
 
-  XcbInputInputInfoIterator* {.importc: "xcb_input_input_info_iterator_t", bycopy.} = object
+  XcbInputInputInfoIterator* {.rename: "xcb_input_input_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputInputInfo]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceName* {.importc: "xcb_input_device_name_t", bycopy.} = object
+  XcbInputDeviceName* {.rename: "xcb_input_device_name_t", bycopy.} = object
     len*: uint8
 
-  XcbInputDeviceNameIterator* {.importc: "xcb_input_device_name_iterator_t", bycopy.} = object
+  XcbInputDeviceNameIterator* {.rename: "xcb_input_device_name_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceName]
     rem*: cint
     index*: cint
 
-  XcbInputListInputDevicesCookie* {.importc: "xcb_input_list_input_devices_cookie_t", bycopy.} = object
+  XcbInputListInputDevicesCookie* {.rename: "xcb_input_list_input_devices_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputListInputDevicesRequest* {.importc: "xcb_input_list_input_devices_request_t", bycopy.} = object
+  XcbInputListInputDevicesRequest* {.rename: "xcb_input_list_input_devices_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbInputListInputDevicesReply* {.importc: "xcb_input_list_input_devices_reply_t", bycopy.} = object
+  XcbInputListInputDevicesReply* {.rename: "xcb_input_list_input_devices_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -306,31 +307,31 @@ type
     devicesLen* {.importc: "devices_len".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputEventTypeBaseIterator* {.importc: "xcb_input_event_type_base_iterator_t", bycopy.} = object
+  XcbInputEventTypeBaseIterator* {.rename: "xcb_input_event_type_base_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputEventTypeBase]
     rem*: cint
     index*: cint
 
-  XcbInputInputClassInfo* {.importc: "xcb_input_input_class_info_t", bycopy.} = object
+  XcbInputInputClassInfo* {.rename: "xcb_input_input_class_info_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     eventTypeBase* {.importc: "event_type_base".}: XcbInputEventTypeBase
 
-  XcbInputInputClassInfoIterator* {.importc: "xcb_input_input_class_info_iterator_t", bycopy.} = object
+  XcbInputInputClassInfoIterator* {.rename: "xcb_input_input_class_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputInputClassInfo]
     rem*: cint
     index*: cint
 
-  XcbInputOpenDeviceCookie* {.importc: "xcb_input_open_device_cookie_t", bycopy.} = object
+  XcbInputOpenDeviceCookie* {.rename: "xcb_input_open_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputOpenDeviceRequest* {.importc: "xcb_input_open_device_request_t", bycopy.} = object
+  XcbInputOpenDeviceRequest* {.rename: "xcb_input_open_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputOpenDeviceReply* {.importc: "xcb_input_open_device_reply_t", bycopy.} = object
+  XcbInputOpenDeviceReply* {.rename: "xcb_input_open_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -338,17 +339,17 @@ type
     numClasses* {.importc: "num_classes".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputCloseDeviceRequest* {.importc: "xcb_input_close_device_request_t", bycopy.} = object
+  XcbInputCloseDeviceRequest* {.rename: "xcb_input_close_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputSetDeviceModeCookie* {.importc: "xcb_input_set_device_mode_cookie_t", bycopy.} = object
+  XcbInputSetDeviceModeCookie* {.rename: "xcb_input_set_device_mode_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputSetDeviceModeRequest* {.importc: "xcb_input_set_device_mode_request_t", bycopy.} = object
+  XcbInputSetDeviceModeRequest* {.rename: "xcb_input_set_device_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -356,7 +357,7 @@ type
     mode*: uint8
     pad0: array[2, uint8]
 
-  XcbInputSetDeviceModeReply* {.importc: "xcb_input_set_device_mode_reply_t", bycopy.} = object
+  XcbInputSetDeviceModeReply* {.rename: "xcb_input_set_device_mode_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -364,7 +365,7 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputSelectExtensionEventRequest* {.importc: "xcb_input_select_extension_event_request_t", bycopy.} = object
+  XcbInputSelectExtensionEventRequest* {.rename: "xcb_input_select_extension_event_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -372,16 +373,16 @@ type
     numClasses* {.importc: "num_classes".}: uint16
     pad0: array[2, uint8]
 
-  XcbInputGetSelectedExtensionEventsCookie* {.importc: "xcb_input_get_selected_extension_events_cookie_t", bycopy.} = object
+  XcbInputGetSelectedExtensionEventsCookie* {.rename: "xcb_input_get_selected_extension_events_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetSelectedExtensionEventsRequest* {.importc: "xcb_input_get_selected_extension_events_request_t", bycopy.} = object
+  XcbInputGetSelectedExtensionEventsRequest* {.rename: "xcb_input_get_selected_extension_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbInputGetSelectedExtensionEventsReply* {.importc: "xcb_input_get_selected_extension_events_reply_t", bycopy.} = object
+  XcbInputGetSelectedExtensionEventsReply* {.rename: "xcb_input_get_selected_extension_events_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -390,11 +391,11 @@ type
     numAllClasses* {.importc: "num_all_classes".}: uint16
     pad0: array[20, uint8]
 
-  XcbInputPropagateMode* {.importc: "xcb_input_propagate_mode_t".} = enum
+  XcbInputPropagateMode* {.rename: "xcb_input_propagate_mode_t".} = enum
     xcbInputPropagateModeAddToList = 0,
     xcbInputPropagateModeDeleteFromList = 1
 
-  XcbInputChangeDeviceDontPropagateListRequest* {.importc: "xcb_input_change_device_dont_propagate_list_request_t", bycopy.} = object
+  XcbInputChangeDeviceDontPropagateListRequest* {.rename: "xcb_input_change_device_dont_propagate_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -403,16 +404,16 @@ type
     mode*: uint8
     pad0: uint8
 
-  XcbInputGetDeviceDontPropagateListCookie* {.importc: "xcb_input_get_device_dont_propagate_list_cookie_t", bycopy.} = object
+  XcbInputGetDeviceDontPropagateListCookie* {.rename: "xcb_input_get_device_dont_propagate_list_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceDontPropagateListRequest* {.importc: "xcb_input_get_device_dont_propagate_list_request_t", bycopy.} = object
+  XcbInputGetDeviceDontPropagateListRequest* {.rename: "xcb_input_get_device_dont_propagate_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbInputGetDeviceDontPropagateListReply* {.importc: "xcb_input_get_device_dont_propagate_list_reply_t", bycopy.} = object
+  XcbInputGetDeviceDontPropagateListReply* {.rename: "xcb_input_get_device_dont_propagate_list_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -420,19 +421,19 @@ type
     numClasses* {.importc: "num_classes".}: uint16
     pad0: array[22, uint8]
 
-  XcbInputDeviceTimeCoord* {.importc: "xcb_input_device_time_coord_t", bycopy.} = object
+  XcbInputDeviceTimeCoord* {.rename: "xcb_input_device_time_coord_t", bycopy.} = object
     time*: XcbTimestamp
 
-  XcbInputDeviceTimeCoordIterator* {.importc: "xcb_input_device_time_coord_iterator_t", bycopy.} = object
+  XcbInputDeviceTimeCoordIterator* {.rename: "xcb_input_device_time_coord_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceTimeCoord]
     rem*: cint
     index*: cint
     numAxes* {.importc: "num_axes".}: uint8
 
-  XcbInputGetDeviceMotionEventsCookie* {.importc: "xcb_input_get_device_motion_events_cookie_t", bycopy.} = object
+  XcbInputGetDeviceMotionEventsCookie* {.rename: "xcb_input_get_device_motion_events_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceMotionEventsRequest* {.importc: "xcb_input_get_device_motion_events_request_t", bycopy.} = object
+  XcbInputGetDeviceMotionEventsRequest* {.rename: "xcb_input_get_device_motion_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -441,7 +442,7 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetDeviceMotionEventsReply* {.importc: "xcb_input_get_device_motion_events_reply_t", bycopy.} = object
+  XcbInputGetDeviceMotionEventsReply* {.rename: "xcb_input_get_device_motion_events_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -451,17 +452,17 @@ type
     deviceMode* {.importc: "device_mode".}: uint8
     pad0: array[18, uint8]
 
-  XcbInputChangeKeyboardDeviceCookie* {.importc: "xcb_input_change_keyboard_device_cookie_t", bycopy.} = object
+  XcbInputChangeKeyboardDeviceCookie* {.rename: "xcb_input_change_keyboard_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputChangeKeyboardDeviceRequest* {.importc: "xcb_input_change_keyboard_device_request_t", bycopy.} = object
+  XcbInputChangeKeyboardDeviceRequest* {.rename: "xcb_input_change_keyboard_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputChangeKeyboardDeviceReply* {.importc: "xcb_input_change_keyboard_device_reply_t", bycopy.} = object
+  XcbInputChangeKeyboardDeviceReply* {.rename: "xcb_input_change_keyboard_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -469,10 +470,10 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputChangePointerDeviceCookie* {.importc: "xcb_input_change_pointer_device_cookie_t", bycopy.} = object
+  XcbInputChangePointerDeviceCookie* {.rename: "xcb_input_change_pointer_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputChangePointerDeviceRequest* {.importc: "xcb_input_change_pointer_device_request_t", bycopy.} = object
+  XcbInputChangePointerDeviceRequest* {.rename: "xcb_input_change_pointer_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -481,7 +482,7 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: uint8
 
-  XcbInputChangePointerDeviceReply* {.importc: "xcb_input_change_pointer_device_reply_t", bycopy.} = object
+  XcbInputChangePointerDeviceReply* {.rename: "xcb_input_change_pointer_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -489,10 +490,10 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputGrabDeviceCookie* {.importc: "xcb_input_grab_device_cookie_t", bycopy.} = object
+  XcbInputGrabDeviceCookie* {.rename: "xcb_input_grab_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGrabDeviceRequest* {.importc: "xcb_input_grab_device_request_t", bycopy.} = object
+  XcbInputGrabDeviceRequest* {.rename: "xcb_input_grab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -505,7 +506,7 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputGrabDeviceReply* {.importc: "xcb_input_grab_device_reply_t", bycopy.} = object
+  XcbInputGrabDeviceReply* {.rename: "xcb_input_grab_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -513,7 +514,7 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputUngrabDeviceRequest* {.importc: "xcb_input_ungrab_device_request_t", bycopy.} = object
+  XcbInputUngrabDeviceRequest* {.rename: "xcb_input_ungrab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -521,10 +522,10 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputModifierDevice* {.importc: "xcb_input_modifier_device_t".} = enum
+  XcbInputModifierDevice* {.rename: "xcb_input_modifier_device_t".} = enum
     xcbInputModifierDeviceUseXKeyboard = 255
 
-  XcbInputGrabDeviceKeyRequest* {.importc: "xcb_input_grab_device_key_request_t", bycopy.} = object
+  XcbInputGrabDeviceKeyRequest* {.rename: "xcb_input_grab_device_key_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -539,7 +540,7 @@ type
     ownerEvents* {.importc: "owner_events".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputUngrabDeviceKeyRequest* {.importc: "xcb_input_ungrab_device_key_request_t", bycopy.} = object
+  XcbInputUngrabDeviceKeyRequest* {.rename: "xcb_input_ungrab_device_key_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -549,7 +550,7 @@ type
     key*: uint8
     grabbedDevice* {.importc: "grabbed_device".}: uint8
 
-  XcbInputGrabDeviceButtonRequest* {.importc: "xcb_input_grab_device_button_request_t", bycopy.} = object
+  XcbInputGrabDeviceButtonRequest* {.rename: "xcb_input_grab_device_button_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -564,7 +565,7 @@ type
     ownerEvents* {.importc: "owner_events".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputUngrabDeviceButtonRequest* {.importc: "xcb_input_ungrab_device_button_request_t", bycopy.} = object
+  XcbInputUngrabDeviceButtonRequest* {.rename: "xcb_input_ungrab_device_button_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -575,7 +576,7 @@ type
     grabbedDevice* {.importc: "grabbed_device".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputDeviceInputMode* {.importc: "xcb_input_device_input_mode_t".} = enum
+  XcbInputDeviceInputMode* {.rename: "xcb_input_device_input_mode_t".} = enum
     xcbInputDeviceInputModeAsyncThisDevice = 0,
     xcbInputDeviceInputModeSyncThisDevice = 1,
     xcbInputDeviceInputModeReplayThisDevice = 2,
@@ -583,7 +584,7 @@ type
     xcbInputDeviceInputModeAsyncAll = 4,
     xcbInputDeviceInputModeSyncAll = 5
 
-  XcbInputAllowDeviceEventsRequest* {.importc: "xcb_input_allow_device_events_request_t", bycopy.} = object
+  XcbInputAllowDeviceEventsRequest* {.rename: "xcb_input_allow_device_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -592,17 +593,17 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputGetDeviceFocusCookie* {.importc: "xcb_input_get_device_focus_cookie_t", bycopy.} = object
+  XcbInputGetDeviceFocusCookie* {.rename: "xcb_input_get_device_focus_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceFocusRequest* {.importc: "xcb_input_get_device_focus_request_t", bycopy.} = object
+  XcbInputGetDeviceFocusRequest* {.rename: "xcb_input_get_device_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetDeviceFocusReply* {.importc: "xcb_input_get_device_focus_reply_t", bycopy.} = object
+  XcbInputGetDeviceFocusReply* {.rename: "xcb_input_get_device_focus_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -612,7 +613,7 @@ type
     revertTo* {.importc: "revert_to".}: uint8
     pad0: array[15, uint8]
 
-  XcbInputSetDeviceFocusRequest* {.importc: "xcb_input_set_device_focus_request_t", bycopy.} = object
+  XcbInputSetDeviceFocusRequest* {.rename: "xcb_input_set_device_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -622,12 +623,12 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputFeedbackClass* {.importc: "xcb_input_feedback_class_t".} = enum
+  XcbInputFeedbackClass* {.rename: "xcb_input_feedback_class_t".} = enum
     xcbInputFeedbackClassKeyboard = 0, xcbInputFeedbackClassPointer = 1,
     xcbInputFeedbackClassString = 2, xcbInputFeedbackClassInteger = 3,
     xcbInputFeedbackClassLed = 4, xcbInputFeedbackClassBell = 5
 
-  XcbInputKbdFeedbackState* {.importc: "xcb_input_kbd_feedback_state_t", bycopy.} = object
+  XcbInputKbdFeedbackState* {.rename: "xcb_input_kbd_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -641,12 +642,12 @@ type
     pad0: uint8
     autoRepeats* {.importc: "auto_repeats".}: array[32, uint8]
 
-  XcbInputKbdFeedbackStateIterator* {.importc: "xcb_input_kbd_feedback_state_iterator_t", bycopy.} = object
+  XcbInputKbdFeedbackStateIterator* {.rename: "xcb_input_kbd_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKbdFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputPtrFeedbackState* {.importc: "xcb_input_ptr_feedback_state_t", bycopy.} = object
+  XcbInputPtrFeedbackState* {.rename: "xcb_input_ptr_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -655,12 +656,12 @@ type
     accelDenom* {.importc: "accel_denom".}: uint16
     threshold*: uint16
 
-  XcbInputPtrFeedbackStateIterator* {.importc: "xcb_input_ptr_feedback_state_iterator_t", bycopy.} = object
+  XcbInputPtrFeedbackStateIterator* {.rename: "xcb_input_ptr_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputPtrFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputIntegerFeedbackState* {.importc: "xcb_input_integer_feedback_state_t", bycopy.} = object
+  XcbInputIntegerFeedbackState* {.rename: "xcb_input_integer_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -668,24 +669,24 @@ type
     minValue* {.importc: "min_value".}: int32
     maxValue* {.importc: "max_value".}: int32
 
-  XcbInputIntegerFeedbackStateIterator* {.importc: "xcb_input_integer_feedback_state_iterator_t", bycopy.} = object
+  XcbInputIntegerFeedbackStateIterator* {.rename: "xcb_input_integer_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputIntegerFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputStringFeedbackState* {.importc: "xcb_input_string_feedback_state_t", bycopy.} = object
+  XcbInputStringFeedbackState* {.rename: "xcb_input_string_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
     maxSymbols* {.importc: "max_symbols".}: uint16
     numKeysyms* {.importc: "num_keysyms".}: uint16
 
-  XcbInputStringFeedbackStateIterator* {.importc: "xcb_input_string_feedback_state_iterator_t", bycopy.} = object
+  XcbInputStringFeedbackStateIterator* {.rename: "xcb_input_string_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputStringFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputBellFeedbackState* {.importc: "xcb_input_bell_feedback_state_t", bycopy.} = object
+  XcbInputBellFeedbackState* {.rename: "xcb_input_bell_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -694,19 +695,19 @@ type
     pitch*: uint16
     duration*: uint16
 
-  XcbInputBellFeedbackStateIterator* {.importc: "xcb_input_bell_feedback_state_iterator_t", bycopy.} = object
+  XcbInputBellFeedbackStateIterator* {.rename: "xcb_input_bell_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputBellFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputLedFeedbackState* {.importc: "xcb_input_led_feedback_state_t", bycopy.} = object
+  XcbInputLedFeedbackState* {.rename: "xcb_input_led_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
     ledMask* {.importc: "led_mask".}: uint32
     ledValues* {.importc: "led_values".}: uint32
 
-  XcbInputLedFeedbackStateIterator* {.importc: "xcb_input_led_feedback_state_iterator_t", bycopy.} = object
+  XcbInputLedFeedbackStateIterator* {.rename: "xcb_input_led_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputLedFeedbackState]
     rem*: cint
     index*: cint
@@ -755,7 +756,7 @@ type
 {.push header: "xcb/xinput.h".}
 
 type
-  XcbInputFeedbackStateData* {.importc: "xcb_input_feedback_state_data_t", bycopy.} = object
+  XcbInputFeedbackStateData* {.rename: "xcb_input_feedback_state_data_t", bycopy.} = object
     keyboard*: XcbInputFeedbackStateKeyboard
     pointer*: XcbInputFeedbackStatePointer
     string*: XcbInputFeedbackStateString
@@ -763,27 +764,27 @@ type
     led*: XcbInputFeedbackStateLed
     bell*: XcbInputFeedbackStateBell
 
-  XcbInputFeedbackState* {.importc: "xcb_input_feedback_state_t", bycopy.} = object
+  XcbInputFeedbackState* {.rename: "xcb_input_feedback_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
 
-  XcbInputFeedbackStateIterator* {.importc: "xcb_input_feedback_state_iterator_t", bycopy.} = object
+  XcbInputFeedbackStateIterator* {.rename: "xcb_input_feedback_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputFeedbackState]
     rem*: cint
     index*: cint
 
-  XcbInputGetFeedbackControlCookie* {.importc: "xcb_input_get_feedback_control_cookie_t", bycopy.} = object
+  XcbInputGetFeedbackControlCookie* {.rename: "xcb_input_get_feedback_control_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetFeedbackControlRequest* {.importc: "xcb_input_get_feedback_control_request_t", bycopy.} = object
+  XcbInputGetFeedbackControlRequest* {.rename: "xcb_input_get_feedback_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetFeedbackControlReply* {.importc: "xcb_input_get_feedback_control_reply_t", bycopy.} = object
+  XcbInputGetFeedbackControlReply* {.rename: "xcb_input_get_feedback_control_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -791,7 +792,7 @@ type
     numFeedbacks* {.importc: "num_feedbacks".}: uint16
     pad0: array[22, uint8]
 
-  XcbInputKbdFeedbackCtl* {.importc: "xcb_input_kbd_feedback_ctl_t", bycopy.} = object
+  XcbInputKbdFeedbackCtl* {.rename: "xcb_input_kbd_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -804,12 +805,12 @@ type
     ledMask* {.importc: "led_mask".}: uint32
     ledValues* {.importc: "led_values".}: uint32
 
-  XcbInputKbdFeedbackCtlIterator* {.importc: "xcb_input_kbd_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputKbdFeedbackCtlIterator* {.rename: "xcb_input_kbd_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKbdFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputPtrFeedbackCtl* {.importc: "xcb_input_ptr_feedback_ctl_t", bycopy.} = object
+  XcbInputPtrFeedbackCtl* {.rename: "xcb_input_ptr_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -818,35 +819,35 @@ type
     denom*: int16
     threshold*: int16
 
-  XcbInputPtrFeedbackCtlIterator* {.importc: "xcb_input_ptr_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputPtrFeedbackCtlIterator* {.rename: "xcb_input_ptr_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputPtrFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputIntegerFeedbackCtl* {.importc: "xcb_input_integer_feedback_ctl_t", bycopy.} = object
+  XcbInputIntegerFeedbackCtl* {.rename: "xcb_input_integer_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
     intToDisplay* {.importc: "int_to_display".}: int32
 
-  XcbInputIntegerFeedbackCtlIterator* {.importc: "xcb_input_integer_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputIntegerFeedbackCtlIterator* {.rename: "xcb_input_integer_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputIntegerFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputStringFeedbackCtl* {.importc: "xcb_input_string_feedback_ctl_t", bycopy.} = object
+  XcbInputStringFeedbackCtl* {.rename: "xcb_input_string_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
     pad0: array[2, uint8]
     numKeysyms* {.importc: "num_keysyms".}: uint16
 
-  XcbInputStringFeedbackCtlIterator* {.importc: "xcb_input_string_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputStringFeedbackCtlIterator* {.rename: "xcb_input_string_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputStringFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputBellFeedbackCtl* {.importc: "xcb_input_bell_feedback_ctl_t", bycopy.} = object
+  XcbInputBellFeedbackCtl* {.rename: "xcb_input_bell_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
@@ -855,19 +856,19 @@ type
     pitch*: int16
     duration*: int16
 
-  XcbInputBellFeedbackCtlIterator* {.importc: "xcb_input_bell_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputBellFeedbackCtlIterator* {.rename: "xcb_input_bell_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputBellFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputLedFeedbackCtl* {.importc: "xcb_input_led_feedback_ctl_t", bycopy.} = object
+  XcbInputLedFeedbackCtl* {.rename: "xcb_input_led_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
     ledMask* {.importc: "led_mask".}: uint32
     ledValues* {.importc: "led_values".}: uint32
 
-  XcbInputLedFeedbackCtlIterator* {.importc: "xcb_input_led_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputLedFeedbackCtlIterator* {.rename: "xcb_input_led_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputLedFeedbackCtl]
     rem*: cint
     index*: cint
@@ -913,7 +914,7 @@ type
 {.push header: "xcb/xinput.h".}
 
 type
-  XcbInputFeedbackCtlData* {.importc: "xcb_input_feedback_ctl_data_t", bycopy.} = object
+  XcbInputFeedbackCtlData* {.rename: "xcb_input_feedback_ctl_data_t", bycopy.} = object
     keyboard*: XcbInputFeedbackCtlKeyboard
     pointer*: XcbInputFeedbackCtlPointer
     string*: XcbInputFeedbackCtlString
@@ -921,17 +922,17 @@ type
     led*: XcbInputFeedbackCtlLed
     bell*: XcbInputFeedbackCtlBell
 
-  XcbInputFeedbackCtl* {.importc: "xcb_input_feedback_ctl_t", bycopy.} = object
+  XcbInputFeedbackCtl* {.rename: "xcb_input_feedback_ctl_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     feedbackId* {.importc: "feedback_id".}: uint8
     len*: uint16
 
-  XcbInputFeedbackCtlIterator* {.importc: "xcb_input_feedback_ctl_iterator_t", bycopy.} = object
+  XcbInputFeedbackCtlIterator* {.rename: "xcb_input_feedback_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputFeedbackCtl]
     rem*: cint
     index*: cint
 
-  XcbInputChangeFeedbackControlMask* {.importc: "xcb_input_change_feedback_control_mask_t".} = enum
+  XcbInputChangeFeedbackControlMask* {.rename: "xcb_input_change_feedback_control_mask_t".} = enum
     xcbInputChangeFeedbackControlMaskKeyClickPercent = 1,
     xcbInputChangeFeedbackControlMaskPercent = 2,
     xcbInputChangeFeedbackControlMaskPitch = 4,
@@ -941,7 +942,7 @@ type
     xcbInputChangeFeedbackControlMaskKey = 64,
     xcbInputChangeFeedbackControlMaskAutoRepeatMode = 128
 
-  XcbInputChangeFeedbackControlRequest* {.importc: "xcb_input_change_feedback_control_request_t", bycopy.} = object
+  XcbInputChangeFeedbackControlRequest* {.rename: "xcb_input_change_feedback_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -950,10 +951,10 @@ type
     feedbackId* {.importc: "feedback_id".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputGetDeviceKeyMappingCookie* {.importc: "xcb_input_get_device_key_mapping_cookie_t", bycopy.} = object
+  XcbInputGetDeviceKeyMappingCookie* {.rename: "xcb_input_get_device_key_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceKeyMappingRequest* {.importc: "xcb_input_get_device_key_mapping_request_t", bycopy.} = object
+  XcbInputGetDeviceKeyMappingRequest* {.rename: "xcb_input_get_device_key_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -962,7 +963,7 @@ type
     count*: uint8
     pad0: uint8
 
-  XcbInputGetDeviceKeyMappingReply* {.importc: "xcb_input_get_device_key_mapping_reply_t", bycopy.} = object
+  XcbInputGetDeviceKeyMappingReply* {.rename: "xcb_input_get_device_key_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -970,7 +971,7 @@ type
     keysymsPerKeycode* {.importc: "keysyms_per_keycode".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputChangeDeviceKeyMappingRequest* {.importc: "xcb_input_change_device_key_mapping_request_t", bycopy.} = object
+  XcbInputChangeDeviceKeyMappingRequest* {.rename: "xcb_input_change_device_key_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -979,17 +980,17 @@ type
     keysymsPerKeycode* {.importc: "keysyms_per_keycode".}: uint8
     keycodeCount* {.importc: "keycode_count".}: uint8
 
-  XcbInputGetDeviceModifierMappingCookie* {.importc: "xcb_input_get_device_modifier_mapping_cookie_t", bycopy.} = object
+  XcbInputGetDeviceModifierMappingCookie* {.rename: "xcb_input_get_device_modifier_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceModifierMappingRequest* {.importc: "xcb_input_get_device_modifier_mapping_request_t", bycopy.} = object
+  XcbInputGetDeviceModifierMappingRequest* {.rename: "xcb_input_get_device_modifier_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetDeviceModifierMappingReply* {.importc: "xcb_input_get_device_modifier_mapping_reply_t", bycopy.} = object
+  XcbInputGetDeviceModifierMappingReply* {.rename: "xcb_input_get_device_modifier_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -997,10 +998,10 @@ type
     keycodesPerModifier* {.importc: "keycodes_per_modifier".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputSetDeviceModifierMappingCookie* {.importc: "xcb_input_set_device_modifier_mapping_cookie_t", bycopy.} = object
+  XcbInputSetDeviceModifierMappingCookie* {.rename: "xcb_input_set_device_modifier_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputSetDeviceModifierMappingRequest* {.importc: "xcb_input_set_device_modifier_mapping_request_t", bycopy.} = object
+  XcbInputSetDeviceModifierMappingRequest* {.rename: "xcb_input_set_device_modifier_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1008,7 +1009,7 @@ type
     keycodesPerModifier* {.importc: "keycodes_per_modifier".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputSetDeviceModifierMappingReply* {.importc: "xcb_input_set_device_modifier_mapping_reply_t", bycopy.} = object
+  XcbInputSetDeviceModifierMappingReply* {.rename: "xcb_input_set_device_modifier_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1016,17 +1017,17 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputGetDeviceButtonMappingCookie* {.importc: "xcb_input_get_device_button_mapping_cookie_t", bycopy.} = object
+  XcbInputGetDeviceButtonMappingCookie* {.rename: "xcb_input_get_device_button_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceButtonMappingRequest* {.importc: "xcb_input_get_device_button_mapping_request_t", bycopy.} = object
+  XcbInputGetDeviceButtonMappingRequest* {.rename: "xcb_input_get_device_button_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetDeviceButtonMappingReply* {.importc: "xcb_input_get_device_button_mapping_reply_t", bycopy.} = object
+  XcbInputGetDeviceButtonMappingReply* {.rename: "xcb_input_get_device_button_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1034,10 +1035,10 @@ type
     mapSize* {.importc: "map_size".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputSetDeviceButtonMappingCookie* {.importc: "xcb_input_set_device_button_mapping_cookie_t", bycopy.} = object
+  XcbInputSetDeviceButtonMappingCookie* {.rename: "xcb_input_set_device_button_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputSetDeviceButtonMappingRequest* {.importc: "xcb_input_set_device_button_mapping_request_t", bycopy.} = object
+  XcbInputSetDeviceButtonMappingRequest* {.rename: "xcb_input_set_device_button_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1045,7 +1046,7 @@ type
     mapSize* {.importc: "map_size".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputSetDeviceButtonMappingReply* {.importc: "xcb_input_set_device_button_mapping_reply_t", bycopy.} = object
+  XcbInputSetDeviceButtonMappingReply* {.rename: "xcb_input_set_device_button_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1053,41 +1054,41 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputKeyState* {.importc: "xcb_input_key_state_t", bycopy.} = object
+  XcbInputKeyState* {.rename: "xcb_input_key_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     numKeys* {.importc: "num_keys".}: uint8
     pad0: uint8
     keys*: array[32, uint8]
 
-  XcbInputKeyStateIterator* {.importc: "xcb_input_key_state_iterator_t", bycopy.} = object
+  XcbInputKeyStateIterator* {.rename: "xcb_input_key_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKeyState]
     rem*: cint
     index*: cint
 
-  XcbInputButtonState* {.importc: "xcb_input_button_state_t", bycopy.} = object
+  XcbInputButtonState* {.rename: "xcb_input_button_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     numButtons* {.importc: "num_buttons".}: uint8
     pad0: uint8
     buttons*: array[32, uint8]
 
-  XcbInputButtonStateIterator* {.importc: "xcb_input_button_state_iterator_t", bycopy.} = object
+  XcbInputButtonStateIterator* {.rename: "xcb_input_button_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputButtonState]
     rem*: cint
     index*: cint
 
-  XcbInputValuatorStateModeMask* {.importc: "xcb_input_valuator_state_mode_mask_t".} = enum
+  XcbInputValuatorStateModeMask* {.rename: "xcb_input_valuator_state_mode_mask_t".} = enum
     xcbInputValuatorStateModeMaskDeviceModeAbsolute = 1,
     xcbInputValuatorStateModeMaskOutOfProximity = 2
 
-  XcbInputValuatorState* {.importc: "xcb_input_valuator_state_t", bycopy.} = object
+  XcbInputValuatorState* {.rename: "xcb_input_valuator_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
     numValuators* {.importc: "num_valuators".}: uint8
     mode*: uint8
 
-  XcbInputValuatorStateIterator* {.importc: "xcb_input_valuator_state_iterator_t", bycopy.} = object
+  XcbInputValuatorStateIterator* {.rename: "xcb_input_valuator_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputValuatorState]
     rem*: cint
     index*: cint
@@ -1114,31 +1115,31 @@ type
 {.push header: "xcb/xinput.h".}
 
 type
-  XcbInputInputStateData* {.importc: "xcb_input_input_state_data_t", bycopy.} = object
+  XcbInputInputStateData* {.rename: "xcb_input_input_state_data_t", bycopy.} = object
     key*: XcbInputInputStateKey
     button*: XcbInputInputStateButton
     valuator*: XcbInputInputStateValidator
 
-  XcbInputInputState* {.importc: "xcb_input_input_state_t", bycopy.} = object
+  XcbInputInputState* {.rename: "xcb_input_input_state_t", bycopy.} = object
     classId* {.importc: "class_id".}: uint8
     len*: uint8
 
-  XcbInputInputStateIterator* {.importc: "xcb_input_input_state_iterator_t", bycopy.} = object
+  XcbInputInputStateIterator* {.rename: "xcb_input_input_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputInputState]
     rem*: cint
     index*: cint
 
-  XcbInputQueryDeviceStateCookie* {.importc: "xcb_input_query_device_state_cookie_t", bycopy.} = object
+  XcbInputQueryDeviceStateCookie* {.rename: "xcb_input_query_device_state_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputQueryDeviceStateRequest* {.importc: "xcb_input_query_device_state_request_t", bycopy.} = object
+  XcbInputQueryDeviceStateRequest* {.rename: "xcb_input_query_device_state_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputQueryDeviceStateReply* {.importc: "xcb_input_query_device_state_reply_t", bycopy.} = object
+  XcbInputQueryDeviceStateReply* {.rename: "xcb_input_query_device_state_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1146,7 +1147,7 @@ type
     numClasses* {.importc: "num_classes".}: uint8
     pad0: array[23, uint8]
 
-  XcbInputDeviceBellRequest* {.importc: "xcb_input_device_bell_request_t", bycopy.} = object
+  XcbInputDeviceBellRequest* {.rename: "xcb_input_device_bell_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1155,10 +1156,10 @@ type
     feedbackClass* {.importc: "feedback_class".}: uint8
     percent*: int8
 
-  XcbInputSetDeviceValuatorsCookie* {.importc: "xcb_input_set_device_valuators_cookie_t", bycopy.} = object
+  XcbInputSetDeviceValuatorsCookie* {.rename: "xcb_input_set_device_valuators_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputSetDeviceValuatorsRequest* {.importc: "xcb_input_set_device_valuators_request_t", bycopy.} = object
+  XcbInputSetDeviceValuatorsRequest* {.rename: "xcb_input_set_device_valuators_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1167,7 +1168,7 @@ type
     numValuators* {.importc: "num_valuators".}: uint8
     pad0: uint8
 
-  XcbInputSetDeviceValuatorsReply* {.importc: "xcb_input_set_device_valuators_reply_t", bycopy.} = object
+  XcbInputSetDeviceValuatorsReply* {.rename: "xcb_input_set_device_valuators_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1175,22 +1176,22 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputDeviceControl* {.importc: "xcb_input_device_control_t".} = enum
+  XcbInputDeviceControl* {.rename: "xcb_input_device_control_t".} = enum
     xcbInputDeviceControlResolution = 1,
     xcbInputDeviceControlAbsCalib = 2, xcbInputDeviceControlCore = 3,
     xcbInputDeviceControlEnable = 4, xcbInputDeviceControlAbsArea = 5
 
-  XcbInputDeviceResolutionState* {.importc: "xcb_input_device_resolution_state_t", bycopy.} = object
+  XcbInputDeviceResolutionState* {.rename: "xcb_input_device_resolution_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     numValuators* {.importc: "num_valuators".}: uint32
 
-  XcbInputDeviceResolutionStateIterator* {.importc: "xcb_input_device_resolution_state_iterator_t", bycopy.} = object
+  XcbInputDeviceResolutionStateIterator* {.rename: "xcb_input_device_resolution_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceResolutionState]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceAbsCalibState* {.importc: "xcb_input_device_abs_calib_state_t", bycopy.} = object
+  XcbInputDeviceAbsCalibState* {.rename: "xcb_input_device_abs_calib_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     minX* {.importc: "min_x".}: int32
@@ -1202,12 +1203,12 @@ type
     rotation*: uint32
     buttonThreshold* {.importc: "button_threshold".}: uint32
 
-  XcbInputDeviceAbsCalibStateIterator* {.importc: "xcb_input_device_abs_calib_state_iterator_t", bycopy.} = object
+  XcbInputDeviceAbsCalibStateIterator* {.rename: "xcb_input_device_abs_calib_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceAbsCalibState]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceAbsAreaState* {.importc: "xcb_input_device_abs_area_state_t", bycopy.} = object
+  XcbInputDeviceAbsAreaState* {.rename: "xcb_input_device_abs_area_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     offsetX* {.importc: "offset_x".}: uint32
@@ -1217,30 +1218,30 @@ type
     screen*: uint32
     following*: uint32
 
-  XcbInputDeviceAbsAreaStateIterator* {.importc: "xcb_input_device_abs_area_state_iterator_t", bycopy.} = object
+  XcbInputDeviceAbsAreaStateIterator* {.rename: "xcb_input_device_abs_area_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceAbsAreaState]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceCoreState* {.importc: "xcb_input_device_core_state_t", bycopy.} = object
+  XcbInputDeviceCoreState* {.rename: "xcb_input_device_core_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     status*: uint8
     iscore*: uint8
     pad0: array[2, uint8]
 
-  XcbInputDeviceCoreStateIterator* {.importc: "xcb_input_device_core_state_iterator_t", bycopy.} = object
+  XcbInputDeviceCoreStateIterator* {.rename: "xcb_input_device_core_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceCoreState]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceEnableState* {.importc: "xcb_input_device_enable_state_t", bycopy.} = object
+  XcbInputDeviceEnableState* {.rename: "xcb_input_device_enable_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     enable*: uint8
     pad0: array[3, uint8]
 
-  XcbInputDeviceEnableStateIterator* {.importc: "xcb_input_device_enable_state_iterator_t", bycopy.} = object
+  XcbInputDeviceEnableStateIterator* {.rename: "xcb_input_device_enable_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceEnableState]
     rem*: cint
     index*: cint
@@ -1274,26 +1275,26 @@ type
     screen*: uint32
     following*: uint32
 
-  XcbInputDeviceStateData* {.importc: "xcb_input_device_state_data_t", bycopy.} = object
+  XcbInputDeviceStateData* {.rename: "xcb_input_device_state_data_t", bycopy.} = object
     resolution*: XcbInputDeviceStateResolution
     absCalib* {.importc: "abs_calib".}: XcbInputDeviceStateCalib
     core*: XcbInputDeviceStateCore
     enable*: XcbInputDeviceStateEnable
     absArea* {.importc: "abs_area".}: XcbInputDeviceStateArea
 
-  XcbInputDeviceState* {.importc: "xcb_input_device_state_t", bycopy.} = object
+  XcbInputDeviceState* {.rename: "xcb_input_device_state_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
 
-  XcbInputDeviceStateIterator* {.importc: "xcb_input_device_state_iterator_t", bycopy.} = object
+  XcbInputDeviceStateIterator* {.rename: "xcb_input_device_state_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceState]
     rem*: cint
     index*: cint
 
-  XcbInputGetDeviceControlCookie* {.importc: "xcb_input_get_device_control_cookie_t", bycopy.} = object
+  XcbInputGetDeviceControlCookie* {.rename: "xcb_input_get_device_control_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDeviceControlRequest* {.importc: "xcb_input_get_device_control_request_t", bycopy.} = object
+  XcbInputGetDeviceControlRequest* {.rename: "xcb_input_get_device_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1301,7 +1302,7 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: uint8
 
-  XcbInputGetDeviceControlReply* {.importc: "xcb_input_get_device_control_reply_t", bycopy.} = object
+  XcbInputGetDeviceControlReply* {.rename: "xcb_input_get_device_control_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1309,19 +1310,19 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputDeviceResolutionCtl* {.importc: "xcb_input_device_resolution_ctl_t", bycopy.} = object
+  XcbInputDeviceResolutionCtl* {.rename: "xcb_input_device_resolution_ctl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     firstValuator* {.importc: "first_valuator".}: uint8
     numValuators* {.importc: "num_valuators".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputDeviceResolutionCtlIterator* {.importc: "xcb_input_device_resolution_ctl_iterator_t", bycopy.} = object
+  XcbInputDeviceResolutionCtlIterator* {.rename: "xcb_input_device_resolution_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceResolutionCtl]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceAbsCalibCtl* {.importc: "xcb_input_device_abs_calib_ctl_t", bycopy.} = object
+  XcbInputDeviceAbsCalibCtl* {.rename: "xcb_input_device_abs_calib_ctl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     minX* {.importc: "min_x".}: int32
@@ -1333,12 +1334,12 @@ type
     rotation*: uint32
     buttonThreshold* {.importc: "button_threshold".}: uint32
 
-  XcbInputDeviceAbsCalibCtlIterator* {.importc: "xcb_input_device_abs_calib_ctl_iterator_t", bycopy.} = object
+  XcbInputDeviceAbsCalibCtlIterator* {.rename: "xcb_input_device_abs_calib_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceAbsCalibCtl]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceAbsAreaCtrl* {.importc: "xcb_input_device_abs_area_ctrl_t", bycopy.} = object
+  XcbInputDeviceAbsAreaCtrl* {.rename: "xcb_input_device_abs_area_ctrl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     offsetX* {.importc: "offset_x".}: uint32
@@ -1348,29 +1349,29 @@ type
     screen*: int32
     following*: uint32
 
-  XcbInputDeviceAbsAreaCtrlIterator* {.importc: "xcb_input_device_abs_area_ctrl_iterator_t", bycopy.} = object
+  XcbInputDeviceAbsAreaCtrlIterator* {.rename: "xcb_input_device_abs_area_ctrl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceAbsAreaCtrl]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceCoreCtrl* {.importc: "xcb_input_device_core_ctrl_t", bycopy.} = object
+  XcbInputDeviceCoreCtrl* {.rename: "xcb_input_device_core_ctrl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     status*: uint8
     pad0: array[3, uint8]
 
-  XcbInputDeviceCoreCtrlIterator* {.importc: "xcb_input_device_core_ctrl_iterator_t", bycopy.} = object
+  XcbInputDeviceCoreCtrlIterator* {.rename: "xcb_input_device_core_ctrl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceCoreCtrl]
     rem*: cint
     index*: cint
 
-  XcbInputDeviceEnableCtrl* {.importc: "xcb_input_device_enable_ctrl_t", bycopy.} = object
+  XcbInputDeviceEnableCtrl* {.rename: "xcb_input_device_enable_ctrl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
     enable*: uint8
     pad0: array[3, uint8]
 
-  XcbInputDeviceEnableCtrlIterator* {.importc: "xcb_input_device_enable_ctrl_iterator_t", bycopy.} = object
+  XcbInputDeviceEnableCtrlIterator* {.rename: "xcb_input_device_enable_ctrl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceEnableCtrl]
     rem*: cint
     index*: cint
@@ -1403,26 +1404,26 @@ type
     screen*: int32
     following*: uint32
 
-  XcbInputDeviceCtlData* {.importc: "xcb_input_device_ctl_data_t", bycopy.} = object
+  XcbInputDeviceCtlData* {.rename: "xcb_input_device_ctl_data_t", bycopy.} = object
     resolution*: XcbInputDeviceCtlResolution
     absCalib* {.importc: "abs_calib".}: XcbInputDeviceCtlCalib
     core*: XcbInputDeviceCtlCore
     enable*: XcbInputDeviceCtlEnable
     absArea* {.importc: "abs_area".}: XcbInputDeviceCtlArea
 
-  XcbInputDeviceCtl* {.importc: "xcb_input_device_ctl_t", bycopy.} = object
+  XcbInputDeviceCtl* {.rename: "xcb_input_device_ctl_t", bycopy.} = object
     controlId* {.importc: "control_id".}: uint16
     len*: uint16
 
-  XcbInputDeviceCtlIterator* {.importc: "xcb_input_device_ctl_iterator_t", bycopy.} = object
+  XcbInputDeviceCtlIterator* {.rename: "xcb_input_device_ctl_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceCtl]
     rem*: cint
     index*: cint
 
-  XcbInputChangeDeviceControlCookie* {.importc: "xcb_input_change_device_control_cookie_t", bycopy.} = object
+  XcbInputChangeDeviceControlCookie* {.rename: "xcb_input_change_device_control_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputChangeDeviceControlRequest* {.importc: "xcb_input_change_device_control_request_t", bycopy.} = object
+  XcbInputChangeDeviceControlRequest* {.rename: "xcb_input_change_device_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1430,7 +1431,7 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: uint8
 
-  XcbInputChangeDeviceControlReply* {.importc: "xcb_input_change_device_control_reply_t", bycopy.} = object
+  XcbInputChangeDeviceControlReply* {.rename: "xcb_input_change_device_control_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1438,17 +1439,17 @@ type
     status*: uint8
     pad0: array[23, uint8]
 
-  XcbInputListDevicePropertiesCookie* {.importc: "xcb_input_list_device_properties_cookie_t", bycopy.} = object
+  XcbInputListDevicePropertiesCookie* {.rename: "xcb_input_list_device_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputListDevicePropertiesRequest* {.importc: "xcb_input_list_device_properties_request_t", bycopy.} = object
+  XcbInputListDevicePropertiesRequest* {.rename: "xcb_input_list_device_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputListDevicePropertiesReply* {.importc: "xcb_input_list_device_properties_reply_t", bycopy.} = object
+  XcbInputListDevicePropertiesReply* {.rename: "xcb_input_list_device_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1456,16 +1457,16 @@ type
     numAtoms* {.importc: "num_atoms".}: uint16
     pad0: array[22, uint8]
 
-  XcbInputPropertyFormat* {.importc: "xcb_input_property_format_t".} = enum
+  XcbInputPropertyFormat* {.rename: "xcb_input_property_format_t".} = enum
     xcbInputPropertyFormat8Bits = 8, xcbInputPropertyFormat16Bits = 16,
     xcbInputPropertyFormat32Bits = 32
 
-  XcbInputChangeDevicePropertyItems* {.importc: "xcb_input_change_device_property_items_t", bycopy.} = object
+  XcbInputChangeDevicePropertyItems* {.rename: "xcb_input_change_device_property_items_t", bycopy.} = object
     data8*: ptr uint8
     data16*: ptr uint16
     data32*: ptr uint32
 
-  XcbInputChangeDevicePropertyRequest* {.importc: "xcb_input_change_device_property_request_t", bycopy.} = object
+  XcbInputChangeDevicePropertyRequest* {.rename: "xcb_input_change_device_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1477,7 +1478,7 @@ type
     pad0: uint8
     numItems* {.importc: "num_items".}: uint32
 
-  XcbInputDeleteDevicePropertyRequest* {.importc: "xcb_input_delete_device_property_request_t", bycopy.} = object
+  XcbInputDeleteDevicePropertyRequest* {.rename: "xcb_input_delete_device_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1485,10 +1486,10 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputGetDevicePropertyCookie* {.importc: "xcb_input_get_device_property_cookie_t", bycopy.} = object
+  XcbInputGetDevicePropertyCookie* {.rename: "xcb_input_get_device_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputGetDevicePropertyRequest* {.importc: "xcb_input_get_device_property_request_t", bycopy.} = object
+  XcbInputGetDevicePropertyRequest* {.rename: "xcb_input_get_device_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1500,12 +1501,12 @@ type
     delete*: uint8
     pad0: array[2, uint8]
 
-  XcbInputGetDevicePropertyItems* {.importc: "xcb_input_get_device_property_items_t", bycopy.} = object
+  XcbInputGetDevicePropertyItems* {.rename: "xcb_input_get_device_property_items_t", bycopy.} = object
     data8*: ptr uint8
     data16*: ptr uint16
     data32*: ptr uint32
 
-  XcbInputGetDevicePropertyReply* {.importc: "xcb_input_get_device_property_reply_t", bycopy.} = object
+  XcbInputGetDevicePropertyReply* {.rename: "xcb_input_get_device_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     xiReplyType* {.importc: "xi_reply_type".}: uint8
     sequence*: uint16
@@ -1517,35 +1518,35 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[10, uint8]
 
-  XcbInputDevice* {.importc: "xcb_input_device_t".} = enum
+  XcbInputDevice* {.rename: "xcb_input_device_t".} = enum
     xcbInputDeviceAll = 0, xcbInputDeviceAllMaster = 1
 
-  XcbInputGroupInfo* {.importc: "xcb_input_group_info_t", bycopy.} = object
+  XcbInputGroupInfo* {.rename: "xcb_input_group_info_t", bycopy.} = object
     base*: uint8
     latched*: uint8
     locked*: uint8
     effective*: uint8
 
-  XcbInputGroupInfoIterator* {.importc: "xcb_input_group_info_iterator_t", bycopy.} = object
+  XcbInputGroupInfoIterator* {.rename: "xcb_input_group_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputGroupInfo]
     rem*: cint
     index*: cint
 
-  XcbInputModifierInfo* {.importc: "xcb_input_modifier_info_t", bycopy.} = object
+  XcbInputModifierInfo* {.rename: "xcb_input_modifier_info_t", bycopy.} = object
     base*: uint32
     latched*: uint32
     locked*: uint32
     effective*: uint32
 
-  XcbInputModifierInfoIterator* {.importc: "xcb_input_modifier_info_iterator_t", bycopy.} = object
+  XcbInputModifierInfoIterator* {.rename: "xcb_input_modifier_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputModifierInfo]
     rem*: cint
     index*: cint
 
-  XcbInputXiQueryPointerCookie* {.importc: "xcb_input_xi_query_pointer_cookie_t", bycopy.} = object
+  XcbInputXiQueryPointerCookie* {.rename: "xcb_input_xi_query_pointer_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiQueryPointerRequest* {.importc: "xcb_input_xi_query_pointer_request_t", bycopy.} = object
+  XcbInputXiQueryPointerRequest* {.rename: "xcb_input_xi_query_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1553,7 +1554,7 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiQueryPointerReply* {.importc: "xcb_input_xi_query_pointer_reply_t", bycopy.} = object
+  XcbInputXiQueryPointerReply* {.rename: "xcb_input_xi_query_pointer_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1570,7 +1571,7 @@ type
     mods*: XcbInputModifierInfo
     group*: XcbInputGroupInfo
 
-  XcbInputXiWarpPointerRequest* {.importc: "xcb_input_xi_warp_pointer_request_t", bycopy.} = object
+  XcbInputXiWarpPointerRequest* {.rename: "xcb_input_xi_warp_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1585,7 +1586,7 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiChangeCursorRequest* {.importc: "xcb_input_xi_change_cursor_request_t", bycopy.} = object
+  XcbInputXiChangeCursorRequest* {.rename: "xcb_input_xi_change_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1594,28 +1595,28 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputHierarchyChangeType* {.importc: "xcb_input_hierarchy_change_type_t".} = enum
+  XcbInputHierarchyChangeType* {.rename: "xcb_input_hierarchy_change_type_t".} = enum
     xcbInputHierarchyChangeTypeAddMaster = 1,
     xcbInputHierarchyChangeTypeRemoveMaster = 2,
     xcbInputHierarchyChangeTypeAttachSlave = 3,
     xcbInputHierarchyChangeTypeDetachSlave = 4
 
-  XcbInputChangeMode* {.importc: "xcb_input_change_mode_t".} = enum
+  XcbInputChangeMode* {.rename: "xcb_input_change_mode_t".} = enum
     xcbInputChangeModeAttach = 1, xcbInputChangeModeFloat = 2
 
-  XcbInputAddMaster* {.importc: "xcb_input_add_master_t", bycopy.} = object
+  XcbInputAddMaster* {.rename: "xcb_input_add_master_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     nameLen* {.importc: "name_len".}: uint16
     sendCore* {.importc: "send_core".}: uint8
     enable*: uint8
 
-  XcbInputAddMasterIterator* {.importc: "xcb_input_add_master_iterator_t", bycopy.} = object
+  XcbInputAddMasterIterator* {.rename: "xcb_input_add_master_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputAddMaster]
     rem*: cint
     index*: cint
 
-  XcbInputRemoveMaster* {.importc: "xcb_input_remove_master_t", bycopy.} = object
+  XcbInputRemoveMaster* {.rename: "xcb_input_remove_master_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     deviceid*: XcbInputDeviceId
@@ -1624,29 +1625,29 @@ type
     returnPointer* {.importc: "return_pointer".}: XcbInputDeviceId
     returnKeyboard* {.importc: "return_keyboard".}: XcbInputDeviceId
 
-  XcbInputRemoveMasterIterator* {.importc: "xcb_input_remove_master_iterator_t", bycopy.} = object
+  XcbInputRemoveMasterIterator* {.rename: "xcb_input_remove_master_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputRemoveMaster]
     rem*: cint
     index*: cint
 
-  XcbInputAttachSlave* {.importc: "xcb_input_attach_slave_t", bycopy.} = object
+  XcbInputAttachSlave* {.rename: "xcb_input_attach_slave_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     deviceid*: XcbInputDeviceId
     master*: XcbInputDeviceId
 
-  XcbInputAttachSlaveIterator* {.importc: "xcb_input_attach_slave_iterator_t", bycopy.} = object
+  XcbInputAttachSlaveIterator* {.rename: "xcb_input_attach_slave_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputAttachSlave]
     rem*: cint
     index*: cint
 
-  XcbInputDetachSlave* {.importc: "xcb_input_detach_slave_t", bycopy.} = object
+  XcbInputDetachSlave* {.rename: "xcb_input_detach_slave_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputDetachSlaveIterator* {.importc: "xcb_input_detach_slave_iterator_t", bycopy.} = object
+  XcbInputDetachSlaveIterator* {.rename: "xcb_input_detach_slave_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDetachSlave]
     rem*: cint
     index*: cint
@@ -1669,29 +1670,29 @@ type
     deviceid*: XcbInputDeviceId
     pad2: array[2, uint8]
 
-  XcbInputHierarchyChangeData* {.importc: "xcb_input_hierarchy_change_data_t", bycopy.} = object
+  XcbInputHierarchyChangeData* {.rename: "xcb_input_hierarchy_change_data_t", bycopy.} = object
     addMaster* {.importc: "add_master".}: XcbInputHierarchyChangeAdd
     removeMaster* {.importc: "remove_master".}: XcbInputHierarchyChangeRemove
     attachSlave* {.importc: "attach_slave".}: XcbInputHierarchyChangeAttach
     detachSlave* {.importc: "detach_slave".}: XcbInputHierarchyChangeDetach
 
-  XcbInputHierarchyChange* {.importc: "xcb_input_hierarchy_change_t", bycopy.} = object
+  XcbInputHierarchyChange* {.rename: "xcb_input_hierarchy_change_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
 
-  XcbInputHierarchyChangeIterator* {.importc: "xcb_input_hierarchy_change_iterator_t", bycopy.} = object
+  XcbInputHierarchyChangeIterator* {.rename: "xcb_input_hierarchy_change_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputHierarchyChange]
     rem*: cint
     index*: cint
 
-  XcbInputXiChangeHierarchyRequest* {.importc: "xcb_input_xi_change_hierarchy_request_t", bycopy.} = object
+  XcbInputXiChangeHierarchyRequest* {.rename: "xcb_input_xi_change_hierarchy_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     numChanges* {.importc: "num_changes".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputXiSetClientPointerRequest* {.importc: "xcb_input_xi_set_client_pointer_request_t", bycopy.} = object
+  XcbInputXiSetClientPointerRequest* {.rename: "xcb_input_xi_set_client_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1699,16 +1700,16 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiGetClientPointerCookie* {.importc: "xcb_input_xi_get_client_pointer_cookie_t", bycopy.} = object
+  XcbInputXiGetClientPointerCookie* {.rename: "xcb_input_xi_get_client_pointer_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiGetClientPointerRequest* {.importc: "xcb_input_xi_get_client_pointer_request_t", bycopy.} = object
+  XcbInputXiGetClientPointerRequest* {.rename: "xcb_input_xi_get_client_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbInputXiGetClientPointerReply* {.importc: "xcb_input_xi_get_client_pointer_reply_t", bycopy.} = object
+  XcbInputXiGetClientPointerReply* {.rename: "xcb_input_xi_get_client_pointer_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1718,7 +1719,7 @@ type
     deviceid*: XcbInputDeviceId
     pad2: array[20, uint8]
 
-  XcbInputXiEventMask* {.importc: "xcb_input_xi_event_mask_t".} = enum
+  XcbInputXiEventMask* {.rename: "xcb_input_xi_event_mask_t".} = enum
     xcbInputXiEventMaskDeviceChanged = 2,
     xcbInputXiEventMaskKeyPress = 4, xcbInputXiEventMaskKeyRelease = 8,
     xcbInputXiEventMaskButtonPress = 16,
@@ -1743,16 +1744,16 @@ type
     xcbInputXiEventMaskBarrierHit = 33554432,
     xcbInputXiEventMaskBarrierLeave = 67108864
 
-  XcbInputEventMask* {.importc: "xcb_input_event_mask_t", bycopy.} = object
+  XcbInputEventMask* {.rename: "xcb_input_event_mask_t", bycopy.} = object
     deviceid*: XcbInputDeviceId
     maskLen* {.importc: "mask_len".}: uint16
 
-  XcbInputEventMaskIterator* {.importc: "xcb_input_event_mask_iterator_t", bycopy.} = object
+  XcbInputEventMaskIterator* {.rename: "xcb_input_event_mask_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputEventMask]
     rem*: cint
     index*: cint
 
-  XcbInputXiSelectEventsRequest* {.importc: "xcb_input_xi_select_events_request_t", bycopy.} = object
+  XcbInputXiSelectEventsRequest* {.rename: "xcb_input_xi_select_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1760,17 +1761,17 @@ type
     numMask* {.importc: "num_mask".}: uint16
     pad0: array[2, uint8]
 
-  XcbInputXiQueryVersionCookie* {.importc: "xcb_input_xi_query_version_cookie_t", bycopy.} = object
+  XcbInputXiQueryVersionCookie* {.rename: "xcb_input_xi_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiQueryVersionRequest* {.importc: "xcb_input_xi_query_version_request_t", bycopy.} = object
+  XcbInputXiQueryVersionRequest* {.rename: "xcb_input_xi_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint16
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbInputXiQueryVersionReply* {.importc: "xcb_input_xi_query_version_reply_t", bycopy.} = object
+  XcbInputXiQueryVersionReply* {.rename: "xcb_input_xi_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1779,50 +1780,50 @@ type
     minorVersion* {.importc: "minor_version".}: uint16
     pad1: array[20, uint8]
 
-  XcbInputDeviceClassType* {.importc: "xcb_input_device_class_type_t".} = enum
+  XcbInputDeviceClassType* {.rename: "xcb_input_device_class_type_t".} = enum
     xcbInputDeviceClassTypeKey = 0, xcbInputDeviceClassTypeButton = 1,
     xcbInputDeviceClassTypeValuator = 2,
     xcbInputDeviceClassTypeScroll = 3, xcbInputDeviceClassTypeTouch = 8
 
-  XcbInputDeviceType* {.importc: "xcb_input_device_type_t".} = enum
+  XcbInputDeviceType* {.rename: "xcb_input_device_type_t".} = enum
     xcbInputDeviceTypeMasterPointer = 1,
     xcbInputDeviceTypeMasterKeyboard = 2,
     xcbInputDeviceTypeSlavePointer = 3,
     xcbInputDeviceTypeSlaveKeyboard = 4,
     xcbInputDeviceTypeFloatingSlave = 5
 
-  XcbInputScrollFlags* {.importc: "xcb_input_scroll_flags_t".} = enum
+  XcbInputScrollFlags* {.rename: "xcb_input_scroll_flags_t".} = enum
     xcbInputScrollFlagsNoEmulation = 1, xcbInputScrollFlagsPreferred = 2
 
-  XcbInputScrollType* {.importc: "xcb_input_scroll_type_t".} = enum
+  XcbInputScrollType* {.rename: "xcb_input_scroll_type_t".} = enum
     xcbInputScrollTypeVertical = 1, xcbInputScrollTypeHorizontal = 2
 
-  XcbInputTouchMode* {.importc: "xcb_input_touch_mode_t".} = enum
+  XcbInputTouchMode* {.rename: "xcb_input_touch_mode_t".} = enum
     xcbInputTouchModeDirect = 1, xcbInputTouchModeDependent = 2
 
-  XcbInputButtonClass* {.importc: "xcb_input_button_class_t", bycopy.} = object
+  XcbInputButtonClass* {.rename: "xcb_input_button_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
     numButtons* {.importc: "num_buttons".}: uint16
 
-  XcbInputButtonClassIterator* {.importc: "xcb_input_button_class_iterator_t", bycopy.} = object
+  XcbInputButtonClassIterator* {.rename: "xcb_input_button_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputButtonClass]
     rem*: cint
     index*: cint
 
-  XcbInputKeyClass* {.importc: "xcb_input_key_class_t", bycopy.} = object
+  XcbInputKeyClass* {.rename: "xcb_input_key_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
     numKeys* {.importc: "num_keys".}: uint16
 
-  XcbInputKeyClassIterator* {.importc: "xcb_input_key_class_iterator_t", bycopy.} = object
+  XcbInputKeyClassIterator* {.rename: "xcb_input_key_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputKeyClass]
     rem*: cint
     index*: cint
 
-  XcbInputScrollClass* {.importc: "xcb_input_scroll_class_t", bycopy.} = object
+  XcbInputScrollClass* {.rename: "xcb_input_scroll_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
@@ -1832,24 +1833,24 @@ type
     flags*: uint32
     increment*: XcbInputFp3232
 
-  XcbInputScrollClassIterator* {.importc: "xcb_input_scroll_class_iterator_t", bycopy.} = object
+  XcbInputScrollClassIterator* {.rename: "xcb_input_scroll_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputScrollClass]
     rem*: cint
     index*: cint
 
-  XcbInputTouchClass* {.importc: "xcb_input_touch_class_t", bycopy.} = object
+  XcbInputTouchClass* {.rename: "xcb_input_touch_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
     mode*: uint8
     numTouches* {.importc: "num_touches".}: uint8
 
-  XcbInputTouchClassIterator* {.importc: "xcb_input_touch_class_iterator_t", bycopy.} = object
+  XcbInputTouchClassIterator* {.rename: "xcb_input_touch_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputTouchClass]
     rem*: cint
     index*: cint
 
-  XcbInputValuatorClass* {.importc: "xcb_input_valuator_class_t", bycopy.} = object
+  XcbInputValuatorClass* {.rename: "xcb_input_valuator_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
@@ -1862,7 +1863,7 @@ type
     mode*: uint8
     pad0: array[3, uint8]
 
-  XcbInputValuatorClassIterator* {.importc: "xcb_input_valuator_class_iterator_t", bycopy.} = object
+  XcbInputValuatorClassIterator* {.rename: "xcb_input_valuator_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputValuatorClass]
     rem*: cint
     index*: cint
@@ -1904,24 +1905,24 @@ type
 {.push header: "xcb/xinput.h".}
 
 type
-  XcbInputDeviceClassData* {.importc: "xcb_input_device_class_data_t", bycopy.} = object
+  XcbInputDeviceClassData* {.rename: "xcb_input_device_class_data_t", bycopy.} = object
     key*: XcbInputDeviceClass
     button*: XcbInputDeviceClass
     valuator*: XcbInputDeviceClass
     scroll*: XcbInputDeviceClass
     touch*: XcbInputDeviceClass
 
-  XcbInputDeviceClass* {.importc: "xcb_input_device_class_t", bycopy.} = object
+  XcbInputDeviceClass* {.rename: "xcb_input_device_class_t", bycopy.} = object
     `type`*: uint16
     len*: uint16
     sourceid*: XcbInputDeviceId
 
-  XcbInputDeviceClassIterator* {.importc: "xcb_input_device_class_iterator_t", bycopy.} = object
+  XcbInputDeviceClassIterator* {.rename: "xcb_input_device_class_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputDeviceClass]
     rem*: cint
     index*: cint
 
-  XcbInputXiDeviceInfo* {.importc: "xcb_input_xi_device_info_t", bycopy.} = object
+  XcbInputXiDeviceInfo* {.rename: "xcb_input_xi_device_info_t", bycopy.} = object
     deviceid*: XcbInputDeviceId
     `type`*: uint16
     attachment*: XcbInputDeviceId
@@ -1930,22 +1931,22 @@ type
     enabled*: uint8
     pad0: uint8
 
-  XcbInputXiDeviceInfoIterator* {.importc: "xcb_input_xi_device_info_iterator_t", bycopy.} = object
+  XcbInputXiDeviceInfoIterator* {.rename: "xcb_input_xi_device_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputXiDeviceInfo]
     rem*: cint
     index*: cint
 
-  XcbInputXiQueryDeviceCookie* {.importc: "xcb_input_xi_query_device_cookie_t", bycopy.} = object
+  XcbInputXiQueryDeviceCookie* {.rename: "xcb_input_xi_query_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiQueryDeviceRequest* {.importc: "xcb_input_xi_query_device_request_t", bycopy.} = object
+  XcbInputXiQueryDeviceRequest* {.rename: "xcb_input_xi_query_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiQueryDeviceReply* {.importc: "xcb_input_xi_query_device_reply_t", bycopy.} = object
+  XcbInputXiQueryDeviceReply* {.rename: "xcb_input_xi_query_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1953,7 +1954,7 @@ type
     numInfos* {.importc: "num_infos".}: uint16
     pad1: array[22, uint8]
 
-  XcbInputXiSetFocusRequest* {.importc: "xcb_input_xi_set_focus_request_t", bycopy.} = object
+  XcbInputXiSetFocusRequest* {.rename: "xcb_input_xi_set_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1962,17 +1963,17 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiGetFocusCookie* {.importc: "xcb_input_xi_get_focus_cookie_t", bycopy.} = object
+  XcbInputXiGetFocusCookie* {.rename: "xcb_input_xi_get_focus_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiGetFocusRequest* {.importc: "xcb_input_xi_get_focus_request_t", bycopy.} = object
+  XcbInputXiGetFocusRequest* {.rename: "xcb_input_xi_get_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiGetFocusReply* {.importc: "xcb_input_xi_get_focus_reply_t", bycopy.} = object
+  XcbInputXiGetFocusReply* {.rename: "xcb_input_xi_get_focus_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1980,13 +1981,13 @@ type
     focus*: XcbWindow
     pad1: array[20, uint8]
 
-  XcbInputGrabOwner* {.importc: "xcb_input_grab_owner_t".} = enum
+  XcbInputGrabOwner* {.rename: "xcb_input_grab_owner_t".} = enum
     xcbInputGrabOwnerNoOwner = 0, xcbInputGrabOwnerOwner = 1
 
-  XcbInputXiGrabDeviceCookie* {.importc: "xcb_input_xi_grab_device_cookie_t", bycopy.} = object
+  XcbInputXiGrabDeviceCookie* {.rename: "xcb_input_xi_grab_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiGrabDeviceRequest* {.importc: "xcb_input_xi_grab_device_request_t", bycopy.} = object
+  XcbInputXiGrabDeviceRequest* {.rename: "xcb_input_xi_grab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2000,7 +2001,7 @@ type
     pad0: uint8
     maskLen* {.importc: "mask_len".}: uint16
 
-  XcbInputXiGrabDeviceReply* {.importc: "xcb_input_xi_grab_device_reply_t", bycopy.} = object
+  XcbInputXiGrabDeviceReply* {.rename: "xcb_input_xi_grab_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2008,7 +2009,7 @@ type
     status*: uint8
     pad1: array[23, uint8]
 
-  XcbInputXiUngrabDeviceRequest* {.importc: "xcb_input_xi_ungrab_device_request_t", bycopy.} = object
+  XcbInputXiUngrabDeviceRequest* {.rename: "xcb_input_xi_ungrab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2016,14 +2017,14 @@ type
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputEventMode* {.importc: "xcb_input_event_mode_t".} = enum
+  XcbInputEventMode* {.rename: "xcb_input_event_mode_t".} = enum
     xcbInputEventModeAsyncDevice = 0, xcbInputEventModeSyncDevice = 1,
     xcbInputEventModeReplayDevice = 2,
     xcbInputEventModeAsyncPairedDevice = 3,
     xcbInputEventModeAsyncPair = 4, xcbInputEventModeSyncPair = 5,
     xcbInputEventModeAcceptTouch = 6, xcbInputEventModeRejectTouch = 7
 
-  XcbInputXiAllowEventsRequest* {.importc: "xcb_input_xi_allow_events_request_t", bycopy.} = object
+  XcbInputXiAllowEventsRequest* {.rename: "xcb_input_xi_allow_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2034,32 +2035,32 @@ type
     touchid*: uint32
     grabWindow* {.importc: "grab_window".}: XcbWindow
 
-  XcbInputGrabMode22* {.importc: "xcb_input_grab_mode22_t".} = enum
+  XcbInputGrabMode22* {.rename: "xcb_input_grab_mode22_t".} = enum
     xcbInputGrabMode22Sync = 0, xcbInputGrabMode22Async = 1,
     xcbInputGrabMode22Touch = 2
 
-  XcbInputGrabType* {.importc: "xcb_input_grab_type_t".} = enum
+  XcbInputGrabType* {.rename: "xcb_input_grab_type_t".} = enum
     xcbInputGrabTypeButton = 0, xcbInputGrabTypeKeycode = 1,
     xcbInputGrabTypeEnter = 2, xcbInputGrabTypeFocusIn = 3,
     xcbInputGrabTypeTouchBegin = 4
 
-  XcbInputModifierMask* {.importc: "xcb_input_modifier_mask_t".} = enum
+  XcbInputModifierMask* {.rename: "xcb_input_modifier_mask_t".} = enum
     xcbInputModifierMaskAny = 2147483648'i64
 
-  XcbInputGrabModifierInfo* {.importc: "xcb_input_grab_modifier_info_t", bycopy.} = object
+  XcbInputGrabModifierInfo* {.rename: "xcb_input_grab_modifier_info_t", bycopy.} = object
     modifiers*: uint32
     status*: uint8
     pad0: array[3, uint8]
 
-  XcbInputGrabModifierInfoIterator* {.importc: "xcb_input_grab_modifier_info_iterator_t", bycopy.} = object
+  XcbInputGrabModifierInfoIterator* {.rename: "xcb_input_grab_modifier_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputGrabModifierInfo]
     rem*: cint
     index*: cint
 
-  XcbInputXiPassiveGrabDeviceCookie* {.importc: "xcb_input_xi_passive_grab_device_cookie_t", bycopy.} = object
+  XcbInputXiPassiveGrabDeviceCookie* {.rename: "xcb_input_xi_passive_grab_device_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiPassiveGrabDeviceRequest* {.importc: "xcb_input_xi_passive_grab_device_request_t", bycopy.} = object
+  XcbInputXiPassiveGrabDeviceRequest* {.rename: "xcb_input_xi_passive_grab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2076,7 +2077,7 @@ type
     ownerEvents* {.importc: "owner_events".}: uint8
     pad0: array[2, uint8]
 
-  XcbInputXiPassiveGrabDeviceReply* {.importc: "xcb_input_xi_passive_grab_device_reply_t", bycopy.} = object
+  XcbInputXiPassiveGrabDeviceReply* {.rename: "xcb_input_xi_passive_grab_device_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2084,7 +2085,7 @@ type
     numModifiers* {.importc: "num_modifiers".}: uint16
     pad1: array[22, uint8]
 
-  XcbInputXiPassiveUngrabDeviceRequest* {.importc: "xcb_input_xi_passive_ungrab_device_request_t", bycopy.} = object
+  XcbInputXiPassiveUngrabDeviceRequest* {.rename: "xcb_input_xi_passive_ungrab_device_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2095,17 +2096,17 @@ type
     grabType* {.importc: "grab_type".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputXiListPropertiesCookie* {.importc: "xcb_input_xi_list_properties_cookie_t", bycopy.} = object
+  XcbInputXiListPropertiesCookie* {.rename: "xcb_input_xi_list_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiListPropertiesRequest* {.importc: "xcb_input_xi_list_properties_request_t", bycopy.} = object
+  XcbInputXiListPropertiesRequest* {.rename: "xcb_input_xi_list_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
 
-  XcbInputXiListPropertiesReply* {.importc: "xcb_input_xi_list_properties_reply_t", bycopy.} = object
+  XcbInputXiListPropertiesReply* {.rename: "xcb_input_xi_list_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2113,12 +2114,12 @@ type
     numProperties* {.importc: "num_properties".}: uint16
     pad1: array[22, uint8]
 
-  XcbInputXiChangePropertyItems* {.importc: "xcb_input_xi_change_property_items_t", bycopy.} = object
+  XcbInputXiChangePropertyItems* {.rename: "xcb_input_xi_change_property_items_t", bycopy.} = object
     data8*: ptr uint8
     data16*: ptr uint16
     data32*: ptr uint32
 
-  XcbInputXiChangePropertyRequest* {.importc: "xcb_input_xi_change_property_request_t", bycopy.} = object
+  XcbInputXiChangePropertyRequest* {.rename: "xcb_input_xi_change_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2129,7 +2130,7 @@ type
     `type`*: XcbAtom
     numItems* {.importc: "num_items".}: uint32
 
-  XcbInputXiDeletePropertyRequest* {.importc: "xcb_input_xi_delete_property_request_t", bycopy.} = object
+  XcbInputXiDeletePropertyRequest* {.rename: "xcb_input_xi_delete_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2137,10 +2138,10 @@ type
     pad0: array[2, uint8]
     property*: XcbAtom
 
-  XcbInputXiGetPropertyCookie* {.importc: "xcb_input_xi_get_property_cookie_t", bycopy.} = object
+  XcbInputXiGetPropertyCookie* {.rename: "xcb_input_xi_get_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiGetPropertyRequest* {.importc: "xcb_input_xi_get_property_request_t", bycopy.} = object
+  XcbInputXiGetPropertyRequest* {.rename: "xcb_input_xi_get_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2152,12 +2153,12 @@ type
     offset*: uint32
     len*: uint32
 
-  XcbInputXiGetPropertyItems* {.importc: "xcb_input_xi_get_property_items_t", bycopy.} = object
+  XcbInputXiGetPropertyItems* {.rename: "xcb_input_xi_get_property_items_t", bycopy.} = object
     data8*: ptr uint8
     data16*: ptr uint16
     data32*: ptr uint32
 
-  XcbInputXiGetPropertyReply* {.importc: "xcb_input_xi_get_property_reply_t", bycopy.} = object
+  XcbInputXiGetPropertyReply* {.rename: "xcb_input_xi_get_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2168,16 +2169,16 @@ type
     format*: uint8
     pad1: array[11, uint8]
 
-  XcbInputXiGetSelectedEventsCookie* {.importc: "xcb_input_xi_get_selected_events_cookie_t", bycopy.} = object
+  XcbInputXiGetSelectedEventsCookie* {.rename: "xcb_input_xi_get_selected_events_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInputXiGetSelectedEventsRequest* {.importc: "xcb_input_xi_get_selected_events_request_t", bycopy.} = object
+  XcbInputXiGetSelectedEventsRequest* {.rename: "xcb_input_xi_get_selected_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbInputXiGetSelectedEventsReply* {.importc: "xcb_input_xi_get_selected_events_reply_t", bycopy.} = object
+  XcbInputXiGetSelectedEventsReply* {.rename: "xcb_input_xi_get_selected_events_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2185,24 +2186,24 @@ type
     numMasks* {.importc: "num_masks".}: uint16
     pad1: array[22, uint8]
 
-  XcbInputBarrierReleasePointerInfo* {.importc: "xcb_input_barrier_release_pointer_info_t", bycopy.} = object
+  XcbInputBarrierReleasePointerInfo* {.rename: "xcb_input_barrier_release_pointer_info_t", bycopy.} = object
     deviceid*: XcbInputDeviceId
     pad0: array[2, uint8]
     barrier*: XcbXfixesBarrier
     eventid*: uint32
 
-  XcbInputBarrierReleasePointerInfoIterator* {.importc: "xcb_input_barrier_release_pointer_info_iterator_t", bycopy.} = object
+  XcbInputBarrierReleasePointerInfoIterator* {.rename: "xcb_input_barrier_release_pointer_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputBarrierReleasePointerInfo]
     rem*: cint
     index*: cint
 
-  XcbInputXiBarrierReleasePointerRequest* {.importc: "xcb_input_xi_barrier_release_pointer_request_t", bycopy.} = object
+  XcbInputXiBarrierReleasePointerRequest* {.rename: "xcb_input_xi_barrier_release_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     numBarriers* {.importc: "num_barriers".}: uint32
 
-  XcbInputDeviceValuatorEvent* {.importc: "xcb_input_device_valuator_event_t", bycopy.} = object
+  XcbInputDeviceValuatorEvent* {.rename: "xcb_input_device_valuator_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
@@ -2211,10 +2212,10 @@ type
     firstValuator* {.importc: "first_valuator".}: uint8
     valuators*: array[6, int32]
 
-  XcbInputMoreEventsMask* {.importc: "xcb_input_more_events_mask_t".} = enum
+  XcbInputMoreEventsMask* {.rename: "xcb_input_more_events_mask_t".} = enum
     xcbInputMoreEventsMaskMoreEvents = 128
 
-  XcbInputDeviceKeyPressEvent* {.importc: "xcb_input_device_key_press_event_t", bycopy.} = object
+  XcbInputDeviceKeyPressEvent* {.rename: "xcb_input_device_key_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
@@ -2230,7 +2231,7 @@ type
     sameScreen* {.importc: "same_screen".}: uint8
     deviceId* {.importc: "device_id".}: uint8
 
-  XcbInputDeviceFocusInEvent* {.importc: "xcb_input_device_focus_in_event_t", bycopy.} = object
+  XcbInputDeviceFocusInEvent* {.rename: "xcb_input_device_focus_in_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
@@ -2240,14 +2241,14 @@ type
     deviceId* {.importc: "device_id".}: uint8
     pad0: array[18, uint8]
 
-  XcbInputClassesReportedMask* {.importc: "xcb_input_classes_reported_mask_t".} = enum
+  XcbInputClassesReportedMask* {.rename: "xcb_input_classes_reported_mask_t".} = enum
     xcbInputClassesReportedMaskReportingKeys = 1,
     xcbInputClassesReportedMaskReportingButtons = 2,
     xcbInputClassesReportedMaskReportingValuators = 4,
     xcbInputClassesReportedMaskDeviceModeAbsolute = 64,
     xcbInputClassesReportedMaskOutOfProximity = 128
 
-  XcbInputDeviceStateNotifyEvent* {.importc: "xcb_input_device_state_notify_event_t", bycopy.} = object
+  XcbInputDeviceStateNotifyEvent* {.rename: "xcb_input_device_state_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
@@ -2260,7 +2261,7 @@ type
     keys*: array[4, uint8]
     valuators*: array[3, uint32]
 
-  XcbInputDeviceMappingNotifyEvent* {.importc: "xcb_input_device_mapping_notify_event_t", bycopy.} = object
+  XcbInputDeviceMappingNotifyEvent* {.rename: "xcb_input_device_mapping_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
@@ -2271,11 +2272,11 @@ type
     time*: XcbTimestamp
     pad1: array[20, uint8]
 
-  XcbInputChangeDevice* {.importc: "xcb_input_change_device_t".} = enum
+  XcbInputChangeDevice* {.rename: "xcb_input_change_device_t".} = enum
     xcbInputChangeDeviceNewPointer = 0,
     xcbInputChangeDeviceNewKeyboard = 1
 
-  XcbInputChangeDeviceNotifyEvent* {.importc: "xcb_input_change_device_notify_event_t", bycopy.} = object
+  XcbInputChangeDeviceNotifyEvent* {.rename: "xcb_input_change_device_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
@@ -2283,25 +2284,25 @@ type
     request*: uint8
     pad0: array[23, uint8]
 
-  XcbInputDeviceKeyStateNotifyEvent* {.importc: "xcb_input_device_key_state_notify_event_t", bycopy.} = object
+  XcbInputDeviceKeyStateNotifyEvent* {.rename: "xcb_input_device_key_state_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
     keys*: array[28, uint8]
 
-  XcbInputDeviceButtonStateNotifyEvent* {.importc: "xcb_input_device_button_state_notify_event_t", bycopy.} = object
+  XcbInputDeviceButtonStateNotifyEvent* {.rename: "xcb_input_device_button_state_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     deviceId* {.importc: "device_id".}: uint8
     sequence*: uint16
     buttons*: array[28, uint8]
 
-  XcbInputDeviceChange* {.importc: "xcb_input_device_change_t".} = enum
+  XcbInputDeviceChange* {.rename: "xcb_input_device_change_t".} = enum
     xcbInputDeviceChangeAdded = 0, xcbInputDeviceChangeRemoved = 1,
     xcbInputDeviceChangeEnabled = 2, xcbInputDeviceChangeDisabled = 3,
     xcbInputDeviceChangeUnrecoverable = 4,
     xcbInputDeviceChangeControlChanged = 5
 
-  XcbInputDevicePresenceNotifyEvent* {.importc: "xcb_input_device_presence_notify_event_t", bycopy.} = object
+  XcbInputDevicePresenceNotifyEvent* {.rename: "xcb_input_device_presence_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2311,7 +2312,7 @@ type
     control*: uint16
     pad1: array[20, uint8]
 
-  XcbInputDevicePropertyNotifyEvent* {.importc: "xcb_input_device_property_notify_event_t", bycopy.} = object
+  XcbInputDevicePropertyNotifyEvent* {.rename: "xcb_input_device_property_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     state*: uint8
     sequence*: uint16
@@ -2320,11 +2321,11 @@ type
     pad0: array[19, uint8]
     deviceId* {.importc: "device_id".}: uint8
 
-  XcbInputChangeReason* {.importc: "xcb_input_change_reason_t".} = enum
+  XcbInputChangeReason* {.rename: "xcb_input_change_reason_t".} = enum
     xcbInputChangeReasonSlaveSwitch = 1,
     xcbInputChangeReasonDeviceChange = 2
 
-  XcbInputDeviceChangedEvent* {.importc: "xcb_input_device_changed_event_t", bycopy.} = object
+  XcbInputDeviceChangedEvent* {.rename: "xcb_input_device_changed_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2338,10 +2339,10 @@ type
     pad0: array[11, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputKeyEventFlags* {.importc: "xcb_input_key_event_flags_t".} = enum
+  XcbInputKeyEventFlags* {.rename: "xcb_input_key_event_flags_t".} = enum
     xcbInputKeyEventFlagsKeyRepeat = 65536
 
-  XcbInputKeyPressEvent* {.importc: "xcb_input_key_press_event_t", bycopy.} = object
+  XcbInputKeyPressEvent* {.rename: "xcb_input_key_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2366,10 +2367,10 @@ type
     mods*: XcbInputModifierInfo
     group*: XcbInputGroupInfo
 
-  XcbInputPointerEventFlags* {.importc: "xcb_input_pointer_event_flags_t".} = enum
+  XcbInputPointerEventFlags* {.rename: "xcb_input_pointer_event_flags_t".} = enum
     xcbInputPointerEventFlagsPointerEmulated = 65536
 
-  XcbInputButtonPressEvent* {.importc: "xcb_input_button_press_event_t", bycopy.} = object
+  XcbInputButtonPressEvent* {.rename: "xcb_input_button_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2394,20 +2395,20 @@ type
     mods*: XcbInputModifierInfo
     group*: XcbInputGroupInfo
 
-  XcbInputNotifyMode* {.importc: "xcb_input_notify_mode_t".} = enum
+  XcbInputNotifyMode* {.rename: "xcb_input_notify_mode_t".} = enum
     xcbInputNotifyModeNormal = 0, xcbInputNotifyModeGrab = 1,
     xcbInputNotifyModeUngrab = 2, xcbInputNotifyModeWhileGrabbed = 3,
     xcbInputNotifyModePassiveGrab = 4,
     xcbInputNotifyModePassiveUngrab = 5
 
-  XcbInputNotifyDetail* {.importc: "xcb_input_notify_detail_t".} = enum
+  XcbInputNotifyDetail* {.rename: "xcb_input_notify_detail_t".} = enum
     xcbInputNotifyDetailAncestor = 0, xcbInputNotifyDetailVirtual = 1,
     xcbInputNotifyDetailInferior = 2, xcbInputNotifyDetailNonlinear = 3,
     xcbInputNotifyDetailNonlinearVirtual = 4,
     xcbInputNotifyDetailPointer = 5, xcbInputNotifyDetailPointerRoot = 6,
     xcbInputNotifyDetailNone = 7
 
-  XcbInputEnterEvent* {.importc: "xcb_input_enter_event_t", bycopy.} = object
+  XcbInputEnterEvent* {.rename: "xcb_input_enter_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2432,7 +2433,7 @@ type
     mods*: XcbInputModifierInfo
     group*: XcbInputGroupInfo
 
-  XcbInputHierarchyMask* {.importc: "xcb_input_hierarchy_mask_t".} = enum
+  XcbInputHierarchyMask* {.rename: "xcb_input_hierarchy_mask_t".} = enum
     xcbInputHierarchyMaskMasterAdded = 1,
     xcbInputHierarchyMaskMasterRemoved = 2,
     xcbInputHierarchyMaskSlaveAdded = 4,
@@ -2442,7 +2443,7 @@ type
     xcbInputHierarchyMaskDeviceEnabled = 64,
     xcbInputHierarchyMaskDeviceDisabled = 128
 
-  XcbInputHierarchyInfo* {.importc: "xcb_input_hierarchy_info_t", bycopy.} = object
+  XcbInputHierarchyInfo* {.rename: "xcb_input_hierarchy_info_t", bycopy.} = object
     deviceid*: XcbInputDeviceId
     attachment*: XcbInputDeviceId
     `type`*: uint8
@@ -2450,12 +2451,12 @@ type
     pad0: array[2, uint8]
     flags*: uint32
 
-  XcbInputHierarchyInfoIterator* {.importc: "xcb_input_hierarchy_info_iterator_t", bycopy.} = object
+  XcbInputHierarchyInfoIterator* {.rename: "xcb_input_hierarchy_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputHierarchyInfo]
     rem*: cint
     index*: cint
 
-  XcbInputHierarchyEvent* {.importc: "xcb_input_hierarchy_event_t", bycopy.} = object
+  XcbInputHierarchyEvent* {.rename: "xcb_input_hierarchy_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2468,11 +2469,11 @@ type
     pad0: array[10, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputPropertyFlag* {.importc: "xcb_input_property_flag_t".} = enum
+  XcbInputPropertyFlag* {.rename: "xcb_input_property_flag_t".} = enum
     xcbInputPropertyFlagDeleted = 0, xcbInputPropertyFlagCreated = 1,
     xcbInputPropertyFlagModified = 2
 
-  XcbInputPropertyEvent* {.importc: "xcb_input_property_event_t", bycopy.} = object
+  XcbInputPropertyEvent* {.rename: "xcb_input_property_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2485,7 +2486,7 @@ type
     pad0: array[11, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputRawKeyPressEvent* {.importc: "xcb_input_raw_key_press_event_t", bycopy.} = object
+  XcbInputRawKeyPressEvent* {.rename: "xcb_input_raw_key_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2500,7 +2501,7 @@ type
     pad0: array[4, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputRawButtonPressEvent* {.importc: "xcb_input_raw_button_press_event_t", bycopy.} = object
+  XcbInputRawButtonPressEvent* {.rename: "xcb_input_raw_button_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2515,11 +2516,11 @@ type
     pad0: array[4, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputTouchEventFlags* {.importc: "xcb_input_touch_event_flags_t".} = enum
+  XcbInputTouchEventFlags* {.rename: "xcb_input_touch_event_flags_t".} = enum
     xcbInputTouchEventFlagsTouchPendingEnd = 65536,
     xcbInputTouchEventFlagsTouchEmulatingPointer = 131072
 
-  XcbInputTouchBeginEvent* {.importc: "xcb_input_touch_begin_event_t", bycopy.} = object
+  XcbInputTouchBeginEvent* {.rename: "xcb_input_touch_begin_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2544,10 +2545,10 @@ type
     mods*: XcbInputModifierInfo
     group*: XcbInputGroupInfo
 
-  XcbInputTouchOwnershipFlags* {.importc: "xcb_input_touch_ownership_flags_t".} = enum
+  XcbInputTouchOwnershipFlags* {.rename: "xcb_input_touch_ownership_flags_t".} = enum
     xcbInputTouchOwnershipFlagsNone = 0
 
-  XcbInputTouchOwnershipEvent* {.importc: "xcb_input_touch_ownership_event_t", bycopy.} = object
+  XcbInputTouchOwnershipEvent* {.rename: "xcb_input_touch_ownership_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2565,7 +2566,7 @@ type
     flags*: uint32
     pad1: array[8, uint8]
 
-  XcbInputRawTouchBeginEvent* {.importc: "xcb_input_raw_touch_begin_event_t", bycopy.} = object
+  XcbInputRawTouchBeginEvent* {.rename: "xcb_input_raw_touch_begin_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2580,11 +2581,11 @@ type
     pad0: array[4, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbInputBarrierFlags* {.importc: "xcb_input_barrier_flags_t".} = enum
+  XcbInputBarrierFlags* {.rename: "xcb_input_barrier_flags_t".} = enum
     xcbInputBarrierFlagsPointerReleased = 1,
     xcbInputBarrierFlagsDeviceIsGrabbed = 2
 
-  XcbInputBarrierHitEvent* {.importc: "xcb_input_barrier_hit_event_t", bycopy.} = object
+  XcbInputBarrierHitEvent* {.rename: "xcb_input_barrier_hit_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -2606,7 +2607,7 @@ type
     dx*: XcbInputFp3232
     dy*: XcbInputFp3232
 
-  XcbInputEventForSend* {.importc: "xcb_input_event_for_send_t", bycopy, union.} = object
+  XcbInputEventForSend* {.rename: "xcb_input_event_for_send_t", bycopy, union.} = object
     deviceValuator* {.importc: "device_valuator".}: XcbInputDeviceValuatorEvent
     deviceKeyPress* {.importc: "device_key_press".}: XcbInputDeviceKeyPressEvent
     deviceKeyRelease* {.importc: "device_key_release".}: XcbInputDeviceKeyReleaseEvent
@@ -2625,12 +2626,12 @@ type
     devicePresenceNotify* {.importc: "device_presence_notify".}: XcbInputDevicePresenceNotifyEvent
     eventHeader* {.importc: "event_header".}: XcbRawGenericEvent
 
-  XcbInputEventForSendIterator* {.importc: "xcb_input_event_for_send_iterator_t", bycopy.} = object
+  XcbInputEventForSendIterator* {.rename: "xcb_input_event_for_send_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbInputEventForSend]
     rem*: cint
     index*: cint
 
-  XcbInputSendExtensionEventRequest* {.importc: "xcb_input_send_extension_event_request_t", bycopy.} = object
+  XcbInputSendExtensionEventRequest* {.rename: "xcb_input_send_extension_event_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -2641,52 +2642,52 @@ type
     numEvents* {.importc: "num_events".}: uint8
     pad0: array[3, uint8]
 
-  XcbInputDeviceError* {.importc: "xcb_input_device_error_t", bycopy.} = object
+  XcbInputDeviceError* {.rename: "xcb_input_device_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbInputEventError* {.importc: "xcb_input_event_error_t", bycopy.} = object
+  XcbInputEventError* {.rename: "xcb_input_event_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbInputModeError* {.importc: "xcb_input_mode_error_t", bycopy.} = object
+  XcbInputModeError* {.rename: "xcb_input_mode_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbInputDeviceBusyError* {.importc: "xcb_input_device_busy_error_t", bycopy.} = object
+  XcbInputDeviceBusyError* {.rename: "xcb_input_device_busy_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbInputClassError* {.importc: "xcb_input_class_error_t", bycopy.} = object
+  XcbInputClassError* {.rename: "xcb_input_class_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbInputDeviceKeyReleaseEvent* {.importc: "xcb_input_device_key_release_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputDeviceButtonPressEvent* {.importc: "xcb_input_device_button_press_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputDeviceButtonReleaseEvent* {.importc: "xcb_input_device_button_release_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputDeviceMotionNotifyEvent* {.importc: "xcb_input_device_motion_notify_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputDeviceFocusOutEvent* {.importc: "xcb_input_device_focus_out_event_t".} = distinct XcbInputDeviceFocusInEvent
-  XcbInputProximityInEvent* {.importc: "xcb_input_proximity_in_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputProximityOutEvent* {.importc: "xcb_input_proximity_out_event_t".} = distinct XcbInputDeviceKeyPressEvent
-  XcbInputKeyReleaseEvent* {.importc: "xcb_input_key_release_event_t".} = distinct XcbInputKeyPressEvent
-  XcbInputButtonReleaseEvent* {.importc: "xcb_input_button_release_event_t".} = distinct XcbInputButtonPressEvent
-  XcbInputMotionEvent* {.importc: "xcb_input_motion_event_t".} = distinct XcbInputButtonPressEvent
-  XcbInputLeaveEvent* {.importc: "xcb_input_leave_event_t".} = distinct XcbInputEnterEvent
-  XcbInputFocusInEvent* {.importc: "xcb_input_focus_in_event_t".} = distinct XcbInputEnterEvent
-  XcbInputFocusOutEvent* {.importc: "xcb_input_focus_out_event_t".} = distinct XcbInputEnterEvent
-  XcbInputRawKeyReleaseEvent* {.importc: "xcb_input_raw_key_release_event_t".} = distinct XcbInputRawKeyPressEvent
-  XcbInputRawButtonReleaseEvent* {.importc: "xcb_input_raw_button_release_event_t".} = distinct XcbInputRawButtonPressEvent
-  XcbInputRawMotionEvent* {.importc: "xcb_input_raw_motion_event_t".} = distinct XcbInputRawButtonPressEvent
-  XcbInputTouchUpdateEvent* {.importc: "xcb_input_touch_update_event_t".} = distinct XcbInputTouchBeginEvent
-  XcbInputTouchEndEvent* {.importc: "xcb_input_touch_end_event_t".} = distinct XcbInputTouchBeginEvent
-  XcbInputRawTouchUpdateEvent* {.importc: "xcb_input_raw_touch_update_event_t".} = distinct XcbInputRawTouchBeginEvent
-  XcbInputRawTouchEndEvent* {.importc: "xcb_input_raw_touch_end_event_t".} = distinct XcbInputRawTouchBeginEvent
-  XcbInputBarrierLeaveEvent* {.importc: "xcb_input_barrier_leave_event_t".} = distinct XcbInputBarrierHitEvent
+  XcbInputDeviceKeyReleaseEvent* {.rename: "xcb_input_device_key_release_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputDeviceButtonPressEvent* {.rename: "xcb_input_device_button_press_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputDeviceButtonReleaseEvent* {.rename: "xcb_input_device_button_release_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputDeviceMotionNotifyEvent* {.rename: "xcb_input_device_motion_notify_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputDeviceFocusOutEvent* {.rename: "xcb_input_device_focus_out_event_t".} = distinct XcbInputDeviceFocusInEvent
+  XcbInputProximityInEvent* {.rename: "xcb_input_proximity_in_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputProximityOutEvent* {.rename: "xcb_input_proximity_out_event_t".} = distinct XcbInputDeviceKeyPressEvent
+  XcbInputKeyReleaseEvent* {.rename: "xcb_input_key_release_event_t".} = distinct XcbInputKeyPressEvent
+  XcbInputButtonReleaseEvent* {.rename: "xcb_input_button_release_event_t".} = distinct XcbInputButtonPressEvent
+  XcbInputMotionEvent* {.rename: "xcb_input_motion_event_t".} = distinct XcbInputButtonPressEvent
+  XcbInputLeaveEvent* {.rename: "xcb_input_leave_event_t".} = distinct XcbInputEnterEvent
+  XcbInputFocusInEvent* {.rename: "xcb_input_focus_in_event_t".} = distinct XcbInputEnterEvent
+  XcbInputFocusOutEvent* {.rename: "xcb_input_focus_out_event_t".} = distinct XcbInputEnterEvent
+  XcbInputRawKeyReleaseEvent* {.rename: "xcb_input_raw_key_release_event_t".} = distinct XcbInputRawKeyPressEvent
+  XcbInputRawButtonReleaseEvent* {.rename: "xcb_input_raw_button_release_event_t".} = distinct XcbInputRawButtonPressEvent
+  XcbInputRawMotionEvent* {.rename: "xcb_input_raw_motion_event_t".} = distinct XcbInputRawButtonPressEvent
+  XcbInputTouchUpdateEvent* {.rename: "xcb_input_touch_update_event_t".} = distinct XcbInputTouchBeginEvent
+  XcbInputTouchEndEvent* {.rename: "xcb_input_touch_end_event_t".} = distinct XcbInputTouchBeginEvent
+  XcbInputRawTouchUpdateEvent* {.rename: "xcb_input_raw_touch_update_event_t".} = distinct XcbInputRawTouchBeginEvent
+  XcbInputRawTouchEndEvent* {.rename: "xcb_input_raw_touch_end_event_t".} = distinct XcbInputRawTouchBeginEvent
+  XcbInputBarrierLeaveEvent* {.rename: "xcb_input_barrier_leave_event_t".} = distinct XcbInputBarrierHitEvent
 
 {.pop.}
 
@@ -2697,7 +2698,10 @@ const
   xcbInputChangeFeedbackControlMaskAccelDenom* = xcbInputChangeFeedbackControlMaskPercent
   xcbInputChangeFeedbackControlMaskThreshold* = xcbInputChangeFeedbackControlMaskPitch
 
-{.push cdecl, header: "xcb/xinput.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb-xinput.so(|.0)".}
+else:
+  {.push cdecl, header: "xcb/xinput.h".}
 
 proc info*(R: ptr XcbInputInputInfo): pointer {.importc: "xcb_input_input_info_info".}
 proc data*(R: ptr XcbInputFeedbackState): pointer {.importc: "xcb_input_feedback_state_data".}

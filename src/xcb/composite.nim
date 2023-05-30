@@ -1,4 +1,4 @@
-import ./xcb, ./xfixes
+import ./xcb, ./xfixes, private/importutil
 
 const
   xcbCompositeMajorVersion* = 0
@@ -13,26 +13,27 @@ const
   xcbCompositeGetOverlayWindow* = 7
   xcbCompositeReleaseOverlayWindow* = 8
 
-{.passl: "-lxcb-composite".}
-{.push header: "xcb/composite.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-composite".}
+  {.push header: "xcb/composite.h".}
 
-var xcbCompositeId* {.extern: "xcb_composite_id".}: XcbExtension
+  var xcbCompositeId* {.extern: "xcb_composite_id".}: XcbExtension
 
 type
   XcbCompositeRedirect* {.importc: "xcb_composite_redirect_t".} = enum
     xcbCompositeRedirectAutomatic = 0, xcbCompositeRedirectManual = 1
 
-  XcbCompositeQueryVersionCookie* {.importc: "xcb_composite_query_version_cookie_t", bycopy.} = object
+  XcbCompositeQueryVersionCookie* {.rename: "xcb_composite_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbCompositeQueryVersionRequest* {.importc: "xcb_composite_query_version_request_t", bycopy.} = object
+  XcbCompositeQueryVersionRequest* {.rename: "xcb_composite_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint32
     clientMinorVersion* {.importc: "client_minor_version".}: uint32
 
-  XcbCompositeQueryVersionReply* {.importc: "xcb_composite_query_version_reply_t", bycopy.} = object
+  XcbCompositeQueryVersionReply* {.rename: "xcb_composite_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -41,7 +42,7 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbCompositeRedirectWindowRequest* {.importc: "xcb_composite_redirect_window_request_t", bycopy.} = object
+  XcbCompositeRedirectWindowRequest* {.rename: "xcb_composite_redirect_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -49,7 +50,7 @@ type
     update*: uint8
     pad0: array[3, uint8]
 
-  XcbCompositeRedirectSubwindowsRequest* {.importc: "xcb_composite_redirect_subwindows_request_t", bycopy.} = object
+  XcbCompositeRedirectSubwindowsRequest* {.rename: "xcb_composite_redirect_subwindows_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -57,7 +58,7 @@ type
     update*: uint8
     pad0: array[3, uint8]
 
-  XcbCompositeUnredirectWindowRequest* {.importc: "xcb_composite_unredirect_window_request_t", bycopy.} = object
+  XcbCompositeUnredirectWindowRequest* {.rename: "xcb_composite_unredirect_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -65,7 +66,7 @@ type
     update*: uint8
     pad0: array[3, uint8]
 
-  XcbCompositeUnredirectSubwindowsRequest* {.importc: "xcb_composite_unredirect_subwindows_request_t", bycopy.} = object
+  XcbCompositeUnredirectSubwindowsRequest* {.rename: "xcb_composite_unredirect_subwindows_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -73,30 +74,30 @@ type
     update*: uint8
     pad0: array[3, uint8]
 
-  XcbCompositeCreateRegionFromBorderClipRequest* {.importc: "xcb_composite_create_region_from_border_clip_request_t", bycopy.} = object
+  XcbCompositeCreateRegionFromBorderClipRequest* {.rename: "xcb_composite_create_region_from_border_clip_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     region*: XcbXfixesRegion
     window*: XcbWindow
 
-  XcbCompositeNameWindowPixmapRequest* {.importc: "xcb_composite_name_window_pixmap_request_t", bycopy.} = object
+  XcbCompositeNameWindowPixmapRequest* {.rename: "xcb_composite_name_window_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     pixmap*: XcbPixmap
 
-  XcbCompositeGetOverlayWindowCookie* {.importc: "xcb_composite_get_overlay_window_cookie_t", bycopy.} = object
+  XcbCompositeGetOverlayWindowCookie* {.rename: "xcb_composite_get_overlay_window_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbCompositeGetOverlayWindowRequest* {.importc: "xcb_composite_get_overlay_window_request_t", bycopy.} = object
+  XcbCompositeGetOverlayWindowRequest* {.rename: "xcb_composite_get_overlay_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbCompositeGetOverlayWindowReply* {.importc: "xcb_composite_get_overlay_window_reply_t", bycopy.} = object
+  XcbCompositeGetOverlayWindowReply* {.rename: "xcb_composite_get_overlay_window_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -104,12 +105,14 @@ type
     overlayWin* {.importc: "overlay_win".}: XcbWindow
     pad1: array[20, uint8]
 
-  XcbCompositeReleaseOverlayWindowRequest* {.importc: "xcb_composite_release_overlay_window_request_t", bycopy.} = object
+  XcbCompositeReleaseOverlayWindowRequest* {.rename: "xcb_composite_release_overlay_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-composite.so(|.0)".}
 {.push cdecl.}
 
 proc compositeQueryVersion*(c: ptr XcbConnection; clientMajorVersion: uint32; clientMinorVersion: uint32): XcbCompositeQueryVersionCookie {.importc: "xcb_composite_query_version".}

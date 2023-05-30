@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbXcMiscMajorVersion* = 1
@@ -7,22 +7,23 @@ const
   xcbXcMiscGetXidRange* = 1
   xcbXcMiscGetXidList* = 2
 
-{.push header: "xcb/xc_misc.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xc_misc.h".}
 
-var xcbXcMiscId* {.extern: "xcb_xc_misc_id".}: XcbExtension
+  var xcbXcMiscId* {.extern: "xcb_xc_misc_id".}: XcbExtension
 
 type
-  XcbXcMiscGetVersionCookie* {.importc: "xcb_xc_misc_get_version_cookie_t", bycopy.} = object
+  XcbXcMiscGetVersionCookie* {.rename: "xcb_xc_misc_get_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXcMiscGetVersionRequest* {.importc: "xcb_xc_misc_get_version_request_t", bycopy.} = object
+  XcbXcMiscGetVersionRequest* {.rename: "xcb_xc_misc_get_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint16
     clientMinorVersion* {.importc: "client_minor_version".}: uint16
 
-  XcbXcMiscGetVersionReply* {.importc: "xcb_xc_misc_get_version_reply_t", bycopy.} = object
+  XcbXcMiscGetVersionReply* {.rename: "xcb_xc_misc_get_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -30,15 +31,15 @@ type
     serverMajorVersion* {.importc: "server_major_version".}: uint16
     serverMinorVersion* {.importc: "server_minor_version".}: uint16
 
-  XcbXcMiscGetXidRangeCookie* {.importc: "xcb_xc_misc_get_xid_range_cookie_t", bycopy.} = object
+  XcbXcMiscGetXidRangeCookie* {.rename: "xcb_xc_misc_get_xid_range_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXcMiscGetXidRangeRequest* {.importc: "xcb_xc_misc_get_xid_range_request_t", bycopy.} = object
+  XcbXcMiscGetXidRangeRequest* {.rename: "xcb_xc_misc_get_xid_range_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXcMiscGetXidRangeReply* {.importc: "xcb_xc_misc_get_xid_range_reply_t", bycopy.} = object
+  XcbXcMiscGetXidRangeReply* {.rename: "xcb_xc_misc_get_xid_range_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -46,16 +47,16 @@ type
     startId* {.importc: "start_id".}: uint32
     count*: uint32
 
-  XcbXcMiscGetXidListCookie* {.importc: "xcb_xc_misc_get_xid_list_cookie_t", bycopy.} = object
+  XcbXcMiscGetXidListCookie* {.rename: "xcb_xc_misc_get_xid_list_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXcMiscGetXidListRequest* {.importc: "xcb_xc_misc_get_xid_list_request_t", bycopy.} = object
+  XcbXcMiscGetXidListRequest* {.rename: "xcb_xc_misc_get_xid_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     count*: uint32
 
-  XcbXcMiscGetXidListReply* {.importc: "xcb_xc_misc_get_xid_list_reply_t", bycopy.} = object
+  XcbXcMiscGetXidListReply* {.rename: "xcb_xc_misc_get_xid_list_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -63,6 +64,8 @@ type
     idsLen* {.importc: "ids_len".}: uint32
     pad1: array[20, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc xcMiscGetVersion*(c: ptr XcbConnection; clientMajorVersion: uint16; clientMinorVersion: uint16): XcbXcMiscGetVersionCookie {.importc: "xcb_xc_misc_get_version".}

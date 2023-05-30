@@ -1,10 +1,13 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-errorrs".}
-{.push header: "xcb/xcb_errors.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-errorrs".}
+  {.push header: "xcb/xcb_errors.h".}
 
-type XcbErrorsContext* {.importc: "xcb_errors_context_t", incompleteStruct.} = object
+type XcbErrorsContext* {.rename: "xcb_errors_context_t", incompleteStruct.} = object
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-errors.so(|.0)".}
 {.push cdecl.}
 
 proc errorsContextNew*(conn: ptr XcbConnection; ctx: ptr ptr XcbErrorsContext): cint {.importc: "xcb_errors_context_new".}

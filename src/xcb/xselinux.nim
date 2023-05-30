@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbSelinuxMajorVersion* = 1
@@ -27,22 +27,23 @@ const
   xcbSelinuxListSelections* = 21
   xcbSelinuxGetClientContext* = 22
 
-{.push header: "xcb/xselinux.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xselinux.h".}
 
-var xcbSelinuxId* {.extern: "xcb_selinux_id".}: XcbExtension
+  var xcbSelinuxId* {.extern: "xcb_selinux_id".}: XcbExtension
 
 type
-  XcbSelinuxQueryVersionCookie* {.importc: "xcb_selinux_query_version_cookie_t", bycopy.} = object
+  XcbSelinuxQueryVersionCookie* {.rename: "xcb_selinux_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxQueryVersionRequest* {.importc: "xcb_selinux_query_version_request_t", bycopy.} = object
+  XcbSelinuxQueryVersionRequest* {.rename: "xcb_selinux_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajor* {.importc: "client_major".}: uint8
     clientMinor* {.importc: "client_minor".}: uint8
 
-  XcbSelinuxQueryVersionReply* {.importc: "xcb_selinux_query_version_reply_t", bycopy.} = object
+  XcbSelinuxQueryVersionReply* {.rename: "xcb_selinux_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -50,21 +51,21 @@ type
     serverMajor* {.importc: "server_major".}: uint16
     serverMinor* {.importc: "server_minor".}: uint16
 
-  XcbSelinuxSetDeviceCreateContextRequest* {.importc: "xcb_selinux_set_device_create_context_request_t", bycopy.} = object
+  XcbSelinuxSetDeviceCreateContextRequest* {.rename: "xcb_selinux_set_device_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetDeviceCreateContextCookie* {.importc: "xcb_selinux_get_device_create_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetDeviceCreateContextCookie* {.rename: "xcb_selinux_get_device_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetDeviceCreateContextRequest* {.importc: "xcb_selinux_get_device_create_context_request_t", bycopy.} = object
+  XcbSelinuxGetDeviceCreateContextRequest* {.rename: "xcb_selinux_get_device_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetDeviceCreateContextReply* {.importc: "xcb_selinux_get_device_create_context_reply_t", bycopy.} = object
+  XcbSelinuxGetDeviceCreateContextReply* {.rename: "xcb_selinux_get_device_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -72,23 +73,23 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxSetDeviceContextRequest* {.importc: "xcb_selinux_set_device_context_request_t", bycopy.} = object
+  XcbSelinuxSetDeviceContextRequest* {.rename: "xcb_selinux_set_device_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     device*: uint32
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetDeviceContextCookie* {.importc: "xcb_selinux_get_device_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetDeviceContextCookie* {.rename: "xcb_selinux_get_device_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetDeviceContextRequest* {.importc: "xcb_selinux_get_device_context_request_t", bycopy.} = object
+  XcbSelinuxGetDeviceContextRequest* {.rename: "xcb_selinux_get_device_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     device*: uint32
 
-  XcbSelinuxGetDeviceContextReply* {.importc: "xcb_selinux_get_device_context_reply_t", bycopy.} = object
+  XcbSelinuxGetDeviceContextReply* {.rename: "xcb_selinux_get_device_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -96,21 +97,21 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxSetWindowCreateContextRequest* {.importc: "xcb_selinux_set_window_create_context_request_t", bycopy.} = object
+  XcbSelinuxSetWindowCreateContextRequest* {.rename: "xcb_selinux_set_window_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetWindowCreateContextCookie* {.importc: "xcb_selinux_get_window_create_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetWindowCreateContextCookie* {.rename: "xcb_selinux_get_window_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetWindowCreateContextRequest* {.importc: "xcb_selinux_get_window_create_context_request_t", bycopy.} = object
+  XcbSelinuxGetWindowCreateContextRequest* {.rename: "xcb_selinux_get_window_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetWindowCreateContextReply* {.importc: "xcb_selinux_get_window_create_context_reply_t", bycopy.} = object
+  XcbSelinuxGetWindowCreateContextReply* {.rename: "xcb_selinux_get_window_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -118,16 +119,16 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetWindowContextCookie* {.importc: "xcb_selinux_get_window_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetWindowContextCookie* {.rename: "xcb_selinux_get_window_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetWindowContextRequest* {.importc: "xcb_selinux_get_window_context_request_t", bycopy.} = object
+  XcbSelinuxGetWindowContextRequest* {.rename: "xcb_selinux_get_window_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbSelinuxGetWindowContextReply* {.importc: "xcb_selinux_get_window_context_reply_t", bycopy.} = object
+  XcbSelinuxGetWindowContextReply* {.rename: "xcb_selinux_get_window_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -135,31 +136,31 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxListItem* {.importc: "xcb_selinux_list_item_t", bycopy.} = object
+  XcbSelinuxListItem* {.rename: "xcb_selinux_list_item_t", bycopy.} = object
     name*: XcbAtom
     objectContextLen* {.importc: "object_context_len".}: uint32
     dataContextLen* {.importc: "data_context_len".}: uint32
 
-  XcbSelinuxListItemIterator* {.importc: "xcb_selinux_list_item_iterator_t", bycopy.} = object
+  XcbSelinuxListItemIterator* {.rename: "xcb_selinux_list_item_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSelinuxListItem]
     rem*: cint
     index*: cint
 
-  XcbSelinuxSetPropertyCreateContextRequest* {.importc: "xcb_selinux_set_property_create_context_request_t", bycopy.} = object
+  XcbSelinuxSetPropertyCreateContextRequest* {.rename: "xcb_selinux_set_property_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetPropertyCreateContextCookie* {.importc: "xcb_selinux_get_property_create_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetPropertyCreateContextCookie* {.rename: "xcb_selinux_get_property_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetPropertyCreateContextRequest* {.importc: "xcb_selinux_get_property_create_context_request_t", bycopy.} = object
+  XcbSelinuxGetPropertyCreateContextRequest* {.rename: "xcb_selinux_get_property_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetPropertyCreateContextReply* {.importc: "xcb_selinux_get_property_create_context_reply_t", bycopy.} = object
+  XcbSelinuxGetPropertyCreateContextReply* {.rename: "xcb_selinux_get_property_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -167,21 +168,21 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxSetPropertyUseContextRequest* {.importc: "xcb_selinux_set_property_use_context_request_t", bycopy.} = object
+  XcbSelinuxSetPropertyUseContextRequest* {.rename: "xcb_selinux_set_property_use_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetPropertyUseContextCookie* {.importc: "xcb_selinux_get_property_use_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetPropertyUseContextCookie* {.rename: "xcb_selinux_get_property_use_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetPropertyUseContextRequest* {.importc: "xcb_selinux_get_property_use_context_request_t", bycopy.} = object
+  XcbSelinuxGetPropertyUseContextRequest* {.rename: "xcb_selinux_get_property_use_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetPropertyUseContextReply* {.importc: "xcb_selinux_get_property_use_context_reply_t", bycopy.} = object
+  XcbSelinuxGetPropertyUseContextReply* {.rename: "xcb_selinux_get_property_use_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -189,17 +190,17 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetPropertyContextCookie* {.importc: "xcb_selinux_get_property_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetPropertyContextCookie* {.rename: "xcb_selinux_get_property_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetPropertyContextRequest* {.importc: "xcb_selinux_get_property_context_request_t", bycopy.} = object
+  XcbSelinuxGetPropertyContextRequest* {.rename: "xcb_selinux_get_property_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     property*: XcbAtom
 
-  XcbSelinuxGetPropertyContextReply* {.importc: "xcb_selinux_get_property_context_reply_t", bycopy.} = object
+  XcbSelinuxGetPropertyContextReply* {.rename: "xcb_selinux_get_property_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -207,17 +208,17 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetPropertyDataContextCookie* {.importc: "xcb_selinux_get_property_data_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetPropertyDataContextCookie* {.rename: "xcb_selinux_get_property_data_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetPropertyDataContextRequest* {.importc: "xcb_selinux_get_property_data_context_request_t", bycopy.} = object
+  XcbSelinuxGetPropertyDataContextRequest* {.rename: "xcb_selinux_get_property_data_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     property*: XcbAtom
 
-  XcbSelinuxGetPropertyDataContextReply* {.importc: "xcb_selinux_get_property_data_context_reply_t", bycopy.} = object
+  XcbSelinuxGetPropertyDataContextReply* {.rename: "xcb_selinux_get_property_data_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -225,16 +226,16 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxListPropertiesCookie* {.importc: "xcb_selinux_list_properties_cookie_t", bycopy.} = object
+  XcbSelinuxListPropertiesCookie* {.rename: "xcb_selinux_list_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxListPropertiesRequest* {.importc: "xcb_selinux_list_properties_request_t", bycopy.} = object
+  XcbSelinuxListPropertiesRequest* {.rename: "xcb_selinux_list_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbSelinuxListPropertiesReply* {.importc: "xcb_selinux_list_properties_reply_t", bycopy.} = object
+  XcbSelinuxListPropertiesReply* {.rename: "xcb_selinux_list_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -242,21 +243,21 @@ type
     propertiesLen* {.importc: "properties_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxSetSelectionCreateContextRequest* {.importc: "xcb_selinux_set_selection_create_context_request_t", bycopy.} = object
+  XcbSelinuxSetSelectionCreateContextRequest* {.rename: "xcb_selinux_set_selection_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetSelectionCreateContextCookie* {.importc: "xcb_selinux_get_selection_create_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetSelectionCreateContextCookie* {.rename: "xcb_selinux_get_selection_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetSelectionCreateContextRequest* {.importc: "xcb_selinux_get_selection_create_context_request_t", bycopy.} = object
+  XcbSelinuxGetSelectionCreateContextRequest* {.rename: "xcb_selinux_get_selection_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetSelectionCreateContextReply* {.importc: "xcb_selinux_get_selection_create_context_reply_t", bycopy.} = object
+  XcbSelinuxGetSelectionCreateContextReply* {.rename: "xcb_selinux_get_selection_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -264,21 +265,21 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxSetSelectionUseContextRequest* {.importc: "xcb_selinux_set_selection_use_context_request_t", bycopy.} = object
+  XcbSelinuxSetSelectionUseContextRequest* {.rename: "xcb_selinux_set_selection_use_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextLen* {.importc: "context_len".}: uint32
 
-  XcbSelinuxGetSelectionUseContextCookie* {.importc: "xcb_selinux_get_selection_use_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetSelectionUseContextCookie* {.rename: "xcb_selinux_get_selection_use_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetSelectionUseContextRequest* {.importc: "xcb_selinux_get_selection_use_context_request_t", bycopy.} = object
+  XcbSelinuxGetSelectionUseContextRequest* {.rename: "xcb_selinux_get_selection_use_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxGetSelectionUseContextReply* {.importc: "xcb_selinux_get_selection_use_context_reply_t", bycopy.} = object
+  XcbSelinuxGetSelectionUseContextReply* {.rename: "xcb_selinux_get_selection_use_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -286,16 +287,16 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetSelectionContextCookie* {.importc: "xcb_selinux_get_selection_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetSelectionContextCookie* {.rename: "xcb_selinux_get_selection_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetSelectionContextRequest* {.importc: "xcb_selinux_get_selection_context_request_t", bycopy.} = object
+  XcbSelinuxGetSelectionContextRequest* {.rename: "xcb_selinux_get_selection_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     selection*: XcbAtom
 
-  XcbSelinuxGetSelectionContextReply* {.importc: "xcb_selinux_get_selection_context_reply_t", bycopy.} = object
+  XcbSelinuxGetSelectionContextReply* {.rename: "xcb_selinux_get_selection_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -303,16 +304,16 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetSelectionDataContextCookie* {.importc: "xcb_selinux_get_selection_data_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetSelectionDataContextCookie* {.rename: "xcb_selinux_get_selection_data_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetSelectionDataContextRequest* {.importc: "xcb_selinux_get_selection_data_context_request_t", bycopy.} = object
+  XcbSelinuxGetSelectionDataContextRequest* {.rename: "xcb_selinux_get_selection_data_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     selection*: XcbAtom
 
-  XcbSelinuxGetSelectionDataContextReply* {.importc: "xcb_selinux_get_selection_data_context_reply_t", bycopy.} = object
+  XcbSelinuxGetSelectionDataContextReply* {.rename: "xcb_selinux_get_selection_data_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -320,15 +321,15 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxListSelectionsCookie* {.importc: "xcb_selinux_list_selections_cookie_t", bycopy.} = object
+  XcbSelinuxListSelectionsCookie* {.rename: "xcb_selinux_list_selections_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxListSelectionsRequest* {.importc: "xcb_selinux_list_selections_request_t", bycopy.} = object
+  XcbSelinuxListSelectionsRequest* {.rename: "xcb_selinux_list_selections_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSelinuxListSelectionsReply* {.importc: "xcb_selinux_list_selections_reply_t", bycopy.} = object
+  XcbSelinuxListSelectionsReply* {.rename: "xcb_selinux_list_selections_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -336,16 +337,16 @@ type
     selectionsLen* {.importc: "selections_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSelinuxGetClientContextCookie* {.importc: "xcb_selinux_get_client_context_cookie_t", bycopy.} = object
+  XcbSelinuxGetClientContextCookie* {.rename: "xcb_selinux_get_client_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSelinuxGetClientContextRequest* {.importc: "xcb_selinux_get_client_context_request_t", bycopy.} = object
+  XcbSelinuxGetClientContextRequest* {.rename: "xcb_selinux_get_client_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     resource*: uint32
 
-  XcbSelinuxGetClientContextReply* {.importc: "xcb_selinux_get_client_context_reply_t", bycopy.} = object
+  XcbSelinuxGetClientContextReply* {.rename: "xcb_selinux_get_client_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -353,6 +354,8 @@ type
     contextLen* {.importc: "context_len".}: uint32
     pad1: array[20, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc selinuxQueryVersion*(c: ptr XcbConnection; clientMajor: uint8; clientMinor: uint8): XcbSelinuxQueryVersionCookie {.importc: "xcb_selinux_query_version".}

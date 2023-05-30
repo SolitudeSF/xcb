@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbRenderMajorVersion* = 0
@@ -40,25 +40,26 @@ const
   xcbRenderCreateRadialGradient* = 35
   xcbRenderCreateConicalGradient* = 36
 
-{.passl: "-lxcb-render".}
-{.push header: "xcb/render.h".}
+when not xcbDynlib
+  {.passl: "-lxcb-render".}
+  {.push header: "xcb/render.h".}
 
-var xcbRenderId* {.extern: "xcb_render_id".}: XcbExtension
+  var xcbRenderId* {.extern: "xcb_render_id".}: XcbExtension
 
 type
-  XcbRenderGlyph* {.importc: "xcb_render_glyph_t".} = distinct uint32
-  XcbRenderGlyphset* {.importc: "xcb_render_glyphset_t".} = distinct uint32
-  XcbRenderPicture* {.importc: "xcb_render_picture_t".} = distinct uint32
-  XcbRenderPictformat* {.importc: "xcb_render_pictformat_t".} = distinct uint32
-  XcbRenderFixed* {.importc: "xcb_render_fixed_t".} = distinct int32
+  XcbRenderGlyph* {.rename: "xcb_render_glyph_t".} = distinct uint32
+  XcbRenderGlyphset* {.rename: "xcb_render_glyphset_t".} = distinct uint32
+  XcbRenderPicture* {.rename: "xcb_render_picture_t".} = distinct uint32
+  XcbRenderPictformat* {.rename: "xcb_render_pictformat_t".} = distinct uint32
+  XcbRenderFixed* {.rename: "xcb_render_fixed_t".} = distinct int32
 
-  XcbRenderPictType* {.importc: "xcb_render_pict_type_t".} = enum
+  XcbRenderPictType* {.rename: "xcb_render_pict_type_t".} = enum
     xcbRenderPictTypeIndexed = 0, xcbRenderPictTypeDirect = 1
 
-  XcbRenderPictureEnum* {.importc: "xcb_render_picture_enum_t".} = enum
+  XcbRenderPictureEnum* {.rename: "xcb_render_picture_enum_t".} = enum
     xcbRenderPictureNone = 0
 
-  XcbRenderPictOp* {.importc: "xcb_render_pict_op_t".} = enum
+  XcbRenderPictOp* {.rename: "xcb_render_pict_op_t".} = enum
     xcbRenderPictOpClear = 0, xcbRenderPictOpSrc = 1,
     xcbRenderPictOpDst = 2, xcbRenderPictOpOver = 3,
     xcbRenderPictOpOverReverse = 4, xcbRenderPictOpIn = 5,
@@ -94,13 +95,13 @@ type
     xcbRenderPictOpHslHue = 59, xcbRenderPictOpHslSaturation = 60,
     xcbRenderPictOpHslColor = 61, xcbRenderPictOpHslLuminosity = 62
 
-  XcbRenderPolyEdge* {.importc: "xcb_render_poly_edge_t".} = enum
+  XcbRenderPolyEdge* {.rename: "xcb_render_poly_edge_t".} = enum
     xcbRenderPolyEdgeSharp = 0, xcbRenderPolyEdgeSmooth = 1
 
-  XcbRenderPolyMode* {.importc: "xcb_render_poly_mode_t".} = enum
+  XcbRenderPolyMode* {.rename: "xcb_render_poly_mode_t".} = enum
     xcbRenderPolyModePrecise = 0, xcbRenderPolyModeImprecise = 1
 
-  XcbRenderCp* {.importc: "xcb_render_cp_t".} = enum
+  XcbRenderCp* {.rename: "xcb_render_cp_t".} = enum
     xcbRenderCpRepeat = 1, xcbRenderCpAlphaMap = 2,
     xcbRenderCpAlphaXOrigin = 4, xcbRenderCpAlphaYOrigin = 8,
     xcbRenderCpClipXOrigin = 16, xcbRenderCpClipYOrigin = 32,
@@ -109,66 +110,66 @@ type
     xcbRenderCpPolyMode = 1024, xcbRenderCpDither = 2048,
     xcbRenderCpComponentAlpha = 4096
 
-  XcbRenderSubPixel* {.importc: "xcb_render_sub_pixel_t".} = enum
+  XcbRenderSubPixel* {.rename: "xcb_render_sub_pixel_t".} = enum
     xcbRenderSubPixelUnknown = 0, xcbRenderSubPixelHorizontalRgb = 1,
     xcbRenderSubPixelHorizontalBgr = 2, xcbRenderSubPixelVerticalRgb = 3,
     xcbRenderSubPixelVerticalBgr = 4, xcbRenderSubPixelNone = 5
 
-  XcbRenderRepeat* {.importc: "xcb_render_repeat_t".} = enum
+  XcbRenderRepeat* {.rename: "xcb_render_repeat_t".} = enum
     xcbRenderRepeatNone = 0, xcbRenderRepeatNormal = 1,
     xcbRenderRepeatPad = 2, xcbRenderRepeatReflect = 3
 
-  XcbRenderGlyphIterator* {.importc: "xcb_render_glyph_iterator_t", bycopy.} = object
+  XcbRenderGlyphIterator* {.rename: "xcb_render_glyph_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderGlyph]
     rem*: cint
     index*: cint
 
-  XcbRenderGlyphsetIterator* {.importc: "xcb_render_glyphset_iterator_t", bycopy.} = object
+  XcbRenderGlyphsetIterator* {.rename: "xcb_render_glyphset_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderGlyphset]
     rem*: cint
     index*: cint
 
-  XcbRenderPictureIterator* {.importc: "xcb_render_picture_iterator_t", bycopy.} = object
+  XcbRenderPictureIterator* {.rename: "xcb_render_picture_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPicture]
     rem*: cint
     index*: cint
 
-  XcbRenderPictformatIterator* {.importc: "xcb_render_pictformat_iterator_t", bycopy.} = object
+  XcbRenderPictformatIterator* {.rename: "xcb_render_pictformat_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPictformat]
     rem*: cint
     index*: cint
 
-  XcbRenderFixedIterator* {.importc: "xcb_render_fixed_iterator_t", bycopy.} = object
+  XcbRenderFixedIterator* {.rename: "xcb_render_fixed_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderFixed]
     rem*: cint
     index*: cint
 
-  XcbRenderPictFormatError* {.importc: "xcb_render_pict_format_error_t", bycopy.} = object
+  XcbRenderPictFormatError* {.rename: "xcb_render_pict_format_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRenderPictureError* {.importc: "xcb_render_picture_error_t", bycopy.} = object
+  XcbRenderPictureError* {.rename: "xcb_render_picture_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRenderPictOpError* {.importc: "xcb_render_pict_op_error_t", bycopy.} = object
+  XcbRenderPictOpError* {.rename: "xcb_render_pict_op_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRenderGlyphSetError* {.importc: "xcb_render_glyph_set_error_t", bycopy.} = object
+  XcbRenderGlyphSetError* {.rename: "xcb_render_glyph_set_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRenderGlyphError* {.importc: "xcb_render_glyph_error_t", bycopy.} = object
+  XcbRenderGlyphError* {.rename: "xcb_render_glyph_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbRenderDirectformat* {.importc: "xcb_render_directformat_t", bycopy.} = object
+  XcbRenderDirectformat* {.rename: "xcb_render_directformat_t", bycopy.} = object
     redShift* {.importc: "red_shift".}: uint16
     redMask* {.importc: "red_mask".}: uint16
     greenShift* {.importc: "green_shift".}: uint16
@@ -178,12 +179,12 @@ type
     alphaShift* {.importc: "alpha_shift".}: uint16
     alphaMask* {.importc: "alpha_mask".}: uint16
 
-  XcbRenderDirectformatIterator* {.importc: "xcb_render_directformat_iterator_t", bycopy.} = object
+  XcbRenderDirectformatIterator* {.rename: "xcb_render_directformat_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderDirectformat]
     rem*: cint
     index*: cint
 
-  XcbRenderPictforminfo* {.importc: "xcb_render_pictforminfo_t", bycopy.} = object
+  XcbRenderPictforminfo* {.rename: "xcb_render_pictforminfo_t", bycopy.} = object
     id*: XcbRenderPictformat
     `type`*: uint8
     depth*: uint8
@@ -191,103 +192,103 @@ type
     direct*: XcbRenderDirectformat
     colormap*: XcbColormap
 
-  XcbRenderPictforminfoIterator* {.importc: "xcb_render_pictforminfo_iterator_t", bycopy.} = object
+  XcbRenderPictforminfoIterator* {.rename: "xcb_render_pictforminfo_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPictforminfo]
     rem*: cint
     index*: cint
 
-  XcbRenderPictvisual* {.importc: "xcb_render_pictvisual_t", bycopy.} = object
+  XcbRenderPictvisual* {.rename: "xcb_render_pictvisual_t", bycopy.} = object
     visual*: XcbVisualid
     format*: XcbRenderPictformat
 
-  XcbRenderPictvisualIterator* {.importc: "xcb_render_pictvisual_iterator_t", bycopy.} = object
+  XcbRenderPictvisualIterator* {.rename: "xcb_render_pictvisual_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPictvisual]
     rem*: cint
     index*: cint
 
-  XcbRenderPictdepth* {.importc: "xcb_render_pictdepth_t", bycopy.} = object
+  XcbRenderPictdepth* {.rename: "xcb_render_pictdepth_t", bycopy.} = object
     depth*: uint8
     pad0: uint8
     numVisuals* {.importc: "num_visuals".}: uint16
     pad1: array[4, uint8]
 
-  XcbRenderPictdepthIterator* {.importc: "xcb_render_pictdepth_iterator_t", bycopy.} = object
+  XcbRenderPictdepthIterator* {.rename: "xcb_render_pictdepth_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPictdepth]
     rem*: cint
     index*: cint
 
-  XcbRenderPictscreen* {.importc: "xcb_render_pictscreen_t", bycopy.} = object
+  XcbRenderPictscreen* {.rename: "xcb_render_pictscreen_t", bycopy.} = object
     numDepths* {.importc: "num_depths".}: uint32
     fallback*: XcbRenderPictformat
 
-  XcbRenderPictscreenIterator* {.importc: "xcb_render_pictscreen_iterator_t", bycopy.} = object
+  XcbRenderPictscreenIterator* {.rename: "xcb_render_pictscreen_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPictscreen]
     rem*: cint
     index*: cint
 
-  XcbRenderIndexvalue* {.importc: "xcb_render_indexvalue_t", bycopy.} = object
+  XcbRenderIndexvalue* {.rename: "xcb_render_indexvalue_t", bycopy.} = object
     pixel*: uint32
     red*: uint16
     green*: uint16
     blue*: uint16
     alpha*: uint16
 
-  XcbRenderIndexvalueIterator* {.importc: "xcb_render_indexvalue_iterator_t", bycopy.} = object
+  XcbRenderIndexvalueIterator* {.rename: "xcb_render_indexvalue_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderIndexvalue]
     rem*: cint
     index*: cint
 
-  XcbRenderColor* {.importc: "xcb_render_color_t", bycopy.} = object
+  XcbRenderColor* {.rename: "xcb_render_color_t", bycopy.} = object
     red*: uint16
     green*: uint16
     blue*: uint16
     alpha*: uint16
 
-  XcbRenderColorIterator* {.importc: "xcb_render_color_iterator_t", bycopy.} = object
+  XcbRenderColorIterator* {.rename: "xcb_render_color_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderColor]
     rem*: cint
     index*: cint
 
-  XcbRenderPointfix* {.importc: "xcb_render_pointfix_t", bycopy.} = object
+  XcbRenderPointfix* {.rename: "xcb_render_pointfix_t", bycopy.} = object
     x*: XcbRenderFixed
     y*: XcbRenderFixed
 
-  XcbRenderPointfixIterator* {.importc: "xcb_render_pointfix_iterator_t", bycopy.} = object
+  XcbRenderPointfixIterator* {.rename: "xcb_render_pointfix_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderPointfix]
     rem*: cint
     index*: cint
 
-  XcbRenderLinefix* {.importc: "xcb_render_linefix_t", bycopy.} = object
+  XcbRenderLinefix* {.rename: "xcb_render_linefix_t", bycopy.} = object
     p1*: XcbRenderPointfix
     p2*: XcbRenderPointfix
 
-  XcbRenderLinefixIterator* {.importc: "xcb_render_linefix_iterator_t", bycopy.} = object
+  XcbRenderLinefixIterator* {.rename: "xcb_render_linefix_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderLinefix]
     rem*: cint
     index*: cint
 
-  XcbRenderTriangle* {.importc: "xcb_render_triangle_t", bycopy.} = object
+  XcbRenderTriangle* {.rename: "xcb_render_triangle_t", bycopy.} = object
     p1*: XcbRenderPointfix
     p2*: XcbRenderPointfix
     p3*: XcbRenderPointfix
 
-  XcbRenderTriangleIterator* {.importc: "xcb_render_triangle_iterator_t", bycopy.} = object
+  XcbRenderTriangleIterator* {.rename: "xcb_render_triangle_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderTriangle]
     rem*: cint
     index*: cint
 
-  XcbRenderTrapezoid* {.importc: "xcb_render_trapezoid_t", bycopy.} = object
+  XcbRenderTrapezoid* {.rename: "xcb_render_trapezoid_t", bycopy.} = object
     top*: XcbRenderFixed
     bottom*: XcbRenderFixed
     left*: XcbRenderLinefix
     right*: XcbRenderLinefix
 
-  XcbRenderTrapezoidIterator* {.importc: "xcb_render_trapezoid_iterator_t", bycopy.} = object
+  XcbRenderTrapezoidIterator* {.rename: "xcb_render_trapezoid_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderTrapezoid]
     rem*: cint
     index*: cint
 
-  XcbRenderGlyphinfo* {.importc: "xcb_render_glyphinfo_t", bycopy.} = object
+  XcbRenderGlyphinfo* {.rename: "xcb_render_glyphinfo_t", bycopy.} = object
     width*: uint16
     height*: uint16
     x*: int16
@@ -295,22 +296,22 @@ type
     xOff* {.importc: "x_off".}: int16
     yOff* {.importc: "y_off".}: int16
 
-  XcbRenderGlyphinfoIterator* {.importc: "xcb_render_glyphinfo_iterator_t", bycopy.} = object
+  XcbRenderGlyphinfoIterator* {.rename: "xcb_render_glyphinfo_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderGlyphinfo]
     rem*: cint
     index*: cint
 
-  XcbRenderQueryVersionCookie* {.importc: "xcb_render_query_version_cookie_t", bycopy.} = object
+  XcbRenderQueryVersionCookie* {.rename: "xcb_render_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRenderQueryVersionRequest* {.importc: "xcb_render_query_version_request_t", bycopy.} = object
+  XcbRenderQueryVersionRequest* {.rename: "xcb_render_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint32
     clientMinorVersion* {.importc: "client_minor_version".}: uint32
 
-  XcbRenderQueryVersionReply* {.importc: "xcb_render_query_version_reply_t", bycopy.} = object
+  XcbRenderQueryVersionReply* {.rename: "xcb_render_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -319,15 +320,15 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbRenderQueryPictFormatsCookie* {.importc: "xcb_render_query_pict_formats_cookie_t", bycopy.} = object
+  XcbRenderQueryPictFormatsCookie* {.rename: "xcb_render_query_pict_formats_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRenderQueryPictFormatsRequest* {.importc: "xcb_render_query_pict_formats_request_t", bycopy.} = object
+  XcbRenderQueryPictFormatsRequest* {.rename: "xcb_render_query_pict_formats_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbRenderQueryPictFormatsReply* {.importc: "xcb_render_query_pict_formats_reply_t", bycopy.} = object
+  XcbRenderQueryPictFormatsReply* {.rename: "xcb_render_query_pict_formats_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -339,16 +340,16 @@ type
     numSubpixel* {.importc: "num_subpixel".}: uint32
     pad1: array[4, uint8]
 
-  XcbRenderQueryPictIndexValuesCookie* {.importc: "xcb_render_query_pict_index_values_cookie_t", bycopy.} = object
+  XcbRenderQueryPictIndexValuesCookie* {.rename: "xcb_render_query_pict_index_values_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRenderQueryPictIndexValuesRequest* {.importc: "xcb_render_query_pict_index_values_request_t", bycopy.} = object
+  XcbRenderQueryPictIndexValuesRequest* {.rename: "xcb_render_query_pict_index_values_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     format*: XcbRenderPictformat
 
-  XcbRenderQueryPictIndexValuesReply* {.importc: "xcb_render_query_pict_index_values_reply_t", bycopy.} = object
+  XcbRenderQueryPictIndexValuesReply* {.rename: "xcb_render_query_pict_index_values_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -356,7 +357,7 @@ type
     numValues* {.importc: "num_values".}: uint32
     pad1: array[20, uint8]
 
-  XcbRenderCreatePictureValueList* {.importc: "xcb_render_create_picture_value_list_t", bycopy.} = object
+  XcbRenderCreatePictureValueList* {.rename: "xcb_render_create_picture_value_list_t", bycopy.} = object
     repeat*: uint32
     alphamap*: XcbRenderPicture
     alphaxorigin*: int32
@@ -371,7 +372,7 @@ type
     dither*: XcbAtom
     componentalpha*: uint32
 
-  XcbRenderCreatePictureRequest* {.importc: "xcb_render_create_picture_request_t", bycopy.} = object
+  XcbRenderCreatePictureRequest* {.rename: "xcb_render_create_picture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -380,7 +381,7 @@ type
     format*: XcbRenderPictformat
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbRenderChangePictureValueList* {.importc: "xcb_render_change_picture_value_list_t", bycopy.} = object
+  XcbRenderChangePictureValueList* {.rename: "xcb_render_change_picture_value_list_t", bycopy.} = object
     repeat*: uint32
     alphamap*: XcbRenderPicture
     alphaxorigin*: int32
@@ -395,14 +396,14 @@ type
     dither*: XcbAtom
     componentalpha*: uint32
 
-  XcbRenderChangePictureRequest* {.importc: "xcb_render_change_picture_request_t", bycopy.} = object
+  XcbRenderChangePictureRequest* {.rename: "xcb_render_change_picture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     picture*: XcbRenderPicture
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbRenderSetPictureClipRectanglesRequest* {.importc: "xcb_render_set_picture_clip_rectangles_request_t", bycopy.} = object
+  XcbRenderSetPictureClipRectanglesRequest* {.rename: "xcb_render_set_picture_clip_rectangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -410,13 +411,13 @@ type
     clipXOrigin* {.importc: "clip_x_origin".}: int16
     clipYOrigin* {.importc: "clip_y_origin".}: int16
 
-  XcbRenderFreePictureRequest* {.importc: "xcb_render_free_picture_request_t", bycopy.} = object
+  XcbRenderFreePictureRequest* {.rename: "xcb_render_free_picture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     picture*: XcbRenderPicture
 
-  XcbRenderCompositeRequest* {.importc: "xcb_render_composite_request_t", bycopy.} = object
+  XcbRenderCompositeRequest* {.rename: "xcb_render_composite_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -434,7 +435,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbRenderTrapezoidsRequest* {.importc: "xcb_render_trapezoids_request_t", bycopy.} = object
+  XcbRenderTrapezoidsRequest* {.rename: "xcb_render_trapezoids_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -446,7 +447,7 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderTrianglesRequest* {.importc: "xcb_render_triangles_request_t", bycopy.} = object
+  XcbRenderTrianglesRequest* {.rename: "xcb_render_triangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -458,7 +459,7 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderTriStripRequest* {.importc: "xcb_render_tri_strip_request_t", bycopy.} = object
+  XcbRenderTriStripRequest* {.rename: "xcb_render_tri_strip_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -470,7 +471,7 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderTriFanRequest* {.importc: "xcb_render_tri_fan_request_t", bycopy.} = object
+  XcbRenderTriFanRequest* {.rename: "xcb_render_tri_fan_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -482,53 +483,40 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderCreateGlyphSetRequest* {.importc: "xcb_render_create_glyph_set_request_t", bycopy.} = object
+  XcbRenderCreateGlyphSetRequest* {.rename: "xcb_render_create_glyph_set_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     gsid*: XcbRenderGlyphset
     format*: XcbRenderPictformat
 
-  XcbRenderReferenceGlyphSetRequest* {.importc: "xcb_render_reference_glyph_set_request_t", bycopy.} = object
+  XcbRenderReferenceGlyphSetRequest* {.rename: "xcb_render_reference_glyph_set_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     gsid*: XcbRenderGlyphset
     existing*: XcbRenderGlyphset
 
-  XcbRenderFreeGlyphSetRequest* {.importc: "xcb_render_free_glyph_set_request_t", bycopy.} = object
+  XcbRenderFreeGlyphSetRequest* {.rename: "xcb_render_free_glyph_set_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glyphset*: XcbRenderGlyphset
 
-  XcbRenderAddGlyphsRequest* {.importc: "xcb_render_add_glyphs_request_t", bycopy.} = object
+  XcbRenderAddGlyphsRequest* {.rename: "xcb_render_add_glyphs_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glyphset*: XcbRenderGlyphset
     glyphsLen* {.importc: "glyphs_len".}: uint32
 
-  XcbRenderFreeGlyphsRequest* {.importc: "xcb_render_free_glyphs_request_t", bycopy.} = object
+  XcbRenderFreeGlyphsRequest* {.rename: "xcb_render_free_glyphs_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glyphset*: XcbRenderGlyphset
 
-  XcbRenderCompositeGlyphs8Request* {.importc: "xcb_render_composite_glyphs8_request_t", bycopy.} = object
-    majorOpcode* {.importc: "major_opcode".}: uint8
-    minorOpcode* {.importc: "minor_opcode".}: uint8
-    length*: uint16
-    op*: uint8
-    pad0: array[3, uint8]
-    src*: XcbRenderPicture
-    dst*: XcbRenderPicture
-    maskFormat* {.importc: "mask_format".}: XcbRenderPictformat
-    glyphset*: XcbRenderGlyphset
-    srcX* {.importc: "src_x".}: int16
-    srcY* {.importc: "src_y".}: int16
-
-  XcbRenderCompositeGlyphs16Request* {.importc: "xcb_render_composite_glyphs16_request_t", bycopy.} = object
+  XcbRenderCompositeGlyphs8Request* {.rename: "xcb_render_composite_glyphs8_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -541,7 +529,7 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderCompositeGlyphs32Request* {.importc: "xcb_render_composite_glyphs32_request_t", bycopy.} = object
+  XcbRenderCompositeGlyphs16Request* {.rename: "xcb_render_composite_glyphs16_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -554,7 +542,20 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbRenderFillRectanglesRequest* {.importc: "xcb_render_fill_rectangles_request_t", bycopy.} = object
+  XcbRenderCompositeGlyphs32Request* {.rename: "xcb_render_composite_glyphs32_request_t", bycopy.} = object
+    majorOpcode* {.importc: "major_opcode".}: uint8
+    minorOpcode* {.importc: "minor_opcode".}: uint8
+    length*: uint16
+    op*: uint8
+    pad0: array[3, uint8]
+    src*: XcbRenderPicture
+    dst*: XcbRenderPicture
+    maskFormat* {.importc: "mask_format".}: XcbRenderPictformat
+    glyphset*: XcbRenderGlyphset
+    srcX* {.importc: "src_x".}: int16
+    srcY* {.importc: "src_y".}: int16
+
+  XcbRenderFillRectanglesRequest* {.rename: "xcb_render_fill_rectangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -563,7 +564,7 @@ type
     dst*: XcbRenderPicture
     color*: XcbRenderColor
 
-  XcbRenderCreateCursorRequest* {.importc: "xcb_render_create_cursor_request_t", bycopy.} = object
+  XcbRenderCreateCursorRequest* {.rename: "xcb_render_create_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -572,7 +573,7 @@ type
     x*: uint16
     y*: uint16
 
-  XcbRenderTransform* {.importc: "xcb_render_transform_t", bycopy.} = object
+  XcbRenderTransform* {.rename: "xcb_render_transform_t", bycopy.} = object
     matrix11*: XcbRenderFixed
     matrix12*: XcbRenderFixed
     matrix13*: XcbRenderFixed
@@ -583,28 +584,28 @@ type
     matrix32*: XcbRenderFixed
     matrix33*: XcbRenderFixed
 
-  XcbRenderTransformIterator* {.importc: "xcb_render_transform_iterator_t", bycopy.} = object
+  XcbRenderTransformIterator* {.rename: "xcb_render_transform_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderTransform]
     rem*: cint
     index*: cint
 
-  XcbRenderSetPictureTransformRequest* {.importc: "xcb_render_set_picture_transform_request_t", bycopy.} = object
+  XcbRenderSetPictureTransformRequest* {.rename: "xcb_render_set_picture_transform_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     picture*: XcbRenderPicture
     transform*: XcbRenderTransform
 
-  XcbRenderQueryFiltersCookie* {.importc: "xcb_render_query_filters_cookie_t", bycopy.} = object
+  XcbRenderQueryFiltersCookie* {.rename: "xcb_render_query_filters_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbRenderQueryFiltersRequest* {.importc: "xcb_render_query_filters_request_t", bycopy.} = object
+  XcbRenderQueryFiltersRequest* {.rename: "xcb_render_query_filters_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbRenderQueryFiltersReply* {.importc: "xcb_render_query_filters_reply_t", bycopy.} = object
+  XcbRenderQueryFiltersReply* {.rename: "xcb_render_query_filters_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -613,7 +614,7 @@ type
     numFilters* {.importc: "num_filters".}: uint32
     pad1: array[16, uint8]
 
-  XcbRenderSetPictureFilterRequest* {.importc: "xcb_render_set_picture_filter_request_t", bycopy.} = object
+  XcbRenderSetPictureFilterRequest* {.rename: "xcb_render_set_picture_filter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -621,41 +622,41 @@ type
     filterLen* {.importc: "filter_len".}: uint16
     pad0: array[2, uint8]
 
-  XcbRenderAnimcursorelt* {.importc: "xcb_render_animcursorelt_t", bycopy.} = object
+  XcbRenderAnimcursorelt* {.rename: "xcb_render_animcursorelt_t", bycopy.} = object
     cursor*: XcbCursor
     delay*: uint32
 
-  XcbRenderAnimcursoreltIterator* {.importc: "xcb_render_animcursorelt_iterator_t", bycopy.} = object
+  XcbRenderAnimcursoreltIterator* {.rename: "xcb_render_animcursorelt_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderAnimcursorelt]
     rem*: cint
     index*: cint
 
-  XcbRenderCreateAnimCursorRequest* {.importc: "xcb_render_create_anim_cursor_request_t", bycopy.} = object
+  XcbRenderCreateAnimCursorRequest* {.rename: "xcb_render_create_anim_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cid*: XcbCursor
 
-  XcbRenderSpanfix* {.importc: "xcb_render_spanfix_t", bycopy.} = object
+  XcbRenderSpanfix* {.rename: "xcb_render_spanfix_t", bycopy.} = object
     l*: XcbRenderFixed
     r*: XcbRenderFixed
     y*: XcbRenderFixed
 
-  XcbRenderSpanfixIterator* {.importc: "xcb_render_spanfix_iterator_t", bycopy.} = object
+  XcbRenderSpanfixIterator* {.rename: "xcb_render_spanfix_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderSpanfix]
     rem*: cint
     index*: cint
 
-  XcbRenderTrap* {.importc: "xcb_render_trap_t", bycopy.} = object
+  XcbRenderTrap* {.rename: "xcb_render_trap_t", bycopy.} = object
     top*: XcbRenderSpanfix
     bot*: XcbRenderSpanfix
 
-  XcbRenderTrapIterator* {.importc: "xcb_render_trap_iterator_t", bycopy.} = object
+  XcbRenderTrapIterator* {.rename: "xcb_render_trap_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRenderTrap]
     rem*: cint
     index*: cint
 
-  XcbRenderAddTrapsRequest* {.importc: "xcb_render_add_traps_request_t", bycopy.} = object
+  XcbRenderAddTrapsRequest* {.rename: "xcb_render_add_traps_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -663,14 +664,14 @@ type
     xOff* {.importc: "x_off".}: int16
     yOff* {.importc: "y_off".}: int16
 
-  XcbRenderCreateSolidFillRequest* {.importc: "xcb_render_create_solid_fill_request_t", bycopy.} = object
+  XcbRenderCreateSolidFillRequest* {.rename: "xcb_render_create_solid_fill_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     picture*: XcbRenderPicture
     color*: XcbRenderColor
 
-  XcbRenderCreateLinearGradientRequest* {.importc: "xcb_render_create_linear_gradient_request_t", bycopy.} = object
+  XcbRenderCreateLinearGradientRequest* {.rename: "xcb_render_create_linear_gradient_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -679,7 +680,7 @@ type
     p2*: XcbRenderPointfix
     numStops* {.importc: "num_stops".}: uint32
 
-  XcbRenderCreateRadialGradientRequest* {.importc: "xcb_render_create_radial_gradient_request_t", bycopy.} = object
+  XcbRenderCreateRadialGradientRequest* {.rename: "xcb_render_create_radial_gradient_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -690,7 +691,7 @@ type
     outerRadius* {.importc: "outer_radius".}: XcbRenderFixed
     numStops* {.importc: "num_stops".}: uint32
 
-  XcbRenderCreateConicalGradientRequest* {.importc: "xcb_render_create_conical_gradient_request_t", bycopy.} = object
+  XcbRenderCreateConicalGradientRequest* {.rename: "xcb_render_create_conical_gradient_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -699,6 +700,8 @@ type
     angle*: XcbRenderFixed
     numStops* {.importc: "num_stops".}: uint32
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-render.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbRenderGlyphIterator) {.importc: "xcb_render_glyph_next".}

@@ -1,26 +1,27 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbGenericeventMajorVersion* = 1
   xcbGenericeventMinorVersion* = 0
   xcbGenericEventQueryVersion* = 0
 
-{.push header: "xcb/ge.h".}
+when not xcbDynlib:
+  {.push header: "xcb/ge.h".}
 
-var xcbGenericeventId* {.extern: "xcb_genericevent_id".}: XcbExtension
+  var xcbGenericeventId* {.extern: "xcb_genericevent_id".}: XcbExtension
 
 type
-  XcbGenericEventQueryVersionCookie* {.importc: "xcb_genericevent_query_version_cookie_t", bycopy.} = object
+  XcbGenericEventQueryVersionCookie* {.rename: "xcb_genericevent_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGenericEventQueryVersionRequest* {.importc: "xcb_genericevent_query_version_request_t", bycopy.} = object
+  XcbGenericEventQueryVersionRequest* {.rename: "xcb_genericevent_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint16
     clientMinorVersion* {.importc: "client_minor_version".}: uint16
 
-  XcbGenericEventQueryVersionReply* {.importc: "xcb_genericevent_query_version_reply_t", bycopy.} = object
+  XcbGenericEventQueryVersionReply* {.rename: "xcb_genericevent_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -29,6 +30,8 @@ type
     minorVersion* {.importc: "minor_version".}: uint16
     pad1: array[20, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc genericEventQueryVersion*(c: ptr XcbConnection; clientMajorVersion, clientMinorVersion: uint16): XcbGenericEventQueryVersionCookie {.importc: "xcb_genericevent_query_version".}

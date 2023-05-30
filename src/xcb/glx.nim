@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbGlxMajorVersion* = 1
@@ -122,88 +122,89 @@ const
   xcbGlxGetQueryObjectivArb* = 165
   xcbGlxGetQueryObjectuivArb* = 166
 
-{.passl: "-lxcb-glx".}
-{.push header: "xcb/glx.h".}
+when not xcbDynlib
+  {.passl: "-lxcb-glx".}
+  {.push header: "xcb/glx.h".}
 
-var xcbGlxId* {.extern: "xcb_glx_id".}: XcbExtension
+  var xcbGlxId* {.extern: "xcb_glx_id".}: XcbExtension
 
 type
-  XcbGlxPixmap* {.importc: "xcb_glx_pixmap_t".} = distinct uint32
-  XcbGlxContext* {.importc: "xcb_glx_context_t".} = distinct uint32
-  XcbGlxPbuffer* {.importc: "xcb_glx_pbuffer_t".} = distinct uint32
-  XcbGlxWindow* {.importc: "xcb_glx_window_t".} = distinct uint32
-  XcbGlxFbconfig* {.importc: "xcb_glx_fbconfig_t".} = distinct uint32
-  XcbGlxDrawable* {.importc: "xcb_glx_drawable_t".} = distinct uint32
-  XcbGlxBool32* {.importc: "xcb_glx_bool32_t".} = distinct uint32
-  XcbGlxContextTag* {.importc: "xcb_glx_context_tag_t".} = distinct uint32
-  XcbGlxFloat32* {.importc: "xcb_glx_float32_t".} = cfloat
-  XcbGlxFloat64* {.importc: "xcb_glx_float64_t".} = cdouble
-  XcbGlxBadContextError* {.importc: "xcb_glx_bad_context_error_t".} = XcbGlxGenericError
-  XcbGlxBadContextStateError* {.importc: "xcb_glx_bad_context_state_error_t".} = XcbGlxGenericError
-  XcbGlxBadDrawableError* {.importc: "xcb_glx_bad_drawable_error_t".} = XcbGlxGenericError
-  XcbGlxBadPixmapError* {.importc: "xcb_glx_bad_pixmap_error_t".} = XcbGlxGenericError
-  XcbGlxBadContextTagError* {.importc: "xcb_glx_bad_context_tag_error_t".} = XcbGlxGenericError
-  XcbGlxBadCurrentWindowError* {.importc: "xcb_glx_bad_current_window_error_t".} = XcbGlxGenericError
-  XcbGlxBadRenderRequestError* {.importc: "xcb_glx_bad_render_request_error_t".} = XcbGlxGenericError
-  XcbGlxBadLargeRequestError* {.importc: "xcb_glx_bad_large_request_error_t".} = XcbGlxGenericError
-  XcbGlxUnsupportedPrivateRequestError* {.importc: "xcb_glx_unsupported_private_request_error_t".} = XcbGlxGenericError
-  XcbGlxBadFbConfigError* {.importc: "xcb_glx_bad_fb_config_error_t".} = XcbGlxGenericError
-  XcbGlxBadPbufferError* {.importc: "xcb_glx_bad_pbuffer_error_t".} = XcbGlxGenericError
-  XcbGlxBadCurrentDrawableError* {.importc: "xcb_glx_bad_current_drawable_error_t".} = XcbGlxGenericError
-  XcbGlxBadWindowError* {.importc: "xcb_glx_bad_window_error_t".} = XcbGlxGenericError
-  XcbGlxGlxBadProfileArbError* {.importc: "xcb_glx_glx_bad_profile_arb_error_t".} = XcbGlxGenericError
+  XcbGlxPixmap* {.rename: "xcb_glx_pixmap_t".} = distinct uint32
+  XcbGlxContext* {.rename: "xcb_glx_context_t".} = distinct uint32
+  XcbGlxPbuffer* {.rename: "xcb_glx_pbuffer_t".} = distinct uint32
+  XcbGlxWindow* {.rename: "xcb_glx_window_t".} = distinct uint32
+  XcbGlxFbconfig* {.rename: "xcb_glx_fbconfig_t".} = distinct uint32
+  XcbGlxDrawable* {.rename: "xcb_glx_drawable_t".} = distinct uint32
+  XcbGlxBool32* {.rename: "xcb_glx_bool32_t".} = distinct uint32
+  XcbGlxContextTag* {.rename: "xcb_glx_context_tag_t".} = distinct uint32
+  XcbGlxFloat32* {.rename: "xcb_glx_float32_t".} = cfloat
+  XcbGlxFloat64* {.rename: "xcb_glx_float64_t".} = cdouble
+  XcbGlxBadContextError* {.rename: "xcb_glx_bad_context_error_t".} = XcbGlxGenericError
+  XcbGlxBadContextStateError* {.rename: "xcb_glx_bad_context_state_error_t".} = XcbGlxGenericError
+  XcbGlxBadDrawableError* {.rename: "xcb_glx_bad_drawable_error_t".} = XcbGlxGenericError
+  XcbGlxBadPixmapError* {.rename: "xcb_glx_bad_pixmap_error_t".} = XcbGlxGenericError
+  XcbGlxBadContextTagError* {.rename: "xcb_glx_bad_context_tag_error_t".} = XcbGlxGenericError
+  XcbGlxBadCurrentWindowError* {.rename: "xcb_glx_bad_current_window_error_t".} = XcbGlxGenericError
+  XcbGlxBadRenderRequestError* {.rename: "xcb_glx_bad_render_request_error_t".} = XcbGlxGenericError
+  XcbGlxBadLargeRequestError* {.rename: "xcb_glx_bad_large_request_error_t".} = XcbGlxGenericError
+  XcbGlxUnsupportedPrivateRequestError* {.rename: "xcb_glx_unsupported_private_request_error_t".} = XcbGlxGenericError
+  XcbGlxBadFbConfigError* {.rename: "xcb_glx_bad_fb_config_error_t".} = XcbGlxGenericError
+  XcbGlxBadPbufferError* {.rename: "xcb_glx_bad_pbuffer_error_t".} = XcbGlxGenericError
+  XcbGlxBadCurrentDrawableError* {.rename: "xcb_glx_bad_current_drawable_error_t".} = XcbGlxGenericError
+  XcbGlxBadWindowError* {.rename: "xcb_glx_bad_window_error_t".} = XcbGlxGenericError
+  XcbGlxGlxBadProfileArbError* {.rename: "xcb_glx_glx_bad_profile_arb_error_t".} = XcbGlxGenericError
 
-  XcbGlxPixmapIterator* {.importc: "xcb_glx_pixmap_iterator_t", bycopy.} = object
+  XcbGlxPixmapIterator* {.rename: "xcb_glx_pixmap_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxPixmap]
     rem*: cint
     index*: cint
 
-  XcbGlxContextIterator* {.importc: "xcb_glx_context_iterator_t", bycopy.} = object
+  XcbGlxContextIterator* {.rename: "xcb_glx_context_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxContext]
     rem*: cint
     index*: cint
 
-  XcbGlxPbufferIterator* {.importc: "xcb_glx_pbuffer_iterator_t", bycopy.} = object
+  XcbGlxPbufferIterator* {.rename: "xcb_glx_pbuffer_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxPbuffer]
     rem*: cint
     index*: cint
 
-  XcbGlxWindowIterator* {.importc: "xcb_glx_window_iterator_t", bycopy.} = object
+  XcbGlxWindowIterator* {.rename: "xcb_glx_window_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxWindow]
     rem*: cint
     index*: cint
 
-  XcbGlxFbconfigIterator* {.importc: "xcb_glx_fbconfig_iterator_t", bycopy.} = object
+  XcbGlxFbconfigIterator* {.rename: "xcb_glx_fbconfig_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxFbconfig]
     rem*: cint
     index*: cint
 
-  XcbGlxDrawableIterator* {.importc: "xcb_glx_drawable_iterator_t", bycopy.} = object
+  XcbGlxDrawableIterator* {.rename: "xcb_glx_drawable_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxDrawable]
     rem*: cint
     index*: cint
 
-  XcbGlxFloat32Iterator* {.importc: "xcb_glx_float32_iterator_t", bycopy.} = object
+  XcbGlxFloat32Iterator* {.rename: "xcb_glx_float32_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxFloat32]
     rem*: cint
     index*: cint
 
-  XcbGlxFloat64Iterator* {.importc: "xcb_glx_float64_iterator_t", bycopy.} = object
+  XcbGlxFloat64Iterator* {.rename: "xcb_glx_float64_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxFloat64]
     rem*: cint
     index*: cint
 
-  XcbGlxBool32Iterator* {.importc: "xcb_glx_bool32_iterator_t", bycopy.} = object
+  XcbGlxBool32Iterator* {.rename: "xcb_glx_bool32_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxBool32]
     rem*: cint
     index*: cint
 
-  XcbGlxContextTagIterator* {.importc: "xcb_glx_context_tag_iterator_t", bycopy.} = object
+  XcbGlxContextTagIterator* {.rename: "xcb_glx_context_tag_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGlxContextTag]
     rem*: cint
     index*: cint
 
-  XcbGlxGenericError* {.importc: "xcb_glx_generic_error_t", bycopy.} = object
+  XcbGlxGenericError* {.rename: "xcb_glx_generic_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -212,7 +213,7 @@ type
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: array[21, uint8]
 
-  XcbGlxPbufferClobberEvent* {.importc: "xcb_glx_pbuffer_clobber_event_t", bycopy.} = object
+  XcbGlxPbufferClobberEvent* {.rename: "xcb_glx_pbuffer_clobber_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -228,7 +229,7 @@ type
     count*: uint16
     pad1: array[4, uint8]
 
-  XcbGlxBufferSwapCompleteEvent* {.importc: "xcb_glx_buffer_swap_complete_event_t", bycopy.} = object
+  XcbGlxBufferSwapCompleteEvent* {.rename: "xcb_glx_buffer_swap_complete_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -241,19 +242,19 @@ type
     mscLo* {.importc: "msc_lo".}: uint32
     sbc*: uint32
 
-  XcbGlxPbcet* {.importc: "xcb_glx_pbcet_t".} = enum
+  XcbGlxPbcet* {.rename: "xcb_glx_pbcet_t".} = enum
     xcbGlxPbcetDamaged = 32791, xcbGlxPbcetSaved = 32792
 
-  XcbGlxPbcdt* {.importc: "xcb_glx_pbcdt_t".} = enum
+  XcbGlxPbcdt* {.rename: "xcb_glx_pbcdt_t".} = enum
     xcbGlxPbcdtWindow = 32793, xcbGlxPbcdtPbuffer = 32794
 
-  XcbGlxRenderRequest* {.importc: "xcb_glx_render_request_t", bycopy.} = object
+  XcbGlxRenderRequest* {.rename: "xcb_glx_render_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxRenderLargeRequest* {.importc: "xcb_glx_render_large_request_t", bycopy.} = object
+  XcbGlxRenderLargeRequest* {.rename: "xcb_glx_render_large_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -262,7 +263,7 @@ type
     requestTotal* {.importc: "request_total".}: uint16
     dataLen* {.importc: "data_len".}: uint32
 
-  XcbGlxCreateContextRequest* {.importc: "xcb_glx_create_context_request_t", bycopy.} = object
+  XcbGlxCreateContextRequest* {.rename: "xcb_glx_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -273,16 +274,16 @@ type
     isDirect* {.importc: "is_direct".}: uint8
     pad0: array[3, uint8]
 
-  XcbGlxDestroyContextRequest* {.importc: "xcb_glx_destroy_context_request_t", bycopy.} = object
+  XcbGlxDestroyContextRequest* {.rename: "xcb_glx_destroy_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbGlxContext
 
-  XcbGlxMakeCurrentCookie* {.importc: "xcb_glx_make_current_cookie_t", bycopy.} = object
+  XcbGlxMakeCurrentCookie* {.rename: "xcb_glx_make_current_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxMakeCurrentRequest* {.importc: "xcb_glx_make_current_request_t", bycopy.} = object
+  XcbGlxMakeCurrentRequest* {.rename: "xcb_glx_make_current_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -290,7 +291,7 @@ type
     context*: XcbGlxContext
     oldContextTag* {.importc: "old_context_tag".}: XcbGlxContextTag
 
-  XcbGlxMakeCurrentReply* {.importc: "xcb_glx_make_current_reply_t", bycopy.} = object
+  XcbGlxMakeCurrentReply* {.rename: "xcb_glx_make_current_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -298,16 +299,16 @@ type
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pad1: array[20, uint8]
 
-  XcbGlxIsDirectCookie* {.importc: "xcb_glx_is_direct_cookie_t", bycopy.} = object
+  XcbGlxIsDirectCookie* {.rename: "xcb_glx_is_direct_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxIsDirectRequest* {.importc: "xcb_glx_is_direct_request_t", bycopy.} = object
+  XcbGlxIsDirectRequest* {.rename: "xcb_glx_is_direct_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbGlxContext
 
-  XcbGlxIsDirectReply* {.importc: "xcb_glx_is_direct_reply_t", bycopy.} = object
+  XcbGlxIsDirectReply* {.rename: "xcb_glx_is_direct_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -315,17 +316,17 @@ type
     isDirect* {.importc: "is_direct".}: uint8
     pad1: array[23, uint8]
 
-  XcbGlxQueryVersionCookie* {.importc: "xcb_glx_query_version_cookie_t", bycopy.} = object
+  XcbGlxQueryVersionCookie* {.rename: "xcb_glx_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxQueryVersionRequest* {.importc: "xcb_glx_query_version_request_t", bycopy.} = object
+  XcbGlxQueryVersionRequest* {.rename: "xcb_glx_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbGlxQueryVersionReply* {.importc: "xcb_glx_query_version_reply_t", bycopy.} = object
+  XcbGlxQueryVersionReply* {.rename: "xcb_glx_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -334,19 +335,19 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     pad1: array[16, uint8]
 
-  XcbGlxWaitGlRequest* {.importc: "xcb_glx_wait_gl_request_t", bycopy.} = object
+  XcbGlxWaitGlRequest* {.rename: "xcb_glx_wait_gl_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxWaitXRequest* {.importc: "xcb_glx_wait_x_request_t", bycopy.} = object
+  XcbGlxWaitXRequest* {.rename: "xcb_glx_wait_x_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxCopyContextRequest* {.importc: "xcb_glx_copy_context_request_t", bycopy.} = object
+  XcbGlxCopyContextRequest* {.rename: "xcb_glx_copy_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -355,7 +356,7 @@ type
     mask*: uint32
     srcContextTag* {.importc: "src_context_tag".}: XcbGlxContextTag
 
-  XcbGlxGc* {.importc: "xcb_glx_gc_t".} = enum
+  XcbGlxGc* {.rename: "xcb_glx_gc_t".} = enum
     xcbGlxGcGlCurrentBit = 1, xcbGlxGcGlPointBit = 2,
     xcbGlxGcGlLineBit = 4, xcbGlxGcGlPolygonBit = 8,
     xcbGlxGcGlPolygonStippleBit = 16, xcbGlxGcGlPixelModeBit = 32,
@@ -368,14 +369,14 @@ type
     xcbGlxGcGlTextureBit = 262144, xcbGlxGcGlScissorBit = 524288,
     xcbGlxGcGlAllAttribBits = 16777215
 
-  XcbGlxSwapBuffersRequest* {.importc: "xcb_glx_swap_buffers_request_t", bycopy.} = object
+  XcbGlxSwapBuffersRequest* {.rename: "xcb_glx_swap_buffers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     drawable*: XcbGlxDrawable
 
-  XcbGlxUseXFontRequest* {.importc: "xcb_glx_use_x_font_request_t", bycopy.} = object
+  XcbGlxUseXFontRequest* {.rename: "xcb_glx_use_x_font_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -385,7 +386,7 @@ type
     count*: uint32
     listBase* {.importc: "list_base".}: uint32
 
-  XcbGlxCreateGlxPixmapRequest* {.importc: "xcb_glx_create_glx_pixmap_request_t", bycopy.} = object
+  XcbGlxCreateGlxPixmapRequest* {.rename: "xcb_glx_create_glx_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -394,16 +395,16 @@ type
     pixmap*: XcbPixmap
     glxPixmap* {.importc: "glx_pixmap".}: XcbGlxPixmap
 
-  XcbGlxGetVisualConfigsCookie* {.importc: "xcb_glx_get_visual_configs_cookie_t", bycopy.} = object
+  XcbGlxGetVisualConfigsCookie* {.rename: "xcb_glx_get_visual_configs_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetVisualConfigsRequest* {.importc: "xcb_glx_get_visual_configs_request_t", bycopy.} = object
+  XcbGlxGetVisualConfigsRequest* {.rename: "xcb_glx_get_visual_configs_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbGlxGetVisualConfigsReply* {.importc: "xcb_glx_get_visual_configs_reply_t", bycopy.} = object
+  XcbGlxGetVisualConfigsReply* {.rename: "xcb_glx_get_visual_configs_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -412,30 +413,30 @@ type
     numProperties* {.importc: "num_properties".}: uint32
     pad1: array[16, uint8]
 
-  XcbGlxDestroyGlxPixmapRequest* {.importc: "xcb_glx_destroy_glx_pixmap_request_t", bycopy.} = object
+  XcbGlxDestroyGlxPixmapRequest* {.rename: "xcb_glx_destroy_glx_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glxPixmap* {.importc: "glx_pixmap".}: XcbGlxPixmap
 
-  XcbGlxVendorPrivateRequest* {.importc: "xcb_glx_vendor_private_request_t", bycopy.} = object
+  XcbGlxVendorPrivateRequest* {.rename: "xcb_glx_vendor_private_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     vendorCode* {.importc: "vendor_code".}: uint32
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxVendorPrivateWithReplyCookie* {.importc: "xcb_glx_vendor_private_with_reply_cookie_t", bycopy.} = object
+  XcbGlxVendorPrivateWithReplyCookie* {.rename: "xcb_glx_vendor_private_with_reply_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxVendorPrivateWithReplyRequest* {.importc: "xcb_glx_vendor_private_with_reply_request_t", bycopy.} = object
+  XcbGlxVendorPrivateWithReplyRequest* {.rename: "xcb_glx_vendor_private_with_reply_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     vendorCode* {.importc: "vendor_code".}: uint32
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxVendorPrivateWithReplyReply* {.importc: "xcb_glx_vendor_private_with_reply_reply_t", bycopy.} = object
+  XcbGlxVendorPrivateWithReplyReply* {.rename: "xcb_glx_vendor_private_with_reply_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -443,16 +444,16 @@ type
     retval*: uint32
     data1*: array[24, uint8]
 
-  XcbGlxQueryExtensionsStringCookie* {.importc: "xcb_glx_query_extensions_string_cookie_t", bycopy.} = object
+  XcbGlxQueryExtensionsStringCookie* {.rename: "xcb_glx_query_extensions_string_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxQueryExtensionsStringRequest* {.importc: "xcb_glx_query_extensions_string_request_t", bycopy.} = object
+  XcbGlxQueryExtensionsStringRequest* {.rename: "xcb_glx_query_extensions_string_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbGlxQueryExtensionsStringReply* {.importc: "xcb_glx_query_extensions_string_reply_t", bycopy.} = object
+  XcbGlxQueryExtensionsStringReply* {.rename: "xcb_glx_query_extensions_string_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -461,17 +462,17 @@ type
     n*: uint32
     pad2: array[16, uint8]
 
-  XcbGlxQueryServerStringCookie* {.importc: "xcb_glx_query_server_string_cookie_t", bycopy.} = object
+  XcbGlxQueryServerStringCookie* {.rename: "xcb_glx_query_server_string_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxQueryServerStringRequest* {.importc: "xcb_glx_query_server_string_request_t", bycopy.} = object
+  XcbGlxQueryServerStringRequest* {.rename: "xcb_glx_query_server_string_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     name*: uint32
 
-  XcbGlxQueryServerStringReply* {.importc: "xcb_glx_query_server_string_reply_t", bycopy.} = object
+  XcbGlxQueryServerStringReply* {.rename: "xcb_glx_query_server_string_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -480,7 +481,7 @@ type
     strLen* {.importc: "str_len".}: uint32
     pad2: array[16, uint8]
 
-  XcbGlxClientInfoRequest* {.importc: "xcb_glx_client_info_request_t", bycopy.} = object
+  XcbGlxClientInfoRequest* {.rename: "xcb_glx_client_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -488,16 +489,16 @@ type
     minorVersion* {.importc: "minor_version".}: uint32
     strLen* {.importc: "str_len".}: uint32
 
-  XcbGlxGetFbConfigsCookie* {.importc: "xcb_glx_get_fb_configs_cookie_t", bycopy.} = object
+  XcbGlxGetFbConfigsCookie* {.rename: "xcb_glx_get_fb_configs_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetFbConfigsRequest* {.importc: "xcb_glx_get_fb_configs_request_t", bycopy.} = object
+  XcbGlxGetFbConfigsRequest* {.rename: "xcb_glx_get_fb_configs_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbGlxGetFbConfigsReply* {.importc: "xcb_glx_get_fb_configs_reply_t", bycopy.} = object
+  XcbGlxGetFbConfigsReply* {.rename: "xcb_glx_get_fb_configs_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -506,7 +507,7 @@ type
     numProperties* {.importc: "num_properties".}: uint32
     pad1: array[16, uint8]
 
-  XcbGlxCreatePixmapRequest* {.importc: "xcb_glx_create_pixmap_request_t", bycopy.} = object
+  XcbGlxCreatePixmapRequest* {.rename: "xcb_glx_create_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -516,13 +517,13 @@ type
     glxPixmap* {.importc: "glx_pixmap".}: XcbGlxPixmap
     numAttribs* {.importc: "num_attribs".}: uint32
 
-  XcbGlxDestroyPixmapRequest* {.importc: "xcb_glx_destroy_pixmap_request_t", bycopy.} = object
+  XcbGlxDestroyPixmapRequest* {.rename: "xcb_glx_destroy_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glxPixmap* {.importc: "glx_pixmap".}: XcbGlxPixmap
 
-  XcbGlxCreateNewContextRequest* {.importc: "xcb_glx_create_new_context_request_t", bycopy.} = object
+  XcbGlxCreateNewContextRequest* {.rename: "xcb_glx_create_new_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -534,16 +535,16 @@ type
     isDirect* {.importc: "is_direct".}: uint8
     pad0: array[3, uint8]
 
-  XcbGlxQueryContextCookie* {.importc: "xcb_glx_query_context_cookie_t", bycopy.} = object
+  XcbGlxQueryContextCookie* {.rename: "xcb_glx_query_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxQueryContextRequest* {.importc: "xcb_glx_query_context_request_t", bycopy.} = object
+  XcbGlxQueryContextRequest* {.rename: "xcb_glx_query_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbGlxContext
 
-  XcbGlxQueryContextReply* {.importc: "xcb_glx_query_context_reply_t", bycopy.} = object
+  XcbGlxQueryContextReply* {.rename: "xcb_glx_query_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -551,10 +552,10 @@ type
     numAttribs* {.importc: "num_attribs".}: uint32
     pad1: array[20, uint8]
 
-  XcbGlxMakeContextCurrentCookie* {.importc: "xcb_glx_make_context_current_cookie_t", bycopy.} = object
+  XcbGlxMakeContextCurrentCookie* {.rename: "xcb_glx_make_context_current_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxMakeContextCurrentRequest* {.importc: "xcb_glx_make_context_current_request_t", bycopy.} = object
+  XcbGlxMakeContextCurrentRequest* {.rename: "xcb_glx_make_context_current_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -563,7 +564,7 @@ type
     readDrawable* {.importc: "read_drawable".}: XcbGlxDrawable
     context*: XcbGlxContext
 
-  XcbGlxMakeContextCurrentReply* {.importc: "xcb_glx_make_context_current_reply_t", bycopy.} = object
+  XcbGlxMakeContextCurrentReply* {.rename: "xcb_glx_make_context_current_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -571,7 +572,7 @@ type
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pad1: array[20, uint8]
 
-  XcbGlxCreatePbufferRequest* {.importc: "xcb_glx_create_pbuffer_request_t", bycopy.} = object
+  XcbGlxCreatePbufferRequest* {.rename: "xcb_glx_create_pbuffer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -580,22 +581,22 @@ type
     pbuffer*: XcbGlxPbuffer
     numAttribs* {.importc: "num_attribs".}: uint32
 
-  XcbGlxDestroyPbufferRequest* {.importc: "xcb_glx_destroy_pbuffer_request_t", bycopy.} = object
+  XcbGlxDestroyPbufferRequest* {.rename: "xcb_glx_destroy_pbuffer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     pbuffer*: XcbGlxPbuffer
 
-  XcbGlxGetDrawableAttributesCookie* {.importc: "xcb_glx_get_drawable_attributes_cookie_t", bycopy.} = object
+  XcbGlxGetDrawableAttributesCookie* {.rename: "xcb_glx_get_drawable_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetDrawableAttributesRequest* {.importc: "xcb_glx_get_drawable_attributes_request_t", bycopy.} = object
+  XcbGlxGetDrawableAttributesRequest* {.rename: "xcb_glx_get_drawable_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbGlxDrawable
 
-  XcbGlxGetDrawableAttributesReply* {.importc: "xcb_glx_get_drawable_attributes_reply_t", bycopy.} = object
+  XcbGlxGetDrawableAttributesReply* {.rename: "xcb_glx_get_drawable_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -603,14 +604,14 @@ type
     numAttribs* {.importc: "num_attribs".}: uint32
     pad1: array[20, uint8]
 
-  XcbGlxChangeDrawableAttributesRequest* {.importc: "xcb_glx_change_drawable_attributes_request_t", bycopy.} = object
+  XcbGlxChangeDrawableAttributesRequest* {.rename: "xcb_glx_change_drawable_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbGlxDrawable
     numAttribs* {.importc: "num_attribs".}: uint32
 
-  XcbGlxCreateWindowRequest* {.importc: "xcb_glx_create_window_request_t", bycopy.} = object
+  XcbGlxCreateWindowRequest* {.rename: "xcb_glx_create_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -620,13 +621,13 @@ type
     glxWindow* {.importc: "glx_window".}: XcbGlxWindow
     numAttribs* {.importc: "num_attribs".}: uint32
 
-  XcbGlxDeleteWindowRequest* {.importc: "xcb_glx_delete_window_request_t", bycopy.} = object
+  XcbGlxDeleteWindowRequest* {.rename: "xcb_glx_delete_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     glxwindow*: XcbGlxWindow
 
-  XcbGlxSetClientInfoArbRequest* {.importc: "xcb_glx_set_client_info_arb_request_t", bycopy.} = object
+  XcbGlxSetClientInfoArbRequest* {.rename: "xcb_glx_set_client_info_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -636,7 +637,7 @@ type
     glStrLen* {.importc: "gl_str_len".}: uint32
     glxStrLen* {.importc: "glx_str_len".}: uint32
 
-  XcbGlxCreateContextAttribsArbRequest* {.importc: "xcb_glx_create_context_attribs_arb_request_t", bycopy.} = object
+  XcbGlxCreateContextAttribsArbRequest* {.rename: "xcb_glx_create_context_attribs_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -648,7 +649,7 @@ type
     pad0: array[3, uint8]
     numAttribs* {.importc: "num_attribs".}: uint32
 
-  XcbGlxSetClientInfo2arbRequest* {.importc: "xcb_glx_set_client_info2arb_request_t", bycopy.} = object
+  XcbGlxSetClientInfo2arbRequest* {.rename: "xcb_glx_set_client_info2arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -658,7 +659,7 @@ type
     glStrLen* {.importc: "gl_str_len".}: uint32
     glxStrLen* {.importc: "glx_str_len".}: uint32
 
-  XcbGlxNewListRequest* {.importc: "xcb_glx_new_list_request_t", bycopy.} = object
+  XcbGlxNewListRequest* {.rename: "xcb_glx_new_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -666,13 +667,13 @@ type
     list*: uint32
     mode*: uint32
 
-  XcbGlxEndListRequest* {.importc: "xcb_glx_end_list_request_t", bycopy.} = object
+  XcbGlxEndListRequest* {.rename: "xcb_glx_end_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxDeleteListsRequest* {.importc: "xcb_glx_delete_lists_request_t", bycopy.} = object
+  XcbGlxDeleteListsRequest* {.rename: "xcb_glx_delete_lists_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -680,24 +681,24 @@ type
     list*: uint32
     range*: int32
 
-  XcbGlxGenListsCookie* {.importc: "xcb_glx_gen_lists_cookie_t", bycopy.} = object
+  XcbGlxGenListsCookie* {.rename: "xcb_glx_gen_lists_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGenListsRequest* {.importc: "xcb_glx_gen_lists_request_t", bycopy.} = object
+  XcbGlxGenListsRequest* {.rename: "xcb_glx_gen_lists_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     range*: int32
 
-  XcbGlxGenListsReply* {.importc: "xcb_glx_gen_lists_reply_t", bycopy.} = object
+  XcbGlxGenListsReply* {.rename: "xcb_glx_gen_lists_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     retVal* {.importc: "ret_val".}: uint32
 
-  XcbGlxFeedbackBufferRequest* {.importc: "xcb_glx_feedback_buffer_request_t", bycopy.} = object
+  XcbGlxFeedbackBufferRequest* {.rename: "xcb_glx_feedback_buffer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -705,24 +706,24 @@ type
     size*: int32
     `type`*: int32
 
-  XcbGlxSelectBufferRequest* {.importc: "xcb_glx_select_buffer_request_t", bycopy.} = object
+  XcbGlxSelectBufferRequest* {.rename: "xcb_glx_select_buffer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     size*: int32
 
-  XcbGlxRenderModeCookie* {.importc: "xcb_glx_render_mode_cookie_t", bycopy.} = object
+  XcbGlxRenderModeCookie* {.rename: "xcb_glx_render_mode_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxRenderModeRequest* {.importc: "xcb_glx_render_mode_request_t", bycopy.} = object
+  XcbGlxRenderModeRequest* {.rename: "xcb_glx_render_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     mode*: uint32
 
-  XcbGlxRenderModeReply* {.importc: "xcb_glx_render_mode_reply_t", bycopy.} = object
+  XcbGlxRenderModeReply* {.rename: "xcb_glx_render_mode_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -732,26 +733,26 @@ type
     newMode* {.importc: "new_mode".}: uint32
     pad1: array[12, uint8]
 
-  XcbGlxRm* {.importc: "xcb_glx_rm_t".} = enum
+  XcbGlxRm* {.rename: "xcb_glx_rm_t".} = enum
     xcbGlxRmGlRender = 7168, xcbGlxRmGlFeedback = 7169,
     xcbGlxRmGlSelect = 7170
 
-  XcbGlxFinishCookie* {.importc: "xcb_glx_finish_cookie_t", bycopy.} = object
+  XcbGlxFinishCookie* {.rename: "xcb_glx_finish_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxFinishRequest* {.importc: "xcb_glx_finish_request_t", bycopy.} = object
+  XcbGlxFinishRequest* {.rename: "xcb_glx_finish_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxFinishReply* {.importc: "xcb_glx_finish_reply_t", bycopy.} = object
+  XcbGlxFinishReply* {.rename: "xcb_glx_finish_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbGlxPixelStorefRequest* {.importc: "xcb_glx_pixel_storef_request_t", bycopy.} = object
+  XcbGlxPixelStorefRequest* {.rename: "xcb_glx_pixel_storef_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -759,7 +760,7 @@ type
     pname*: uint32
     datum*: XcbGlxFloat32
 
-  XcbGlxPixelStoreiRequest* {.importc: "xcb_glx_pixel_storei_request_t", bycopy.} = object
+  XcbGlxPixelStoreiRequest* {.rename: "xcb_glx_pixel_storei_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -767,10 +768,10 @@ type
     pname*: uint32
     datum*: int32
 
-  XcbGlxReadPixelsCookie* {.importc: "xcb_glx_read_pixels_cookie_t", bycopy.} = object
+  XcbGlxReadPixelsCookie* {.rename: "xcb_glx_read_pixels_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxReadPixelsRequest* {.importc: "xcb_glx_read_pixels_request_t", bycopy.} = object
+  XcbGlxReadPixelsRequest* {.rename: "xcb_glx_read_pixels_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -784,24 +785,24 @@ type
     swapBytes* {.importc: "swap_bytes".}: uint8
     lsbFirst* {.importc: "lsb_first".}: uint8
 
-  XcbGlxReadPixelsReply* {.importc: "xcb_glx_read_pixels_reply_t", bycopy.} = object
+  XcbGlxReadPixelsReply* {.rename: "xcb_glx_read_pixels_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxGetBooleanvCookie* {.importc: "xcb_glx_get_booleanv_cookie_t", bycopy.} = object
+  XcbGlxGetBooleanvCookie* {.rename: "xcb_glx_get_booleanv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetBooleanvRequest* {.importc: "xcb_glx_get_booleanv_request_t", bycopy.} = object
+  XcbGlxGetBooleanvRequest* {.rename: "xcb_glx_get_booleanv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pname*: int32
 
-  XcbGlxGetBooleanvReply* {.importc: "xcb_glx_get_booleanv_reply_t", bycopy.} = object
+  XcbGlxGetBooleanvReply* {.rename: "xcb_glx_get_booleanv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -811,34 +812,34 @@ type
     datum*: uint8
     pad2: array[15, uint8]
 
-  XcbGlxGetClipPlaneCookie* {.importc: "xcb_glx_get_clip_plane_cookie_t", bycopy.} = object
+  XcbGlxGetClipPlaneCookie* {.rename: "xcb_glx_get_clip_plane_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetClipPlaneRequest* {.importc: "xcb_glx_get_clip_plane_request_t", bycopy.} = object
+  XcbGlxGetClipPlaneRequest* {.rename: "xcb_glx_get_clip_plane_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     plane*: int32
 
-  XcbGlxGetClipPlaneReply* {.importc: "xcb_glx_get_clip_plane_reply_t", bycopy.} = object
+  XcbGlxGetClipPlaneReply* {.rename: "xcb_glx_get_clip_plane_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxGetDoublevCookie* {.importc: "xcb_glx_get_doublev_cookie_t", bycopy.} = object
+  XcbGlxGetDoublevCookie* {.rename: "xcb_glx_get_doublev_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetDoublevRequest* {.importc: "xcb_glx_get_doublev_request_t", bycopy.} = object
+  XcbGlxGetDoublevRequest* {.rename: "xcb_glx_get_doublev_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pname*: uint32
 
-  XcbGlxGetDoublevReply* {.importc: "xcb_glx_get_doublev_reply_t", bycopy.} = object
+  XcbGlxGetDoublevReply* {.rename: "xcb_glx_get_doublev_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -848,33 +849,33 @@ type
     datum*: XcbGlxFloat64
     pad2: array[8, uint8]
 
-  XcbGlxGetErrorCookie* {.importc: "xcb_glx_get_error_cookie_t", bycopy.} = object
+  XcbGlxGetErrorCookie* {.rename: "xcb_glx_get_error_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetErrorRequest* {.importc: "xcb_glx_get_error_request_t", bycopy.} = object
+  XcbGlxGetErrorRequest* {.rename: "xcb_glx_get_error_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxGetErrorReply* {.importc: "xcb_glx_get_error_reply_t", bycopy.} = object
+  XcbGlxGetErrorReply* {.rename: "xcb_glx_get_error_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     error*: int32
 
-  XcbGlxGetFloatvCookie* {.importc: "xcb_glx_get_floatv_cookie_t", bycopy.} = object
+  XcbGlxGetFloatvCookie* {.rename: "xcb_glx_get_floatv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetFloatvRequest* {.importc: "xcb_glx_get_floatv_request_t", bycopy.} = object
+  XcbGlxGetFloatvRequest* {.rename: "xcb_glx_get_floatv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pname*: uint32
 
-  XcbGlxGetFloatvReply* {.importc: "xcb_glx_get_floatv_reply_t", bycopy.} = object
+  XcbGlxGetFloatvReply* {.rename: "xcb_glx_get_floatv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -884,17 +885,17 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetIntegervCookie* {.importc: "xcb_glx_get_integerv_cookie_t", bycopy.} = object
+  XcbGlxGetIntegervCookie* {.rename: "xcb_glx_get_integerv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetIntegervRequest* {.importc: "xcb_glx_get_integerv_request_t", bycopy.} = object
+  XcbGlxGetIntegervRequest* {.rename: "xcb_glx_get_integerv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     pname*: uint32
 
-  XcbGlxGetIntegervReply* {.importc: "xcb_glx_get_integerv_reply_t", bycopy.} = object
+  XcbGlxGetIntegervReply* {.rename: "xcb_glx_get_integerv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -904,10 +905,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetLightfvCookie* {.importc: "xcb_glx_get_lightfv_cookie_t", bycopy.} = object
+  XcbGlxGetLightfvCookie* {.rename: "xcb_glx_get_lightfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetLightfvRequest* {.importc: "xcb_glx_get_lightfv_request_t", bycopy.} = object
+  XcbGlxGetLightfvRequest* {.rename: "xcb_glx_get_lightfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -915,7 +916,7 @@ type
     light*: uint32
     pname*: uint32
 
-  XcbGlxGetLightfvReply* {.importc: "xcb_glx_get_lightfv_reply_t", bycopy.} = object
+  XcbGlxGetLightfvReply* {.rename: "xcb_glx_get_lightfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -925,10 +926,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetLightivCookie* {.importc: "xcb_glx_get_lightiv_cookie_t", bycopy.} = object
+  XcbGlxGetLightivCookie* {.rename: "xcb_glx_get_lightiv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetLightivRequest* {.importc: "xcb_glx_get_lightiv_request_t", bycopy.} = object
+  XcbGlxGetLightivRequest* {.rename: "xcb_glx_get_lightiv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -936,7 +937,7 @@ type
     light*: uint32
     pname*: uint32
 
-  XcbGlxGetLightivReply* {.importc: "xcb_glx_get_lightiv_reply_t", bycopy.} = object
+  XcbGlxGetLightivReply* {.rename: "xcb_glx_get_lightiv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -946,10 +947,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetMapdvCookie* {.importc: "xcb_glx_get_mapdv_cookie_t", bycopy.} = object
+  XcbGlxGetMapdvCookie* {.rename: "xcb_glx_get_mapdv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMapdvRequest* {.importc: "xcb_glx_get_mapdv_request_t", bycopy.} = object
+  XcbGlxGetMapdvRequest* {.rename: "xcb_glx_get_mapdv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -957,7 +958,7 @@ type
     target*: uint32
     query*: uint32
 
-  XcbGlxGetMapdvReply* {.importc: "xcb_glx_get_mapdv_reply_t", bycopy.} = object
+  XcbGlxGetMapdvReply* {.rename: "xcb_glx_get_mapdv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -967,10 +968,10 @@ type
     datum*: XcbGlxFloat64
     pad2: array[8, uint8]
 
-  XcbGlxGetMapfvCookie* {.importc: "xcb_glx_get_mapfv_cookie_t", bycopy.} = object
+  XcbGlxGetMapfvCookie* {.rename: "xcb_glx_get_mapfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMapfvRequest* {.importc: "xcb_glx_get_mapfv_request_t", bycopy.} = object
+  XcbGlxGetMapfvRequest* {.rename: "xcb_glx_get_mapfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -978,7 +979,7 @@ type
     target*: uint32
     query*: uint32
 
-  XcbGlxGetMapfvReply* {.importc: "xcb_glx_get_mapfv_reply_t", bycopy.} = object
+  XcbGlxGetMapfvReply* {.rename: "xcb_glx_get_mapfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -988,10 +989,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetMapivCookie* {.importc: "xcb_glx_get_mapiv_cookie_t", bycopy.} = object
+  XcbGlxGetMapivCookie* {.rename: "xcb_glx_get_mapiv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMapivRequest* {.importc: "xcb_glx_get_mapiv_request_t", bycopy.} = object
+  XcbGlxGetMapivRequest* {.rename: "xcb_glx_get_mapiv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -999,7 +1000,7 @@ type
     target*: uint32
     query*: uint32
 
-  XcbGlxGetMapivReply* {.importc: "xcb_glx_get_mapiv_reply_t", bycopy.} = object
+  XcbGlxGetMapivReply* {.rename: "xcb_glx_get_mapiv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1009,10 +1010,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetMaterialfvCookie* {.importc: "xcb_glx_get_materialfv_cookie_t", bycopy.} = object
+  XcbGlxGetMaterialfvCookie* {.rename: "xcb_glx_get_materialfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMaterialfvRequest* {.importc: "xcb_glx_get_materialfv_request_t", bycopy.} = object
+  XcbGlxGetMaterialfvRequest* {.rename: "xcb_glx_get_materialfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1020,7 +1021,7 @@ type
     face*: uint32
     pname*: uint32
 
-  XcbGlxGetMaterialfvReply* {.importc: "xcb_glx_get_materialfv_reply_t", bycopy.} = object
+  XcbGlxGetMaterialfvReply* {.rename: "xcb_glx_get_materialfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1030,10 +1031,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetMaterialivCookie* {.importc: "xcb_glx_get_materialiv_cookie_t", bycopy.} = object
+  XcbGlxGetMaterialivCookie* {.rename: "xcb_glx_get_materialiv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMaterialivRequest* {.importc: "xcb_glx_get_materialiv_request_t", bycopy.} = object
+  XcbGlxGetMaterialivRequest* {.rename: "xcb_glx_get_materialiv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1041,7 +1042,7 @@ type
     face*: uint32
     pname*: uint32
 
-  XcbGlxGetMaterialivReply* {.importc: "xcb_glx_get_materialiv_reply_t", bycopy.} = object
+  XcbGlxGetMaterialivReply* {.rename: "xcb_glx_get_materialiv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1051,17 +1052,17 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetPixelMapfvCookie* {.importc: "xcb_glx_get_pixel_mapfv_cookie_t", bycopy.} = object
+  XcbGlxGetPixelMapfvCookie* {.rename: "xcb_glx_get_pixel_mapfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetPixelMapfvRequest* {.importc: "xcb_glx_get_pixel_mapfv_request_t", bycopy.} = object
+  XcbGlxGetPixelMapfvRequest* {.rename: "xcb_glx_get_pixel_mapfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     map*: uint32
 
-  XcbGlxGetPixelMapfvReply* {.importc: "xcb_glx_get_pixel_mapfv_reply_t", bycopy.} = object
+  XcbGlxGetPixelMapfvReply* {.rename: "xcb_glx_get_pixel_mapfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1071,17 +1072,17 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetPixelMapuivCookie* {.importc: "xcb_glx_get_pixel_mapuiv_cookie_t", bycopy.} = object
+  XcbGlxGetPixelMapuivCookie* {.rename: "xcb_glx_get_pixel_mapuiv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetPixelMapuivRequest* {.importc: "xcb_glx_get_pixel_mapuiv_request_t", bycopy.} = object
+  XcbGlxGetPixelMapuivRequest* {.rename: "xcb_glx_get_pixel_mapuiv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     map*: uint32
 
-  XcbGlxGetPixelMapuivReply* {.importc: "xcb_glx_get_pixel_mapuiv_reply_t", bycopy.} = object
+  XcbGlxGetPixelMapuivReply* {.rename: "xcb_glx_get_pixel_mapuiv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1091,17 +1092,17 @@ type
     datum*: uint32
     pad2: array[12, uint8]
 
-  XcbGlxGetPixelMapusvCookie* {.importc: "xcb_glx_get_pixel_mapusv_cookie_t", bycopy.} = object
+  XcbGlxGetPixelMapusvCookie* {.rename: "xcb_glx_get_pixel_mapusv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetPixelMapusvRequest* {.importc: "xcb_glx_get_pixel_mapusv_request_t", bycopy.} = object
+  XcbGlxGetPixelMapusvRequest* {.rename: "xcb_glx_get_pixel_mapusv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     map*: uint32
 
-  XcbGlxGetPixelMapusvReply* {.importc: "xcb_glx_get_pixel_mapusv_reply_t", bycopy.} = object
+  XcbGlxGetPixelMapusvReply* {.rename: "xcb_glx_get_pixel_mapusv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1111,34 +1112,34 @@ type
     datum*: uint16
     pad2: array[16, uint8]
 
-  XcbGlxGetPolygonStippleCookie* {.importc: "xcb_glx_get_polygon_stipple_cookie_t", bycopy.} = object
+  XcbGlxGetPolygonStippleCookie* {.rename: "xcb_glx_get_polygon_stipple_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetPolygonStippleRequest* {.importc: "xcb_glx_get_polygon_stipple_request_t", bycopy.} = object
+  XcbGlxGetPolygonStippleRequest* {.rename: "xcb_glx_get_polygon_stipple_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     lsbFirst* {.importc: "lsb_first".}: uint8
 
-  XcbGlxGetPolygonStippleReply* {.importc: "xcb_glx_get_polygon_stipple_reply_t", bycopy.} = object
+  XcbGlxGetPolygonStippleReply* {.rename: "xcb_glx_get_polygon_stipple_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxGetStringCookie* {.importc: "xcb_glx_get_string_cookie_t", bycopy.} = object
+  XcbGlxGetStringCookie* {.rename: "xcb_glx_get_string_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetStringRequest* {.importc: "xcb_glx_get_string_request_t", bycopy.} = object
+  XcbGlxGetStringRequest* {.rename: "xcb_glx_get_string_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     name*: uint32
 
-  XcbGlxGetStringReply* {.importc: "xcb_glx_get_string_reply_t", bycopy.} = object
+  XcbGlxGetStringReply* {.rename: "xcb_glx_get_string_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1147,10 +1148,10 @@ type
     n*: uint32
     pad2: array[16, uint8]
 
-  XcbGlxGetTexEnvfvCookie* {.importc: "xcb_glx_get_tex_envfv_cookie_t", bycopy.} = object
+  XcbGlxGetTexEnvfvCookie* {.rename: "xcb_glx_get_tex_envfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexEnvfvRequest* {.importc: "xcb_glx_get_tex_envfv_request_t", bycopy.} = object
+  XcbGlxGetTexEnvfvRequest* {.rename: "xcb_glx_get_tex_envfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1158,7 +1159,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetTexEnvfvReply* {.importc: "xcb_glx_get_tex_envfv_reply_t", bycopy.} = object
+  XcbGlxGetTexEnvfvReply* {.rename: "xcb_glx_get_tex_envfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1168,10 +1169,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexEnvivCookie* {.importc: "xcb_glx_get_tex_enviv_cookie_t", bycopy.} = object
+  XcbGlxGetTexEnvivCookie* {.rename: "xcb_glx_get_tex_enviv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexEnvivRequest* {.importc: "xcb_glx_get_tex_enviv_request_t", bycopy.} = object
+  XcbGlxGetTexEnvivRequest* {.rename: "xcb_glx_get_tex_enviv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1179,7 +1180,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetTexEnvivReply* {.importc: "xcb_glx_get_tex_enviv_reply_t", bycopy.} = object
+  XcbGlxGetTexEnvivReply* {.rename: "xcb_glx_get_tex_enviv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1189,10 +1190,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexGendvCookie* {.importc: "xcb_glx_get_tex_gendv_cookie_t", bycopy.} = object
+  XcbGlxGetTexGendvCookie* {.rename: "xcb_glx_get_tex_gendv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexGendvRequest* {.importc: "xcb_glx_get_tex_gendv_request_t", bycopy.} = object
+  XcbGlxGetTexGendvRequest* {.rename: "xcb_glx_get_tex_gendv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1200,7 +1201,7 @@ type
     coord*: uint32
     pname*: uint32
 
-  XcbGlxGetTexGendvReply* {.importc: "xcb_glx_get_tex_gendv_reply_t", bycopy.} = object
+  XcbGlxGetTexGendvReply* {.rename: "xcb_glx_get_tex_gendv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1210,10 +1211,10 @@ type
     datum*: XcbGlxFloat64
     pad2: array[8, uint8]
 
-  XcbGlxGetTexGenfvCookie* {.importc: "xcb_glx_get_tex_genfv_cookie_t", bycopy.} = object
+  XcbGlxGetTexGenfvCookie* {.rename: "xcb_glx_get_tex_genfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexGenfvRequest* {.importc: "xcb_glx_get_tex_genfv_request_t", bycopy.} = object
+  XcbGlxGetTexGenfvRequest* {.rename: "xcb_glx_get_tex_genfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1221,7 +1222,7 @@ type
     coord*: uint32
     pname*: uint32
 
-  XcbGlxGetTexGenfvReply* {.importc: "xcb_glx_get_tex_genfv_reply_t", bycopy.} = object
+  XcbGlxGetTexGenfvReply* {.rename: "xcb_glx_get_tex_genfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1231,10 +1232,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexGenivCookie* {.importc: "xcb_glx_get_tex_geniv_cookie_t", bycopy.} = object
+  XcbGlxGetTexGenivCookie* {.rename: "xcb_glx_get_tex_geniv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexGenivRequest* {.importc: "xcb_glx_get_tex_geniv_request_t", bycopy.} = object
+  XcbGlxGetTexGenivRequest* {.rename: "xcb_glx_get_tex_geniv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1242,7 +1243,7 @@ type
     coord*: uint32
     pname*: uint32
 
-  XcbGlxGetTexGenivReply* {.importc: "xcb_glx_get_tex_geniv_reply_t", bycopy.} = object
+  XcbGlxGetTexGenivReply* {.rename: "xcb_glx_get_tex_geniv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1252,10 +1253,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexImageCookie* {.importc: "xcb_glx_get_tex_image_cookie_t", bycopy.} = object
+  XcbGlxGetTexImageCookie* {.rename: "xcb_glx_get_tex_image_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexImageRequest* {.importc: "xcb_glx_get_tex_image_request_t", bycopy.} = object
+  XcbGlxGetTexImageRequest* {.rename: "xcb_glx_get_tex_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1266,7 +1267,7 @@ type
     `type`*: uint32
     swapBytes* {.importc: "swap_bytes".}: uint8
 
-  XcbGlxGetTexImageReply* {.importc: "xcb_glx_get_tex_image_reply_t", bycopy.} = object
+  XcbGlxGetTexImageReply* {.rename: "xcb_glx_get_tex_image_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1277,10 +1278,10 @@ type
     depth*: int32
     pad2: array[4, uint8]
 
-  XcbGlxGetTexParameterfvCookie* {.importc: "xcb_glx_get_tex_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetTexParameterfvCookie* {.rename: "xcb_glx_get_tex_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexParameterfvRequest* {.importc: "xcb_glx_get_tex_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetTexParameterfvRequest* {.rename: "xcb_glx_get_tex_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1288,7 +1289,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetTexParameterfvReply* {.importc: "xcb_glx_get_tex_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetTexParameterfvReply* {.rename: "xcb_glx_get_tex_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1298,10 +1299,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexParameterivCookie* {.importc: "xcb_glx_get_tex_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetTexParameterivCookie* {.rename: "xcb_glx_get_tex_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexParameterivRequest* {.importc: "xcb_glx_get_tex_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetTexParameterivRequest* {.rename: "xcb_glx_get_tex_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1309,7 +1310,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetTexParameterivReply* {.importc: "xcb_glx_get_tex_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetTexParameterivReply* {.rename: "xcb_glx_get_tex_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1319,10 +1320,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexLevelParameterfvCookie* {.importc: "xcb_glx_get_tex_level_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterfvCookie* {.rename: "xcb_glx_get_tex_level_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexLevelParameterfvRequest* {.importc: "xcb_glx_get_tex_level_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterfvRequest* {.rename: "xcb_glx_get_tex_level_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1331,7 +1332,7 @@ type
     level*: int32
     pname*: uint32
 
-  XcbGlxGetTexLevelParameterfvReply* {.importc: "xcb_glx_get_tex_level_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterfvReply* {.rename: "xcb_glx_get_tex_level_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1341,10 +1342,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetTexLevelParameterivCookie* {.importc: "xcb_glx_get_tex_level_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterivCookie* {.rename: "xcb_glx_get_tex_level_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetTexLevelParameterivRequest* {.importc: "xcb_glx_get_tex_level_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterivRequest* {.rename: "xcb_glx_get_tex_level_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1353,7 +1354,7 @@ type
     level*: int32
     pname*: uint32
 
-  XcbGlxGetTexLevelParameterivReply* {.importc: "xcb_glx_get_tex_level_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetTexLevelParameterivReply* {.rename: "xcb_glx_get_tex_level_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1363,57 +1364,57 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxIsEnabledCookie* {.importc: "xcb_glx_is_enabled_cookie_t", bycopy.} = object
+  XcbGlxIsEnabledCookie* {.rename: "xcb_glx_is_enabled_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxIsEnabledRequest* {.importc: "xcb_glx_is_enabled_request_t", bycopy.} = object
+  XcbGlxIsEnabledRequest* {.rename: "xcb_glx_is_enabled_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     capability*: uint32
 
-  XcbGlxIsEnabledReply* {.importc: "xcb_glx_is_enabled_reply_t", bycopy.} = object
+  XcbGlxIsEnabledReply* {.rename: "xcb_glx_is_enabled_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     retVal* {.importc: "ret_val".}: XcbGlxBool32
 
-  XcbGlxIsListCookie* {.importc: "xcb_glx_is_list_cookie_t", bycopy.} = object
+  XcbGlxIsListCookie* {.rename: "xcb_glx_is_list_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxIsListRequest* {.importc: "xcb_glx_is_list_request_t", bycopy.} = object
+  XcbGlxIsListRequest* {.rename: "xcb_glx_is_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     list*: uint32
 
-  XcbGlxIsListReply* {.importc: "xcb_glx_is_list_reply_t", bycopy.} = object
+  XcbGlxIsListReply* {.rename: "xcb_glx_is_list_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     retVal* {.importc: "ret_val".}: XcbGlxBool32
 
-  XcbGlxFlushRequest* {.importc: "xcb_glx_flush_request_t", bycopy.} = object
+  XcbGlxFlushRequest* {.rename: "xcb_glx_flush_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
 
-  XcbGlxAreTexturesResidentCookie* {.importc: "xcb_glx_are_textures_resident_cookie_t", bycopy.} = object
+  XcbGlxAreTexturesResidentCookie* {.rename: "xcb_glx_are_textures_resident_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxAreTexturesResidentRequest* {.importc: "xcb_glx_are_textures_resident_request_t", bycopy.} = object
+  XcbGlxAreTexturesResidentRequest* {.rename: "xcb_glx_are_textures_resident_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     n*: int32
 
-  XcbGlxAreTexturesResidentReply* {.importc: "xcb_glx_are_textures_resident_reply_t", bycopy.} = object
+  XcbGlxAreTexturesResidentReply* {.rename: "xcb_glx_are_textures_resident_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1421,51 +1422,51 @@ type
     retVal* {.importc: "ret_val".}: XcbGlxBool32
     pad1: array[20, uint8]
 
-  XcbGlxDeleteTexturesRequest* {.importc: "xcb_glx_delete_textures_request_t", bycopy.} = object
+  XcbGlxDeleteTexturesRequest* {.rename: "xcb_glx_delete_textures_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     n*: int32
 
-  XcbGlxGenTexturesCookie* {.importc: "xcb_glx_gen_textures_cookie_t", bycopy.} = object
+  XcbGlxGenTexturesCookie* {.rename: "xcb_glx_gen_textures_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGenTexturesRequest* {.importc: "xcb_glx_gen_textures_request_t", bycopy.} = object
+  XcbGlxGenTexturesRequest* {.rename: "xcb_glx_gen_textures_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     n*: int32
 
-  XcbGlxGenTexturesReply* {.importc: "xcb_glx_gen_textures_reply_t", bycopy.} = object
+  XcbGlxGenTexturesReply* {.rename: "xcb_glx_gen_textures_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxIsTextureCookie* {.importc: "xcb_glx_is_texture_cookie_t", bycopy.} = object
+  XcbGlxIsTextureCookie* {.rename: "xcb_glx_is_texture_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxIsTextureRequest* {.importc: "xcb_glx_is_texture_request_t", bycopy.} = object
+  XcbGlxIsTextureRequest* {.rename: "xcb_glx_is_texture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     texture*: uint32
 
-  XcbGlxIsTextureReply* {.importc: "xcb_glx_is_texture_reply_t", bycopy.} = object
+  XcbGlxIsTextureReply* {.rename: "xcb_glx_is_texture_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     retVal* {.importc: "ret_val".}: XcbGlxBool32
 
-  XcbGlxGetColorTableCookie* {.importc: "xcb_glx_get_color_table_cookie_t", bycopy.} = object
+  XcbGlxGetColorTableCookie* {.rename: "xcb_glx_get_color_table_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetColorTableRequest* {.importc: "xcb_glx_get_color_table_request_t", bycopy.} = object
+  XcbGlxGetColorTableRequest* {.rename: "xcb_glx_get_color_table_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1475,7 +1476,7 @@ type
     `type`*: uint32
     swapBytes* {.importc: "swap_bytes".}: uint8
 
-  XcbGlxGetColorTableReply* {.importc: "xcb_glx_get_color_table_reply_t", bycopy.} = object
+  XcbGlxGetColorTableReply* {.rename: "xcb_glx_get_color_table_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1484,10 +1485,10 @@ type
     width*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetColorTableParameterfvCookie* {.importc: "xcb_glx_get_color_table_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetColorTableParameterfvCookie* {.rename: "xcb_glx_get_color_table_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetColorTableParameterfvRequest* {.importc: "xcb_glx_get_color_table_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetColorTableParameterfvRequest* {.rename: "xcb_glx_get_color_table_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1495,7 +1496,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetColorTableParameterfvReply* {.importc: "xcb_glx_get_color_table_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetColorTableParameterfvReply* {.rename: "xcb_glx_get_color_table_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1505,10 +1506,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetColorTableParameterivCookie* {.importc: "xcb_glx_get_color_table_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetColorTableParameterivCookie* {.rename: "xcb_glx_get_color_table_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetColorTableParameterivRequest* {.importc: "xcb_glx_get_color_table_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetColorTableParameterivRequest* {.rename: "xcb_glx_get_color_table_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1516,7 +1517,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetColorTableParameterivReply* {.importc: "xcb_glx_get_color_table_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetColorTableParameterivReply* {.rename: "xcb_glx_get_color_table_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1526,10 +1527,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetConvolutionFilterCookie* {.importc: "xcb_glx_get_convolution_filter_cookie_t", bycopy.} = object
+  XcbGlxGetConvolutionFilterCookie* {.rename: "xcb_glx_get_convolution_filter_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetConvolutionFilterRequest* {.importc: "xcb_glx_get_convolution_filter_request_t", bycopy.} = object
+  XcbGlxGetConvolutionFilterRequest* {.rename: "xcb_glx_get_convolution_filter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1539,7 +1540,7 @@ type
     `type`*: uint32
     swapBytes* {.importc: "swap_bytes".}: uint8
 
-  XcbGlxGetConvolutionFilterReply* {.importc: "xcb_glx_get_convolution_filter_reply_t", bycopy.} = object
+  XcbGlxGetConvolutionFilterReply* {.rename: "xcb_glx_get_convolution_filter_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1549,10 +1550,10 @@ type
     height*: int32
     pad2: array[8, uint8]
 
-  XcbGlxGetConvolutionParameterfvCookie* {.importc: "xcb_glx_get_convolution_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterfvCookie* {.rename: "xcb_glx_get_convolution_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetConvolutionParameterfvRequest* {.importc: "xcb_glx_get_convolution_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterfvRequest* {.rename: "xcb_glx_get_convolution_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1560,7 +1561,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetConvolutionParameterfvReply* {.importc: "xcb_glx_get_convolution_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterfvReply* {.rename: "xcb_glx_get_convolution_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1570,10 +1571,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetConvolutionParameterivCookie* {.importc: "xcb_glx_get_convolution_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterivCookie* {.rename: "xcb_glx_get_convolution_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetConvolutionParameterivRequest* {.importc: "xcb_glx_get_convolution_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterivRequest* {.rename: "xcb_glx_get_convolution_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1581,7 +1582,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetConvolutionParameterivReply* {.importc: "xcb_glx_get_convolution_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetConvolutionParameterivReply* {.rename: "xcb_glx_get_convolution_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1591,10 +1592,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetSeparableFilterCookie* {.importc: "xcb_glx_get_separable_filter_cookie_t", bycopy.} = object
+  XcbGlxGetSeparableFilterCookie* {.rename: "xcb_glx_get_separable_filter_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetSeparableFilterRequest* {.importc: "xcb_glx_get_separable_filter_request_t", bycopy.} = object
+  XcbGlxGetSeparableFilterRequest* {.rename: "xcb_glx_get_separable_filter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1604,7 +1605,7 @@ type
     `type`*: uint32
     swapBytes* {.importc: "swap_bytes".}: uint8
 
-  XcbGlxGetSeparableFilterReply* {.importc: "xcb_glx_get_separable_filter_reply_t", bycopy.} = object
+  XcbGlxGetSeparableFilterReply* {.rename: "xcb_glx_get_separable_filter_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1614,10 +1615,10 @@ type
     colH* {.importc: "col_h".}: int32
     pad2: array[8, uint8]
 
-  XcbGlxGetHistogramCookie* {.importc: "xcb_glx_get_histogram_cookie_t", bycopy.} = object
+  XcbGlxGetHistogramCookie* {.rename: "xcb_glx_get_histogram_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetHistogramRequest* {.importc: "xcb_glx_get_histogram_request_t", bycopy.} = object
+  XcbGlxGetHistogramRequest* {.rename: "xcb_glx_get_histogram_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1628,7 +1629,7 @@ type
     swapBytes* {.importc: "swap_bytes".}: uint8
     reset*: uint8
 
-  XcbGlxGetHistogramReply* {.importc: "xcb_glx_get_histogram_reply_t", bycopy.} = object
+  XcbGlxGetHistogramReply* {.rename: "xcb_glx_get_histogram_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1637,10 +1638,10 @@ type
     width*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetHistogramParameterfvCookie* {.importc: "xcb_glx_get_histogram_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetHistogramParameterfvCookie* {.rename: "xcb_glx_get_histogram_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetHistogramParameterfvRequest* {.importc: "xcb_glx_get_histogram_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetHistogramParameterfvRequest* {.rename: "xcb_glx_get_histogram_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1648,7 +1649,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetHistogramParameterfvReply* {.importc: "xcb_glx_get_histogram_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetHistogramParameterfvReply* {.rename: "xcb_glx_get_histogram_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1658,10 +1659,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetHistogramParameterivCookie* {.importc: "xcb_glx_get_histogram_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetHistogramParameterivCookie* {.rename: "xcb_glx_get_histogram_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetHistogramParameterivRequest* {.importc: "xcb_glx_get_histogram_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetHistogramParameterivRequest* {.rename: "xcb_glx_get_histogram_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1669,7 +1670,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetHistogramParameterivReply* {.importc: "xcb_glx_get_histogram_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetHistogramParameterivReply* {.rename: "xcb_glx_get_histogram_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1679,10 +1680,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetMinmaxCookie* {.importc: "xcb_glx_get_minmax_cookie_t", bycopy.} = object
+  XcbGlxGetMinmaxCookie* {.rename: "xcb_glx_get_minmax_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMinmaxRequest* {.importc: "xcb_glx_get_minmax_request_t", bycopy.} = object
+  XcbGlxGetMinmaxRequest* {.rename: "xcb_glx_get_minmax_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1693,17 +1694,17 @@ type
     swapBytes* {.importc: "swap_bytes".}: uint8
     reset*: uint8
 
-  XcbGlxGetMinmaxReply* {.importc: "xcb_glx_get_minmax_reply_t", bycopy.} = object
+  XcbGlxGetMinmaxReply* {.rename: "xcb_glx_get_minmax_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxGetMinmaxParameterfvCookie* {.importc: "xcb_glx_get_minmax_parameterfv_cookie_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterfvCookie* {.rename: "xcb_glx_get_minmax_parameterfv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMinmaxParameterfvRequest* {.importc: "xcb_glx_get_minmax_parameterfv_request_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterfvRequest* {.rename: "xcb_glx_get_minmax_parameterfv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1711,7 +1712,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetMinmaxParameterfvReply* {.importc: "xcb_glx_get_minmax_parameterfv_reply_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterfvReply* {.rename: "xcb_glx_get_minmax_parameterfv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1721,10 +1722,10 @@ type
     datum*: XcbGlxFloat32
     pad2: array[12, uint8]
 
-  XcbGlxGetMinmaxParameterivCookie* {.importc: "xcb_glx_get_minmax_parameteriv_cookie_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterivCookie* {.rename: "xcb_glx_get_minmax_parameteriv_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetMinmaxParameterivRequest* {.importc: "xcb_glx_get_minmax_parameteriv_request_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterivRequest* {.rename: "xcb_glx_get_minmax_parameteriv_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1732,7 +1733,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetMinmaxParameterivReply* {.importc: "xcb_glx_get_minmax_parameteriv_reply_t", bycopy.} = object
+  XcbGlxGetMinmaxParameterivReply* {.rename: "xcb_glx_get_minmax_parameteriv_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1742,10 +1743,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetCompressedTexImageArbCookie* {.importc: "xcb_glx_get_compressed_tex_image_arb_cookie_t", bycopy.} = object
+  XcbGlxGetCompressedTexImageArbCookie* {.rename: "xcb_glx_get_compressed_tex_image_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetCompressedTexImageArbRequest* {.importc: "xcb_glx_get_compressed_tex_image_arb_request_t", bycopy.} = object
+  XcbGlxGetCompressedTexImageArbRequest* {.rename: "xcb_glx_get_compressed_tex_image_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1753,7 +1754,7 @@ type
     target*: uint32
     level*: int32
 
-  XcbGlxGetCompressedTexImageArbReply* {.importc: "xcb_glx_get_compressed_tex_image_arb_reply_t", bycopy.} = object
+  XcbGlxGetCompressedTexImageArbReply* {.rename: "xcb_glx_get_compressed_tex_image_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1762,51 +1763,51 @@ type
     size*: int32
     pad2: array[12, uint8]
 
-  XcbGlxDeleteQueriesArbRequest* {.importc: "xcb_glx_delete_queries_arb_request_t", bycopy.} = object
+  XcbGlxDeleteQueriesArbRequest* {.rename: "xcb_glx_delete_queries_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     n*: int32
 
-  XcbGlxGenQueriesArbCookie* {.importc: "xcb_glx_gen_queries_arb_cookie_t", bycopy.} = object
+  XcbGlxGenQueriesArbCookie* {.rename: "xcb_glx_gen_queries_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGenQueriesArbRequest* {.importc: "xcb_glx_gen_queries_arb_request_t", bycopy.} = object
+  XcbGlxGenQueriesArbRequest* {.rename: "xcb_glx_gen_queries_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     n*: int32
 
-  XcbGlxGenQueriesArbReply* {.importc: "xcb_glx_gen_queries_arb_reply_t", bycopy.} = object
+  XcbGlxGenQueriesArbReply* {.rename: "xcb_glx_gen_queries_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbGlxIsQueryArbCookie* {.importc: "xcb_glx_is_query_arb_cookie_t", bycopy.} = object
+  XcbGlxIsQueryArbCookie* {.rename: "xcb_glx_is_query_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxIsQueryArbRequest* {.importc: "xcb_glx_is_query_arb_request_t", bycopy.} = object
+  XcbGlxIsQueryArbRequest* {.rename: "xcb_glx_is_query_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextTag* {.importc: "context_tag".}: XcbGlxContextTag
     id*: uint32
 
-  XcbGlxIsQueryArbReply* {.importc: "xcb_glx_is_query_arb_reply_t", bycopy.} = object
+  XcbGlxIsQueryArbReply* {.rename: "xcb_glx_is_query_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     retVal* {.importc: "ret_val".}: XcbGlxBool32
 
-  XcbGlxGetQueryivArbCookie* {.importc: "xcb_glx_get_queryiv_arb_cookie_t", bycopy.} = object
+  XcbGlxGetQueryivArbCookie* {.rename: "xcb_glx_get_queryiv_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetQueryivArbRequest* {.importc: "xcb_glx_get_queryiv_arb_request_t", bycopy.} = object
+  XcbGlxGetQueryivArbRequest* {.rename: "xcb_glx_get_queryiv_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1814,7 +1815,7 @@ type
     target*: uint32
     pname*: uint32
 
-  XcbGlxGetQueryivArbReply* {.importc: "xcb_glx_get_queryiv_arb_reply_t", bycopy.} = object
+  XcbGlxGetQueryivArbReply* {.rename: "xcb_glx_get_queryiv_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1824,10 +1825,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetQueryObjectivArbCookie* {.importc: "xcb_glx_get_query_objectiv_arb_cookie_t", bycopy.} = object
+  XcbGlxGetQueryObjectivArbCookie* {.rename: "xcb_glx_get_query_objectiv_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetQueryObjectivArbRequest* {.importc: "xcb_glx_get_query_objectiv_arb_request_t", bycopy.} = object
+  XcbGlxGetQueryObjectivArbRequest* {.rename: "xcb_glx_get_query_objectiv_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1835,7 +1836,7 @@ type
     id*: uint32
     pname*: uint32
 
-  XcbGlxGetQueryObjectivArbReply* {.importc: "xcb_glx_get_query_objectiv_arb_reply_t", bycopy.} = object
+  XcbGlxGetQueryObjectivArbReply* {.rename: "xcb_glx_get_query_objectiv_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1845,10 +1846,10 @@ type
     datum*: int32
     pad2: array[12, uint8]
 
-  XcbGlxGetQueryObjectuivArbCookie* {.importc: "xcb_glx_get_query_objectuiv_arb_cookie_t", bycopy.} = object
+  XcbGlxGetQueryObjectuivArbCookie* {.rename: "xcb_glx_get_query_objectuiv_arb_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGlxGetQueryObjectuivArbRequest* {.importc: "xcb_glx_get_query_objectuiv_arb_request_t", bycopy.} = object
+  XcbGlxGetQueryObjectuivArbRequest* {.rename: "xcb_glx_get_query_objectuiv_arb_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -1856,7 +1857,7 @@ type
     id*: uint32
     pname*: uint32
 
-  XcbGlxGetQueryObjectuivArbReply* {.importc: "xcb_glx_get_query_objectuiv_arb_reply_t", bycopy.} = object
+  XcbGlxGetQueryObjectuivArbReply* {.rename: "xcb_glx_get_query_objectuiv_arb_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1866,6 +1867,8 @@ type
     datum*: uint32
     pad2: array[12, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-glx.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbGlxPixmapIterator) {.importc: "xcb_glx_pixmap_next".}

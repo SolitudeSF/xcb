@@ -1,23 +1,26 @@
-import ./xcb
-import posix
+import ./xcb, private/importutil
+import std/posix
 
-{.push header: "xcb/xcbext.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xcbext.h".}
 
 type
-  XcbExtension* {.importc: "xcb_extension_t", bycopy.} = object
+  XcbExtension* {.rename: "xcb_extension_t", bycopy.} = object
     name*: cstring
     global_id*: cint
 
-  XcbProtocolRequest* {.importc: "xcb_protocol_request_t", bycopy.} = object
+  XcbProtocolRequest* {.rename: "xcb_protocol_request_t", bycopy.} = object
     count*: csize_t
     ext*: ptr XcbExtension
     opcode*: uint8
     isvoid*: uint8
 
-  XcbSendRequestFlags* {.importc: "xcbsendrequestflags".} = enum
+  XcbSendRequestFlags* {.rename: "xcbsendrequestflags".} = enum
     xcbRequestChecked = 1 shl 0, xcbRequestRaw = 1 shl 1,
     xcbRequestDiscardReply = 1 shl 2, xcbRequestReplyFds = 1 shl 3
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc sendRequest*(c: ptr XcbConnection; flags: cint; vector: ptr IOVec; request: ptr XcbProtocolRequest): cuint {.importc: "xcb_send_request".}

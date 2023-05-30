@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbShmMajorVersion* = 1
@@ -14,21 +14,22 @@ const
   xcbShmAttachFd* = 6
   xcbShmCreateSegment* = 7
 
-{.passl: "-lxcb-shm".}
-{.push header: "xcb/shm.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-shm".}
+  {.push header: "xcb/shm.h".}
 
-var xcbShmId* {.extern: "xcb_shm_id".}: XcbExtension
+  var xcbShmId* {.extern: "xcb_shm_id".}: XcbExtension
 
 type
-  XcbShmSeg* {.importc: "xcb_shm_seg_t".} = distinct uint32
-  XcbShmBadSegError* {.importc: "xcb_shm_bad_seg_error_t".} = XcbValueError
+  XcbShmSeg* {.rename: "xcb_shm_seg_t".} = distinct uint32
+  XcbShmBadSegError* {.rename: "xcb_shm_bad_seg_error_t".} = XcbValueError
 
-  XcbShmSegIterator* {.importc: "xcb_shm_seg_iterator_t", bycopy.} = object
+  XcbShmSegIterator* {.rename: "xcb_shm_seg_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbShmSeg]
     rem*: cint
     index*: cint
 
-  XcbShmCompletionEvent* {.importc: "xcb_shm_completion_event_t", bycopy.} = object
+  XcbShmCompletionEvent* {.rename: "xcb_shm_completion_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -39,15 +40,15 @@ type
     shmseg*: XcbShmSeg
     offset*: uint32
 
-  XcbShmQueryVersionCookie* {.importc: "xcb_shm_query_version_cookie_t", bycopy.} = object
+  XcbShmQueryVersionCookie* {.rename: "xcb_shm_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShmQueryVersionRequest* {.importc: "xcb_shm_query_version_request_t", bycopy.} = object
+  XcbShmQueryVersionRequest* {.rename: "xcb_shm_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbShmQueryVersionReply* {.importc: "xcb_shm_query_version_reply_t", bycopy.} = object
+  XcbShmQueryVersionReply* {.rename: "xcb_shm_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     sharedPixmaps* {.importc: "shared_pixmaps".}: uint8
     sequence*: uint16
@@ -59,7 +60,7 @@ type
     pixmapFormat* {.importc: "pixmap_format".}: uint8
     pad0: array[15, uint8]
 
-  XcbShmAttachRequest* {.importc: "xcb_shm_attach_request_t", bycopy.} = object
+  XcbShmAttachRequest* {.rename: "xcb_shm_attach_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -68,13 +69,13 @@ type
     readOnly* {.importc: "read_only".}: uint8
     pad0: array[3, uint8]
 
-  XcbShmDetachRequest* {.importc: "xcb_shm_detach_request_t", bycopy.} = object
+  XcbShmDetachRequest* {.rename: "xcb_shm_detach_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     shmseg*: XcbShmSeg
 
-  XcbShmPutImageRequest* {.importc: "xcb_shm_put_image_request_t", bycopy.} = object
+  XcbShmPutImageRequest* {.rename: "xcb_shm_put_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -95,10 +96,10 @@ type
     shmseg*: XcbShmSeg
     offset*: uint32
 
-  XcbShmGetImageCookie* {.importc: "xcb_shm_get_image_cookie_t", bycopy.} = object
+  XcbShmGetImageCookie* {.rename: "xcb_shm_get_image_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShmGetImageRequest* {.importc: "xcb_shm_get_image_request_t", bycopy.} = object
+  XcbShmGetImageRequest* {.rename: "xcb_shm_get_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -113,7 +114,7 @@ type
     shmseg*: XcbShmSeg
     offset*: uint32
 
-  XcbShmGetImageReply* {.importc: "xcb_shm_get_image_reply_t", bycopy.} = object
+  XcbShmGetImageReply* {.rename: "xcb_shm_get_image_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     depth*: uint8
     sequence*: uint16
@@ -121,7 +122,7 @@ type
     visual*: XcbVisualid
     size*: uint32
 
-  XcbShmCreatePixmapRequest* {.importc: "xcb_shm_create_pixmap_request_t", bycopy.} = object
+  XcbShmCreatePixmapRequest* {.rename: "xcb_shm_create_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -134,7 +135,7 @@ type
     shmseg*: XcbShmSeg
     offset*: uint32
 
-  XcbShmAttachFdRequest* {.importc: "xcb_shm_attach_fd_request_t", bycopy.} = object
+  XcbShmAttachFdRequest* {.rename: "xcb_shm_attach_fd_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -142,10 +143,10 @@ type
     readOnly* {.importc: "read_only".}: uint8
     pad0: array[3, uint8]
 
-  XcbShmCreateSegmentCookie* {.importc: "xcb_shm_create_segment_cookie_t", bycopy.} = object
+  XcbShmCreateSegmentCookie* {.rename: "xcb_shm_create_segment_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShmCreateSegmentRequest* {.importc: "xcb_shm_create_segment_request_t", bycopy.} = object
+  XcbShmCreateSegmentRequest* {.rename: "xcb_shm_create_segment_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -154,13 +155,15 @@ type
     readOnly* {.importc: "read_only".}: uint8
     pad0: array[3, uint8]
 
-  XcbShmCreateSegmentReply* {.importc: "xcb_shm_create_segment_reply_t", bycopy.} = object
+  XcbShmCreateSegmentReply* {.rename: "xcb_shm_create_segment_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-shm.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbShmSegIterator) {.importc: "xcb_shm_seg_next".}

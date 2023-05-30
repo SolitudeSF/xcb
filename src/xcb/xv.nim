@@ -1,4 +1,4 @@
-import ./xcb, ./shm
+import ./xcb, ./shm, private/importutil
 
 const
   xcbXvMajorVersion* = 2
@@ -29,75 +29,76 @@ const
   xcbXvPutImage* = 18
   xcbXvShmPutImage* = 19
 
-{.passl: "-lxcb-xv".}
-{.push header: "xcb/xv.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xv".}
+  {.push header: "xcb/xv.h".}
 
-var xcbXvId* {.extern: "xcb_xv_id".}: XcbExtension
+  var xcbXvId* {.extern: "xcb_xv_id".}: XcbExtension
 
 type
-  XcbXvPort* {.importc: "xcb_xv_port_t".} = distinct uint32
-  XcbXvEncoding* {.importc: "xcb_xv_encoding_t".} = distinct uint32
+  XcbXvPort* {.rename: "xcb_xv_port_t".} = distinct uint32
+  XcbXvEncoding* {.rename: "xcb_xv_encoding_t".} = distinct uint32
 
-  XcbXvPortIterator* {.importc: "xcb_xv_port_iterator_t", bycopy.} = object
+  XcbXvPortIterator* {.rename: "xcb_xv_port_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvPort]
     rem*: cint
     index*: cint
 
-  XcbXvEncodingIterator* {.importc: "xcb_xv_encoding_iterator_t", bycopy.} = object
+  XcbXvEncodingIterator* {.rename: "xcb_xv_encoding_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvEncoding]
     rem*: cint
     index*: cint
 
-  XcbXvType* {.importc: "xcb_xv_type_t".} = enum
+  XcbXvType* {.rename: "xcb_xv_type_t".} = enum
     xcbXvTypeInputMask = 1, xcbXvTypeOutputMask = 2,
     xcbXvTypeVideoMask = 4, xcbXvTypeStillMask = 8,
     xcbXvTypeImageMask = 16
 
-  XcbXvImageFormatInfoType* {.importc: "xcb_xv_image_format_info_type_t".} = enum
+  XcbXvImageFormatInfoType* {.rename: "xcb_xv_image_format_info_type_t".} = enum
     xcbXvImageFormatInfoTypeRgb = 0, xcbXvImageFormatInfoTypeYuv = 1
 
-  XcbXvImageFormatInfoFormat* {.importc: "xcb_xv_image_format_info_format_t".} = enum
+  XcbXvImageFormatInfoFormat* {.rename: "xcb_xv_image_format_info_format_t".} = enum
     xcbXvImageFormatInfoFormatPacked = 0,
     xcbXvImageFormatInfoFormatPlanar = 1
 
-  XcbXvAttributeFlag* {.importc: "xcb_xv_attribute_flag_t".} = enum
+  XcbXvAttributeFlag* {.rename: "xcb_xv_attribute_flag_t".} = enum
     xcbXvAttributeFlagGettable = 1, xcbXvAttributeFlagSettable = 2
 
-  XcbXvVideoNotifyReason* {.importc: "xcb_xv_video_notify_reason_t".} = enum
+  XcbXvVideoNotifyReason* {.rename: "xcb_xv_video_notify_reason_t".} = enum
     xcbXvVideoNotifyReasonStarted = 0, xcbXvVideoNotifyReasonStopped = 1,
     xcbXvVideoNotifyReasonBusy = 2, xcbXvVideoNotifyReasonPreempted = 3,
     xcbXvVideoNotifyReasonHardError = 4
 
-  XcbXvScanlineOrder* {.importc: "xcb_xv_scanline_order_t".} = enum
+  XcbXvScanlineOrder* {.rename: "xcb_xv_scanline_order_t".} = enum
     xcbXvScanlineOrderTopToBottom = 0,
     xcbXvScanlineOrderBottomToTop = 1
 
-  XcbXvGrabPortStatus* {.importc: "xcb_xv_grab_port_status_t".} = enum
+  XcbXvGrabPortStatus* {.rename: "xcb_xv_grab_port_status_t".} = enum
     xcbXvGrabPortStatusSuccess = 0, xcbXvGrabPortStatusBadExtension = 1,
     xcbXvGrabPortStatusAlreadyGrabbed = 2,
     xcbXvGrabPortStatusInvalidTime = 3,
     xcbXvGrabPortStatusBadReply = 4, xcbXvGrabPortStatusBadAlloc = 5
 
-  XcbXvRational* {.importc: "xcb_xv_rational_t", bycopy.} = object
+  XcbXvRational* {.rename: "xcb_xv_rational_t", bycopy.} = object
     numerator*: int32
     denominator*: int32
 
-  XcbXvRationalIterator* {.importc: "xcb_xv_rational_iterator_t", bycopy.} = object
+  XcbXvRationalIterator* {.rename: "xcb_xv_rational_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvRational]
     rem*: cint
     index*: cint
 
-  XcbXvFormat* {.importc: "xcb_xv_format_t", bycopy.} = object
+  XcbXvFormat* {.rename: "xcb_xv_format_t", bycopy.} = object
     visual*: XcbVisualid
     depth*: uint8
     pad0: array[3, uint8]
 
-  XcbXvFormatIterator* {.importc: "xcb_xv_format_iterator_t", bycopy.} = object
+  XcbXvFormatIterator* {.rename: "xcb_xv_format_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvFormat]
     rem*: cint
     index*: cint
 
-  XcbXvAdaptorInfo* {.importc: "xcb_xv_adaptor_info_t", bycopy.} = object
+  XcbXvAdaptorInfo* {.rename: "xcb_xv_adaptor_info_t", bycopy.} = object
     baseId* {.importc: "base_id".}: XcbXvPort
     nameSize* {.importc: "name_size".}: uint16
     numPorts* {.importc: "num_ports".}: uint16
@@ -105,12 +106,12 @@ type
     `type`*: uint8
     pad0: uint8
 
-  XcbXvAdaptorInfoIterator* {.importc: "xcb_xv_adaptor_info_iterator_t", bycopy.} = object
+  XcbXvAdaptorInfoIterator* {.rename: "xcb_xv_adaptor_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvAdaptorInfo]
     rem*: cint
     index*: cint
 
-  XcbXvEncodingInfo* {.importc: "xcb_xv_encoding_info_t", bycopy.} = object
+  XcbXvEncodingInfo* {.rename: "xcb_xv_encoding_info_t", bycopy.} = object
     encoding*: XcbXvEncoding
     nameSize* {.importc: "name_size".}: uint16
     width*: uint16
@@ -118,35 +119,35 @@ type
     pad0: array[2, uint8]
     rate*: XcbXvRational
 
-  XcbXvEncodingInfoIterator* {.importc: "xcb_xv_encoding_info_iterator_t", bycopy.} = object
+  XcbXvEncodingInfoIterator* {.rename: "xcb_xv_encoding_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvEncodingInfo]
     rem*: cint
     index*: cint
 
-  XcbXvImage* {.importc: "xcb_xv_image_t", bycopy.} = object
+  XcbXvImage* {.rename: "xcb_xv_image_t", bycopy.} = object
     id*: uint32
     width*: uint16
     height*: uint16
     dataSize* {.importc: "data_size".}: uint32
     numPlanes* {.importc: "num_planes".}: uint32
 
-  XcbXvImageIterator* {.importc: "xcb_xv_image_iterator_t", bycopy.} = object
+  XcbXvImageIterator* {.rename: "xcb_xv_image_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvImage]
     rem*: cint
     index*: cint
 
-  XcbXvAttributeInfo* {.importc: "xcb_xv_attribute_info_t", bycopy.} = object
+  XcbXvAttributeInfo* {.rename: "xcb_xv_attribute_info_t", bycopy.} = object
     flags*: uint32
     min*: int32
     max*: int32
     size*: uint32
 
-  XcbXvAttributeInfoIterator* {.importc: "xcb_xv_attribute_info_iterator_t", bycopy.} = object
+  XcbXvAttributeInfoIterator* {.rename: "xcb_xv_attribute_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvAttributeInfo]
     rem*: cint
     index*: cint
 
-  XcbXvImageFormatInfo* {.importc: "xcb_xv_image_format_info_t", bycopy.} = object
+  XcbXvImageFormatInfo* {.rename: "xcb_xv_image_format_info_t", bycopy.} = object
     id*: uint32
     `type`*: uint8
     byteOrder* {.importc: "byte_order".}: uint8
@@ -175,27 +176,27 @@ type
     vscanlineOrder* {.importc: "vscanline_order".}: uint8
     pad4: array[11, uint8]
 
-  XcbXvImageFormatInfoIterator* {.importc: "xcb_xv_image_format_info_iterator_t", bycopy.} = object
+  XcbXvImageFormatInfoIterator* {.rename: "xcb_xv_image_format_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvImageFormatInfo]
     rem*: cint
     index*: cint
 
-  XcbXvBadPortError* {.importc: "xcb_xv_bad_port_error_t", bycopy.} = object
+  XcbXvBadPortError* {.rename: "xcb_xv_bad_port_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbXvBadEncodingError* {.importc: "xcb_xv_bad_encoding_error_t", bycopy.} = object
+  XcbXvBadEncodingError* {.rename: "xcb_xv_bad_encoding_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbXvBadControlError* {.importc: "xcb_xv_bad_control_error_t", bycopy.} = object
+  XcbXvBadControlError* {.rename: "xcb_xv_bad_control_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbXvVideoNotifyEvent* {.importc: "xcb_xv_video_notify_event_t", bycopy.} = object
+  XcbXvVideoNotifyEvent* {.rename: "xcb_xv_video_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     reason*: uint8
     sequence*: uint16
@@ -203,7 +204,7 @@ type
     drawable*: XcbDrawable
     port*: XcbXvPort
 
-  XcbXvPortNotifyEvent* {.importc: "xcb_xv_port_notify_event_t", bycopy.} = object
+  XcbXvPortNotifyEvent* {.rename: "xcb_xv_port_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -212,15 +213,15 @@ type
     attribute*: XcbAtom
     value*: int32
 
-  XcbXvQueryExtensionCookie* {.importc: "xcb_xv_query_extension_cookie_t", bycopy.} = object
+  XcbXvQueryExtensionCookie* {.rename: "xcb_xv_query_extension_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryExtensionRequest* {.importc: "xcb_xv_query_extension_request_t", bycopy.} = object
+  XcbXvQueryExtensionRequest* {.rename: "xcb_xv_query_extension_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXvQueryExtensionReply* {.importc: "xcb_xv_query_extension_reply_t", bycopy.} = object
+  XcbXvQueryExtensionReply* {.rename: "xcb_xv_query_extension_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -228,16 +229,16 @@ type
     major*: uint16
     minor*: uint16
 
-  XcbXvQueryAdaptorsCookie* {.importc: "xcb_xv_query_adaptors_cookie_t", bycopy.} = object
+  XcbXvQueryAdaptorsCookie* {.rename: "xcb_xv_query_adaptors_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryAdaptorsRequest* {.importc: "xcb_xv_query_adaptors_request_t", bycopy.} = object
+  XcbXvQueryAdaptorsRequest* {.rename: "xcb_xv_query_adaptors_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbXvQueryAdaptorsReply* {.importc: "xcb_xv_query_adaptors_reply_t", bycopy.} = object
+  XcbXvQueryAdaptorsReply* {.rename: "xcb_xv_query_adaptors_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -245,16 +246,16 @@ type
     numAdaptors* {.importc: "num_adaptors".}: uint16
     pad1: array[22, uint8]
 
-  XcbXvQueryEncodingsCookie* {.importc: "xcb_xv_query_encodings_cookie_t", bycopy.} = object
+  XcbXvQueryEncodingsCookie* {.rename: "xcb_xv_query_encodings_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryEncodingsRequest* {.importc: "xcb_xv_query_encodings_request_t", bycopy.} = object
+  XcbXvQueryEncodingsRequest* {.rename: "xcb_xv_query_encodings_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
 
-  XcbXvQueryEncodingsReply* {.importc: "xcb_xv_query_encodings_reply_t", bycopy.} = object
+  XcbXvQueryEncodingsReply* {.rename: "xcb_xv_query_encodings_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -262,30 +263,30 @@ type
     numEncodings* {.importc: "num_encodings".}: uint16
     pad1: array[22, uint8]
 
-  XcbXvGrabPortCookie* {.importc: "xcb_xv_grab_port_cookie_t", bycopy.} = object
+  XcbXvGrabPortCookie* {.rename: "xcb_xv_grab_port_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvGrabPortRequest* {.importc: "xcb_xv_grab_port_request_t", bycopy.} = object
+  XcbXvGrabPortRequest* {.rename: "xcb_xv_grab_port_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
     time*: XcbTimestamp
 
-  XcbXvGrabPortReply* {.importc: "xcb_xv_grab_port_reply_t", bycopy.} = object
+  XcbXvGrabPortReply* {.rename: "xcb_xv_grab_port_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     result*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbXvUngrabPortRequest* {.importc: "xcb_xv_ungrab_port_request_t", bycopy.} = object
+  XcbXvUngrabPortRequest* {.rename: "xcb_xv_ungrab_port_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
     time*: XcbTimestamp
 
-  XcbXvPutVideoRequest* {.importc: "xcb_xv_put_video_request_t", bycopy.} = object
+  XcbXvPutVideoRequest* {.rename: "xcb_xv_put_video_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -301,7 +302,7 @@ type
     drwW* {.importc: "drw_w".}: uint16
     drwH* {.importc: "drw_h".}: uint16
 
-  XcbXvPutStillRequest* {.importc: "xcb_xv_put_still_request_t", bycopy.} = object
+  XcbXvPutStillRequest* {.rename: "xcb_xv_put_still_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -317,7 +318,7 @@ type
     drwW* {.importc: "drw_w".}: uint16
     drwH* {.importc: "drw_h".}: uint16
 
-  XcbXvGetVideoRequest* {.importc: "xcb_xv_get_video_request_t", bycopy.} = object
+  XcbXvGetVideoRequest* {.rename: "xcb_xv_get_video_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -333,7 +334,7 @@ type
     drwW* {.importc: "drw_w".}: uint16
     drwH* {.importc: "drw_h".}: uint16
 
-  XcbXvGetStillRequest* {.importc: "xcb_xv_get_still_request_t", bycopy.} = object
+  XcbXvGetStillRequest* {.rename: "xcb_xv_get_still_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -349,14 +350,14 @@ type
     drwW* {.importc: "drw_w".}: uint16
     drwH* {.importc: "drw_h".}: uint16
 
-  XcbXvStopVideoRequest* {.importc: "xcb_xv_stop_video_request_t", bycopy.} = object
+  XcbXvStopVideoRequest* {.rename: "xcb_xv_stop_video_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
     drawable*: XcbDrawable
 
-  XcbXvSelectVideoNotifyRequest* {.importc: "xcb_xv_select_video_notify_request_t", bycopy.} = object
+  XcbXvSelectVideoNotifyRequest* {.rename: "xcb_xv_select_video_notify_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -364,7 +365,7 @@ type
     onoff*: uint8
     pad0: array[3, uint8]
 
-  XcbXvSelectPortNotifyRequest* {.importc: "xcb_xv_select_port_notify_request_t", bycopy.} = object
+  XcbXvSelectPortNotifyRequest* {.rename: "xcb_xv_select_port_notify_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -372,10 +373,10 @@ type
     onoff*: uint8
     pad0: array[3, uint8]
 
-  XcbXvQueryBestSizeCookie* {.importc: "xcb_xv_query_best_size_cookie_t", bycopy.} = object
+  XcbXvQueryBestSizeCookie* {.rename: "xcb_xv_query_best_size_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryBestSizeRequest* {.importc: "xcb_xv_query_best_size_request_t", bycopy.} = object
+  XcbXvQueryBestSizeRequest* {.rename: "xcb_xv_query_best_size_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -387,7 +388,7 @@ type
     motion*: uint8
     pad0: array[3, uint8]
 
-  XcbXvQueryBestSizeReply* {.importc: "xcb_xv_query_best_size_reply_t", bycopy.} = object
+  XcbXvQueryBestSizeReply* {.rename: "xcb_xv_query_best_size_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -395,7 +396,7 @@ type
     actualWidth* {.importc: "actual_width".}: uint16
     actualHeight* {.importc: "actual_height".}: uint16
 
-  XcbXvSetPortAttributeRequest* {.importc: "xcb_xv_set_port_attribute_request_t", bycopy.} = object
+  XcbXvSetPortAttributeRequest* {.rename: "xcb_xv_set_port_attribute_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -403,33 +404,33 @@ type
     attribute*: XcbAtom
     value*: int32
 
-  XcbXvGetPortAttributeCookie* {.importc: "xcb_xv_get_port_attribute_cookie_t", bycopy.} = object
+  XcbXvGetPortAttributeCookie* {.rename: "xcb_xv_get_port_attribute_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvGetPortAttributeRequest* {.importc: "xcb_xv_get_port_attribute_request_t", bycopy.} = object
+  XcbXvGetPortAttributeRequest* {.rename: "xcb_xv_get_port_attribute_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
     attribute*: XcbAtom
 
-  XcbXvGetPortAttributeReply* {.importc: "xcb_xv_get_port_attribute_reply_t", bycopy.} = object
+  XcbXvGetPortAttributeReply* {.rename: "xcb_xv_get_port_attribute_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     value*: int32
 
-  XcbXvQueryPortAttributesCookie* {.importc: "xcb_xv_query_port_attributes_cookie_t", bycopy.} = object
+  XcbXvQueryPortAttributesCookie* {.rename: "xcb_xv_query_port_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryPortAttributesRequest* {.importc: "xcb_xv_query_port_attributes_request_t", bycopy.} = object
+  XcbXvQueryPortAttributesRequest* {.rename: "xcb_xv_query_port_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
 
-  XcbXvQueryPortAttributesReply* {.importc: "xcb_xv_query_port_attributes_reply_t", bycopy.} = object
+  XcbXvQueryPortAttributesReply* {.rename: "xcb_xv_query_port_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -438,16 +439,16 @@ type
     textSize* {.importc: "text_size".}: uint32
     pad1: array[16, uint8]
 
-  XcbXvListImageFormatsCookie* {.importc: "xcb_xv_list_image_formats_cookie_t", bycopy.} = object
+  XcbXvListImageFormatsCookie* {.rename: "xcb_xv_list_image_formats_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvListImageFormatsRequest* {.importc: "xcb_xv_list_image_formats_request_t", bycopy.} = object
+  XcbXvListImageFormatsRequest* {.rename: "xcb_xv_list_image_formats_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     port*: XcbXvPort
 
-  XcbXvListImageFormatsReply* {.importc: "xcb_xv_list_image_formats_reply_t", bycopy.} = object
+  XcbXvListImageFormatsReply* {.rename: "xcb_xv_list_image_formats_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -455,10 +456,10 @@ type
     numFormats* {.importc: "num_formats".}: uint32
     pad1: array[20, uint8]
 
-  XcbXvQueryImageAttributesCookie* {.importc: "xcb_xv_query_image_attributes_cookie_t", bycopy.} = object
+  XcbXvQueryImageAttributesCookie* {.rename: "xcb_xv_query_image_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvQueryImageAttributesRequest* {.importc: "xcb_xv_query_image_attributes_request_t", bycopy.} = object
+  XcbXvQueryImageAttributesRequest* {.rename: "xcb_xv_query_image_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -467,7 +468,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbXvQueryImageAttributesReply* {.importc: "xcb_xv_query_image_attributes_reply_t", bycopy.} = object
+  XcbXvQueryImageAttributesReply* {.rename: "xcb_xv_query_image_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -478,7 +479,7 @@ type
     height*: uint16
     pad1: array[12, uint8]
 
-  XcbXvPutImageRequest* {.importc: "xcb_xv_put_image_request_t", bycopy.} = object
+  XcbXvPutImageRequest* {.rename: "xcb_xv_put_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -497,7 +498,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbXvShmPutImageRequest* {.importc: "xcb_xv_shm_put_image_request_t", bycopy.} = object
+  XcbXvShmPutImageRequest* {.rename: "xcb_xv_shm_put_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -520,6 +521,8 @@ type
     sendEvent* {.importc: "send_event".}: uint8
     pad0: array[3, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-xv.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbXvPortIterator) {.importc: "xcb_xv_port_next".}

@@ -1,4 +1,4 @@
-import ./xcb, ./xv
+import ./xcb, ./xv, private/importutil
 
 const
   xcbXvmcMajorVersion* = 1
@@ -13,32 +13,33 @@ const
   xcbXvmcDestroySubpicture* = 7
   xcbXvmcListSubpictureTypes* = 8
 
-{.passl: "-lxcb-xvmc".}
-{.push header: "xcb/xvmc.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xvmc".}
+  {.push header: "xcb/xvmc.h".}
 
-var xcbXvmcId* {.extern: "xcb_xvmc_id".}: XcbExtension
+  var xcbXvmcId* {.extern: "xcb_xvmc_id".}: XcbExtension
 
 type
-  XcbXvmcContext* {.importc: "xcb_xvmc_context_t".} = distinct uint32
-  XcbXvmcSurface* {.importc: "xcb_xvmc_surface_t".} = distinct uint32
-  XcbXvmcSubpicture* {.importc: "xcb_xvmc_subpicture_t".} = distinct uint32
+  XcbXvmcContext* {.rename: "xcb_xvmc_context_t".} = distinct uint32
+  XcbXvmcSurface* {.rename: "xcb_xvmc_surface_t".} = distinct uint32
+  XcbXvmcSubpicture* {.rename: "xcb_xvmc_subpicture_t".} = distinct uint32
 
-  XcbXvmcContextIterator* {.importc: "xcb_xvmc_context_iterator_t", bycopy.} = object
+  XcbXvmcContextIterator* {.rename: "xcb_xvmc_context_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvmcContext]
     rem*: cint
     index*: cint
 
-  XcbXvmcSurfaceIterator* {.importc: "xcb_xvmc_surface_iterator_t", bycopy.} = object
+  XcbXvmcSurfaceIterator* {.rename: "xcb_xvmc_surface_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvmcSurface]
     rem*: cint
     index*: cint
 
-  XcbXvmcSubpictureIterator* {.importc: "xcb_xvmc_subpicture_iterator_t", bycopy.} = object
+  XcbXvmcSubpictureIterator* {.rename: "xcb_xvmc_subpicture_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvmcSubpicture]
     rem*: cint
     index*: cint
 
-  XcbXvmcSurfaceInfo* {.importc: "xcb_xvmc_surface_info_t", bycopy.} = object
+  XcbXvmcSurfaceInfo* {.rename: "xcb_xvmc_surface_info_t", bycopy.} = object
     id*: XcbXvmcSurface
     chromaFormat* {.importc: "chroma_format".}: uint16
     pad0: uint16
@@ -49,20 +50,20 @@ type
     mcType* {.importc: "mc_type".}: uint32
     flags*: uint32
 
-  XcbXvmcSurfaceInfoIterator* {.importc: "xcb_xvmc_surface_info_iterator_t", bycopy.} = object
+  XcbXvmcSurfaceInfoIterator* {.rename: "xcb_xvmc_surface_info_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXvmcSurfaceInfo]
     rem*: cint
     index*: cint
 
-  XcbXvmcQueryVersionCookie* {.importc: "xcb_xvmc_query_version_cookie_t", bycopy.} = object
+  XcbXvmcQueryVersionCookie* {.rename: "xcb_xvmc_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcQueryVersionRequest* {.importc: "xcb_xvmc_query_version_request_t", bycopy.} = object
+  XcbXvmcQueryVersionRequest* {.rename: "xcb_xvmc_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXvmcQueryVersionReply* {.importc: "xcb_xvmc_query_version_reply_t", bycopy.} = object
+  XcbXvmcQueryVersionReply* {.rename: "xcb_xvmc_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -70,16 +71,16 @@ type
     major*: uint32
     minor*: uint32
 
-  XcbXvmcListSurfaceTypesCookie* {.importc: "xcb_xvmc_list_surface_types_cookie_t", bycopy.} = object
+  XcbXvmcListSurfaceTypesCookie* {.rename: "xcb_xvmc_list_surface_types_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcListSurfaceTypesRequest* {.importc: "xcb_xvmc_list_surface_types_request_t", bycopy.} = object
+  XcbXvmcListSurfaceTypesRequest* {.rename: "xcb_xvmc_list_surface_types_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     portId* {.importc: "port_id".}: XcbXvPort
 
-  XcbXvmcListSurfaceTypesReply* {.importc: "xcb_xvmc_list_surface_types_reply_t", bycopy.} = object
+  XcbXvmcListSurfaceTypesReply* {.rename: "xcb_xvmc_list_surface_types_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -87,10 +88,10 @@ type
     num*: uint32
     pad1: array[20, uint8]
 
-  XcbXvmcCreateContextCookie* {.importc: "xcb_xvmc_create_context_cookie_t", bycopy.} = object
+  XcbXvmcCreateContextCookie* {.rename: "xcb_xvmc_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcCreateContextRequest* {.importc: "xcb_xvmc_create_context_request_t", bycopy.} = object
+  XcbXvmcCreateContextRequest* {.rename: "xcb_xvmc_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -101,7 +102,7 @@ type
     height*: uint16
     flags*: uint32
 
-  XcbXvmcCreateContextReply* {.importc: "xcb_xvmc_create_context_reply_t", bycopy.} = object
+  XcbXvmcCreateContextReply* {.rename: "xcb_xvmc_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -111,39 +112,39 @@ type
     flagsReturn* {.importc: "flags_return".}: uint32
     pad1: array[20, uint8]
 
-  XcbXvmcDestroyContextRequest* {.importc: "xcb_xvmc_destroy_context_request_t", bycopy.} = object
+  XcbXvmcDestroyContextRequest* {.rename: "xcb_xvmc_destroy_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     contextId* {.importc: "context_id".}: XcbXvmcContext
 
-  XcbXvmcCreateSurfaceCookie* {.importc: "xcb_xvmc_create_surface_cookie_t", bycopy.} = object
+  XcbXvmcCreateSurfaceCookie* {.rename: "xcb_xvmc_create_surface_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcCreateSurfaceRequest* {.importc: "xcb_xvmc_create_surface_request_t", bycopy.} = object
+  XcbXvmcCreateSurfaceRequest* {.rename: "xcb_xvmc_create_surface_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     surfaceId* {.importc: "surface_id".}: XcbXvmcSurface
     contextId* {.importc: "context_id".}: XcbXvmcContext
 
-  XcbXvmcCreateSurfaceReply* {.importc: "xcb_xvmc_create_surface_reply_t", bycopy.} = object
+  XcbXvmcCreateSurfaceReply* {.rename: "xcb_xvmc_create_surface_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbXvmcDestroySurfaceRequest* {.importc: "xcb_xvmc_destroy_surface_request_t", bycopy.} = object
+  XcbXvmcDestroySurfaceRequest* {.rename: "xcb_xvmc_destroy_surface_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     surfaceId* {.importc: "surface_id".}: XcbXvmcSurface
 
-  XcbXvmcCreateSubpictureCookie* {.importc: "xcb_xvmc_create_subpicture_cookie_t", bycopy.} = object
+  XcbXvmcCreateSubpictureCookie* {.rename: "xcb_xvmc_create_subpicture_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcCreateSubpictureRequest* {.importc: "xcb_xvmc_create_subpicture_request_t", bycopy.} = object
+  XcbXvmcCreateSubpictureRequest* {.rename: "xcb_xvmc_create_subpicture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -153,7 +154,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbXvmcCreateSubpictureReply* {.importc: "xcb_xvmc_create_subpicture_reply_t", bycopy.} = object
+  XcbXvmcCreateSubpictureReply* {.rename: "xcb_xvmc_create_subpicture_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -165,23 +166,23 @@ type
     componentOrder* {.importc: "component_order".}: array[4, uint8]
     pad1: array[12, uint8]
 
-  XcbXvmcDestroySubpictureRequest* {.importc: "xcb_xvmc_destroy_subpicture_request_t", bycopy.} = object
+  XcbXvmcDestroySubpictureRequest* {.rename: "xcb_xvmc_destroy_subpicture_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     subpictureId* {.importc: "subpicture_id".}: XcbXvmcSubpicture
 
-  XcbXvmcListSubpictureTypesCookie* {.importc: "xcb_xvmc_list_subpicture_types_cookie_t", bycopy.} = object
+  XcbXvmcListSubpictureTypesCookie* {.rename: "xcb_xvmc_list_subpicture_types_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXvmcListSubpictureTypesRequest* {.importc: "xcb_xvmc_list_subpicture_types_request_t", bycopy.} = object
+  XcbXvmcListSubpictureTypesRequest* {.rename: "xcb_xvmc_list_subpicture_types_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     portId* {.importc: "port_id".}: XcbXvPort
     surfaceId* {.importc: "surface_id".}: XcbXvmcSurface
 
-  XcbXvmcListSubpictureTypesReply* {.importc: "xcb_xvmc_list_subpicture_types_reply_t", bycopy.} = object
+  XcbXvmcListSubpictureTypesReply* {.rename: "xcb_xvmc_list_subpicture_types_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -189,6 +190,8 @@ type
     num*: uint32
     pad1: array[20, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-xcmv.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbXvmcContextIterator) {.importc: "xcb_xvmc_context_next".}

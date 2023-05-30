@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbDri2MajorVersion* = 1
@@ -20,13 +20,14 @@ const
   xcbDri2BufferSwapComplete* = 0
   xcbDri2InvalidateBuffers* = 1
 
-{.passl: "-lxcb-dri2".}
-{.push header: "xcb/dri2.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-dri2".}
+  {.push header: "xcb/dri2.h".}
 
-var xcbDri2Id* {.extern: "xcb_dri2_id".}: XcbExtension
+  var xcbDri2Id* {.extern: "xcb_dri2_id".}: XcbExtension
 
 type
-  XcbDri2Attachment* {.importc: "xcb_dri2_attachment_t".} = enum
+  XcbDri2Attachment* {.rename: "xcb_dri2_attachment_t".} = enum
     xcbDri2AttachmentBufferFrontLeft = 0,
     xcbDri2AttachmentBufferBackLeft = 1,
     xcbDri2AttachmentBufferFrontRight = 2,
@@ -38,45 +39,45 @@ type
     xcbDri2AttachmentBufferDepthStencil = 9,
     xcbDri2AttachmentBufferHiz = 10
 
-  XcbDri2DriverType* {.importc: "xcb_dri2_driver_type_t".} = enum
+  XcbDri2DriverType* {.rename: "xcb_dri2_driver_type_t".} = enum
     xcbDri2DriverTypeDri = 0, xcbDri2DriverTypeVdpau = 1
 
-  XcbDri2EventType* {.importc: "xcb_dri2_event_type_t".} = enum
+  XcbDri2EventType* {.rename: "xcb_dri2_event_type_t".} = enum
     xcbDri2EventTypeExchangeComplete = 1,
     xcbDri2EventTypeBlitComplete = 2, xcbDri2EventTypeFlipComplete = 3
 
-  XcbDri2Dri2Buffer* {.importc: "xcb_dri2_dri2_buffer_t", bycopy.} = object
+  XcbDri2Dri2Buffer* {.rename: "xcb_dri2_dri2_buffer_t", bycopy.} = object
     attachment*: uint32
     name*: uint32
     pitch*: uint32
     cpp*: uint32
     flags*: uint32
 
-  XcbDri2Dri2BufferIterator* {.importc: "xcb_dri2_dri2_buffer_iterator_t", bycopy.} = object
+  XcbDri2Dri2BufferIterator* {.rename: "xcb_dri2_dri2_buffer_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbDri2Dri2Buffer]
     rem*: cint
     index*: cint
 
-  XcbDri2AttachFormat* {.importc: "xcb_dri2_attach_format_t", bycopy.} = object
+  XcbDri2AttachFormat* {.rename: "xcb_dri2_attach_format_t", bycopy.} = object
     attachment*: uint32
     format*: uint32
 
-  XcbDri2AttachFormatIterator* {.importc: "xcb_dri2_attach_format_iterator_t", bycopy.} = object
+  XcbDri2AttachFormatIterator* {.rename: "xcb_dri2_attach_format_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbDri2AttachFormat]
     rem*: cint
     index*: cint
 
-  XcbDri2QueryVersionCookie* {.importc: "xcb_dri2_query_version_cookie_t", bycopy.} = object
+  XcbDri2QueryVersionCookie* {.rename: "xcb_dri2_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2QueryVersionRequest* {.importc: "xcb_dri2_query_version_request_t", bycopy.} = object
+  XcbDri2QueryVersionRequest* {.rename: "xcb_dri2_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbDri2QueryVersionReply* {.importc: "xcb_dri2_query_version_reply_t", bycopy.} = object
+  XcbDri2QueryVersionReply* {.rename: "xcb_dri2_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -84,17 +85,17 @@ type
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbDri2ConnectCookie* {.importc: "xcb_dri2_connect_cookie_t", bycopy.} = object
+  XcbDri2ConnectCookie* {.rename: "xcb_dri2_connect_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2ConnectRequest* {.importc: "xcb_dri2_connect_request_t", bycopy.} = object
+  XcbDri2ConnectRequest* {.rename: "xcb_dri2_connect_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     driverType* {.importc: "driver_type".}: uint32
 
-  XcbDri2ConnectReply* {.importc: "xcb_dri2_connect_reply_t", bycopy.} = object
+  XcbDri2ConnectReply* {.rename: "xcb_dri2_connect_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -103,46 +104,46 @@ type
     deviceNameLength* {.importc: "device_name_length".}: uint32
     pad1: array[16, uint8]
 
-  XcbDri2AuthenticateCookie* {.importc: "xcb_dri2_authenticate_cookie_t", bycopy.} = object
+  XcbDri2AuthenticateCookie* {.rename: "xcb_dri2_authenticate_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2AuthenticateRequest* {.importc: "xcb_dri2_authenticate_request_t", bycopy.} = object
+  XcbDri2AuthenticateRequest* {.rename: "xcb_dri2_authenticate_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     magic*: uint32
 
-  XcbDri2AuthenticateReply* {.importc: "xcb_dri2_authenticate_reply_t", bycopy.} = object
+  XcbDri2AuthenticateReply* {.rename: "xcb_dri2_authenticate_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     authenticated*: uint32
 
-  XcbDri2CreateDrawableRequest* {.importc: "xcb_dri2_create_drawable_request_t", bycopy.} = object
+  XcbDri2CreateDrawableRequest* {.rename: "xcb_dri2_create_drawable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbDri2DestroyDrawableRequest* {.importc: "xcb_dri2_destroy_drawable_request_t", bycopy.} = object
+  XcbDri2DestroyDrawableRequest* {.rename: "xcb_dri2_destroy_drawable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbDri2GetBuffersCookie* {.importc: "xcb_dri2_get_buffers_cookie_t", bycopy.} = object
+  XcbDri2GetBuffersCookie* {.rename: "xcb_dri2_get_buffers_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2GetBuffersRequest* {.importc: "xcb_dri2_get_buffers_request_t", bycopy.} = object
+  XcbDri2GetBuffersRequest* {.rename: "xcb_dri2_get_buffers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     count*: uint32
 
-  XcbDri2GetBuffersReply* {.importc: "xcb_dri2_get_buffers_reply_t", bycopy.} = object
+  XcbDri2GetBuffersReply* {.rename: "xcb_dri2_get_buffers_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -152,10 +153,10 @@ type
     count*: uint32
     pad1: array[12, uint8]
 
-  XcbDri2CopyRegionCookie* {.importc: "xcb_dri2_copy_region_cookie_t", bycopy.} = object
+  XcbDri2CopyRegionCookie* {.rename: "xcb_dri2_copy_region_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2CopyRegionRequest* {.importc: "xcb_dri2_copy_region_request_t", bycopy.} = object
+  XcbDri2CopyRegionRequest* {.rename: "xcb_dri2_copy_region_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -164,23 +165,23 @@ type
     dest*: uint32
     src*: uint32
 
-  XcbDri2CopyRegionReply* {.importc: "xcb_dri2_copy_region_reply_t", bycopy.} = object
+  XcbDri2CopyRegionReply* {.rename: "xcb_dri2_copy_region_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbDri2GetBuffersWithFormatCookie* {.importc: "xcb_dri2_get_buffers_with_format_cookie_t", bycopy.} = object
+  XcbDri2GetBuffersWithFormatCookie* {.rename: "xcb_dri2_get_buffers_with_format_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2GetBuffersWithFormatRequest* {.importc: "xcb_dri2_get_buffers_with_format_request_t", bycopy.} = object
+  XcbDri2GetBuffersWithFormatRequest* {.rename: "xcb_dri2_get_buffers_with_format_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     count*: uint32
 
-  XcbDri2GetBuffersWithFormatReply* {.importc: "xcb_dri2_get_buffers_with_format_reply_t", bycopy.} = object
+  XcbDri2GetBuffersWithFormatReply* {.rename: "xcb_dri2_get_buffers_with_format_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -190,10 +191,10 @@ type
     count*: uint32
     pad1: array[12, uint8]
 
-  XcbDri2SwapBuffersCookie* {.importc: "xcb_dri2_swap_buffers_cookie_t", bycopy.} = object
+  XcbDri2SwapBuffersCookie* {.rename: "xcb_dri2_swap_buffers_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2SwapBuffersRequest* {.importc: "xcb_dri2_swap_buffers_request_t", bycopy.} = object
+  XcbDri2SwapBuffersRequest* {.rename: "xcb_dri2_swap_buffers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -205,7 +206,7 @@ type
     remainderHi* {.importc: "remainder_hi".}: uint32
     remainderLo* {.importc: "remainder_lo".}: uint32
 
-  XcbDri2SwapBuffersReply* {.importc: "xcb_dri2_swap_buffers_reply_t", bycopy.} = object
+  XcbDri2SwapBuffersReply* {.rename: "xcb_dri2_swap_buffers_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -213,16 +214,16 @@ type
     swapHi* {.importc: "swap_hi".}: uint32
     swapLo* {.importc: "swap_lo".}: uint32
 
-  XcbDri2GetMscCookie* {.importc: "xcb_dri2_get_msc_cookie_t", bycopy.} = object
+  XcbDri2GetMscCookie* {.rename: "xcb_dri2_get_msc_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2GetMscRequest* {.importc: "xcb_dri2_get_msc_request_t", bycopy.} = object
+  XcbDri2GetMscRequest* {.rename: "xcb_dri2_get_msc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbDri2GetMscReply* {.importc: "xcb_dri2_get_msc_reply_t", bycopy.} = object
+  XcbDri2GetMscReply* {.rename: "xcb_dri2_get_msc_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -234,10 +235,10 @@ type
     sbcHi* {.importc: "sbc_hi".}: uint32
     sbcLo* {.importc: "sbc_lo".}: uint32
 
-  XcbDri2WaitMscCookie* {.importc: "xcb_dri2_wait_msc_cookie_t", bycopy.} = object
+  XcbDri2WaitMscCookie* {.rename: "xcb_dri2_wait_msc_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2WaitMscRequest* {.importc: "xcb_dri2_wait_msc_request_t", bycopy.} = object
+  XcbDri2WaitMscRequest* {.rename: "xcb_dri2_wait_msc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -249,7 +250,7 @@ type
     remainderHi* {.importc: "remainder_hi".}: uint32
     remainderLo* {.importc: "remainder_lo".}: uint32
 
-  XcbDri2WaitMscReply* {.importc: "xcb_dri2_wait_msc_reply_t", bycopy.} = object
+  XcbDri2WaitMscReply* {.rename: "xcb_dri2_wait_msc_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -261,10 +262,10 @@ type
     sbcHi* {.importc: "sbc_hi".}: uint32
     sbcLo* {.importc: "sbc_lo".}: uint32
 
-  XcbDri2WaitSbcCookie* {.importc: "xcb_dri2_wait_sbc_cookie_t", bycopy.} = object
+  XcbDri2WaitSbcCookie* {.rename: "xcb_dri2_wait_sbc_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2WaitSbcRequest* {.importc: "xcb_dri2_wait_sbc_request_t", bycopy.} = object
+  XcbDri2WaitSbcRequest* {.rename: "xcb_dri2_wait_sbc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -272,7 +273,7 @@ type
     targetSbcHi* {.importc: "target_sbc_hi".}: uint32
     targetSbcLo* {.importc: "target_sbc_lo".}: uint32
 
-  XcbDri2WaitSbcReply* {.importc: "xcb_dri2_wait_sbc_reply_t", bycopy.} = object
+  XcbDri2WaitSbcReply* {.rename: "xcb_dri2_wait_sbc_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -284,24 +285,24 @@ type
     sbcHi* {.importc: "sbc_hi".}: uint32
     sbcLo* {.importc: "sbc_lo".}: uint32
 
-  XcbDri2SwapIntervalRequest* {.importc: "xcb_dri2_swap_interval_request_t", bycopy.} = object
+  XcbDri2SwapIntervalRequest* {.rename: "xcb_dri2_swap_interval_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     interval*: uint32
 
-  XcbDri2GetParamCookie* {.importc: "xcb_dri2_get_param_cookie_t", bycopy.} = object
+  XcbDri2GetParamCookie* {.rename: "xcb_dri2_get_param_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri2GetParamRequest* {.importc: "xcb_dri2_get_param_request_t", bycopy.} = object
+  XcbDri2GetParamRequest* {.rename: "xcb_dri2_get_param_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     param*: uint32
 
-  XcbDri2GetParamReply* {.importc: "xcb_dri2_get_param_reply_t", bycopy.} = object
+  XcbDri2GetParamReply* {.rename: "xcb_dri2_get_param_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     isParamRecognized* {.importc: "is_param_recognized".}: uint8
     sequence*: uint16
@@ -309,7 +310,7 @@ type
     valueHi* {.importc: "value_hi".}: uint32
     valueLo* {.importc: "value_lo".}: uint32
 
-  XcbDri2BufferSwapCompleteEvent* {.importc: "xcb_dri2_buffer_swap_complete_event_t", bycopy.} = object
+  XcbDri2BufferSwapCompleteEvent* {.rename: "xcb_dri2_buffer_swap_complete_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -322,12 +323,14 @@ type
     mscLo* {.importc: "msc_lo".}: uint32
     sbc*: uint32
 
-  XcbDri2InvalidateBuffersEvent* {.importc: "xcb_dri2_invalidate_buffers_event_t", bycopy.} = object
+  XcbDri2InvalidateBuffersEvent* {.rename: "xcb_dri2_invalidate_buffers_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     drawable*: XcbDrawable
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-dri2.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbDri2Dri2BufferIterator) {.importc: "xcb_dri2_dri2_buffer_next".}

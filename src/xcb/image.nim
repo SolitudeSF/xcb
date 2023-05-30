@@ -1,10 +1,11 @@
-import ./xcb, ./shm
+import ./xcb, ./shm, private/importutil
 
-{.passl: "-lxcb-image".}
-{.push header: "xcb/xcb_image.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-image".}
+  {.push header: "xcb/xcb_image.h".}
 
 type
-  XcbImage* {.importc: "xcb_image_t", bycopy.} = object
+  XcbImage* {.rename: "xcb_image_t", bycopy.} = object
     width*: uint16
     height*: uint16
     format*: XcbImageFormat
@@ -20,11 +21,13 @@ type
     base*: pointer
     data*: ptr UncheckedArray[uint8]
 
-  XcbShmSegmentInfo* {.importc: "xcb_shm_segment_info_t", bycopy.} = object
+  XcbShmSegmentInfo* {.rename: "xcb_shm_segment_info_t", bycopy.} = object
     shmseg*: XcbShmSeg
     shmid*: uint32
     shmaddr*: ptr uint8
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-image.so(|.0)".}
 {.push cdecl.}
 
 proc annotate*(image: ptr XcbImage) {.importc: "xcb_image_annotate".}

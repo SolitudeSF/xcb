@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbTestMajorVersion* = 2
@@ -8,16 +8,17 @@ const
   xcbTestFakeInput* = 2
   xcbTestGrabControl* = 3
 
-{.passl: "-lxcb-xtest".}
-{.push header: "xcb/xtest.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xtest".}
+  {.push header: "xcb/xtest.h".}
 
-var xcbTestId* {.extern: "xcb_test_id".}: XcbExtension
+  var xcbTestId* {.extern: "xcb_test_id".}: XcbExtension
 
 type
-  XcbTestGetVersionCookie* {.importc: "xcb_test_get_version_cookie_t", bycopy.} = object
+  XcbTestGetVersionCookie* {.rename: "xcb_test_get_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbTestGetVersionRequest* {.importc: "xcb_test_get_version_request_t", bycopy.} = object
+  XcbTestGetVersionRequest* {.rename: "xcb_test_get_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -25,33 +26,33 @@ type
     pad0: uint8
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbTestGetVersionReply* {.importc: "xcb_test_get_version_reply_t", bycopy.} = object
+  XcbTestGetVersionReply* {.rename: "xcb_test_get_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     majorVersion* {.importc: "major_version".}: uint8
     sequence*: uint16
     length*: uint32
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbTestCursor* {.importc: "xcb_test_cursor_t".} = enum
+  XcbTestCursor* {.rename: "xcb_test_cursor_t".} = enum
     xcbTestCursorNone = 0, xcbTestCursorCurrent = 1
 
-  XcbTestCompareCursorCookie* {.importc: "xcb_test_compare_cursor_cookie_t", bycopy.} = object
+  XcbTestCompareCursorCookie* {.rename: "xcb_test_compare_cursor_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbTestCompareCursorRequest* {.importc: "xcb_test_compare_cursor_request_t", bycopy.} = object
+  XcbTestCompareCursorRequest* {.rename: "xcb_test_compare_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
     cursor*: XcbCursor
 
-  XcbTestCompareCursorReply* {.importc: "xcb_test_compare_cursor_reply_t", bycopy.} = object
+  XcbTestCompareCursorReply* {.rename: "xcb_test_compare_cursor_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     same*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbTestFakeInputRequest* {.importc: "xcb_test_fake_input_request_t", bycopy.} = object
+  XcbTestFakeInputRequest* {.rename: "xcb_test_fake_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -66,13 +67,15 @@ type
     pad2: array[7, uint8]
     deviceid*: uint8
 
-  XcbTestGrabControlRequest* {.importc: "xcb_test_grab_control_request_t", bycopy.} = object
+  XcbTestGrabControlRequest* {.rename: "xcb_test_grab_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     impervious*: uint8
     pad0: array[3, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-xtest.so(|.0)".}
 {.push cdecl.}
 
 proc testGetVersion*(c: ptr XcbConnection; majorVersion: uint8; minorVersion: uint16): XcbTestGetVersionCookie {.importc: "xcb_test_get_version".}

@@ -1,3 +1,5 @@
+import private/importutil
+
 const
   xProtocol* = 11
   xProtocolRevision* = 0
@@ -14,39 +16,40 @@ const
   xcbCurrentTime* = 0
   xcbNoSymbol* = 0
 
-{.passl: "-lxcb".}
-{.push header: "xcb/xcb.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb".}
+  {.push header: "xcb/xcb.h".}
 
 type
-  XcbConnection* {.importc: "xcb_connection_t", incompleteStruct.} = object
-  XcbSpecialEvent* {.importc: "xcb_special_event_t", incompleteStruct.} = object
-  XcbExtension* {.importc: "xcb_extension_t", incompleteStruct.} = object
+  XcbConnection* {.rename: "xcb_connection_t", incompleteStruct.} = object
+  XcbSpecialEvent* {.rename: "xcb_special_event_t", incompleteStruct.} = object
+  XcbExtension* {.rename: "xcb_extension_t", incompleteStruct.} = object
 
-  XcbGenericIterator* {.importc: "xcb_generic_iterator_t", bycopy.} = object
+  XcbGenericIterator* {.rename: "xcb_generic_iterator_t", bycopy.} = object
     data*: pointer
     rem*: cint
     index*: cint
 
-  XcbGenericReply* {.importc: "xcb_generic_reply_t", bycopy.} = object
+  XcbGenericReply* {.rename: "xcb_generic_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbGenericEvent* {.importc: "xcb_generic_event_t", bycopy.} = object
+  XcbGenericEvent* {.rename: "xcb_generic_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     pad: array[7, uint32]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbRawGenericEvent* {.importc: "xcb_raw_generic_event_t", bycopy.} = object
+  XcbRawGenericEvent* {.rename: "xcb_raw_generic_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     pad: array[7, uint32]
 
-  XcbGEEvent* {.importc: "xcb_ge_event_t", bycopy.} = object
+  XcbGEEvent* {.rename: "xcb_ge_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -56,7 +59,7 @@ type
     pad: array[5, uint32]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbGenericError* {.importc: "xcb_generic_error_t", bycopy.} = object
+  XcbGenericError* {.rename: "xcb_generic_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -67,20 +70,24 @@ type
     pad: array[5, uint32]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbVoidCookie* {.importc: "xcb_void_cookie_t", bycopy.} = object
+  XcbVoidCookie* {.rename: "xcb_void_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbAuthInfo* {.importc: "xcb_auth_info_t", bycopy.} = object
+  XcbAuthInfo* {.rename: "xcb_auth_info_t", bycopy.} = object
     namelen*: cint
     name*: ptr UncheckedArray[char]
     datalen*: cint
     data*: ptr UncheckedArray[char]
 
-{.pop.}
+when not xcbDynlib:
+  {.pop.}
 
 include ./xproto
 
-{.push cdecl, header: "xcb/xcb.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb.so(|.1)".}
+else:
+  {.push cdecl, header: "xcb/xcb.h".}
 
 proc flush*(c: ptr XcbConnection): cint {.importc: "xcb_flush".}
 proc getMaximumRequestLength*(c: ptr XcbConnection): uint32 {.importc: "xcb_get_maximum_request_length".}

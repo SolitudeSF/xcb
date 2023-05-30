@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbXevieMajorVersion* = 1
@@ -9,22 +9,23 @@ const
   xcbXevieSend* = 3
   xcbXevieSelectInput* = 4
 
-{.push header: "xcb/xevie.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xevie.h".}
 
-var xcbXevieId* {.importc: "xcb_xevie_id".}: XcbExtension
+  var xcbXevieId* {.rename: "xcb_xevie_id".}: XcbExtension
 
 type
-  XcbXevieQueryVersionCookie* {.importc: "xcb_xevie_query_version_cookie_t", bycopy.} = object
+  XcbXevieQueryVersionCookie* {.rename: "xcb_xevie_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXevieQueryVersionRequest* {.importc: "xcb_xevie_query_version_request_t", bycopy.} = object
+  XcbXevieQueryVersionRequest* {.rename: "xcb_xevie_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     clientMajorVersion* {.importc: "client_major_version".}: uint16
     clientMinorVersion* {.importc: "client_minor_version".}: uint16
 
-  XcbXevieQueryVersionReply* {.importc: "xcb_xevie_query_version_reply_t", bycopy.} = object
+  XcbXevieQueryVersionReply* {.rename: "xcb_xevie_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -33,53 +34,53 @@ type
     serverMinorVersion* {.importc: "server_minor_version".}: uint16
     pad1: array[20, uint8]
 
-  XcbXevieStartCookie* {.importc: "xcb_xevie_start_cookie_t", bycopy.} = object
+  XcbXevieStartCookie* {.rename: "xcb_xevie_start_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXevieStartRequest* {.importc: "xcb_xevie_start_request_t", bycopy.} = object
+  XcbXevieStartRequest* {.rename: "xcb_xevie_start_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXevieStartReply* {.importc: "xcb_xevie_start_reply_t", bycopy.} = object
+  XcbXevieStartReply* {.rename: "xcb_xevie_start_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbXevieEndCookie* {.importc: "xcb_xevie_end_cookie_t", bycopy.} = object
+  XcbXevieEndCookie* {.rename: "xcb_xevie_end_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXevieEndRequest* {.importc: "xcb_xevie_end_request_t", bycopy.} = object
+  XcbXevieEndRequest* {.rename: "xcb_xevie_end_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cmap*: uint32
 
-  XcbXevieEndReply* {.importc: "xcb_xevie_end_reply_t", bycopy.} = object
+  XcbXevieEndReply* {.rename: "xcb_xevie_end_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbXevieDatatype* {.importc: "xcb_xevie_datatype_t".} = enum
+  XcbXevieDatatype* {.rename: "xcb_xevie_datatype_t".} = enum
     xcbXevieDatatypeUnmodified = 0, xcbXevieDatatypeModified = 1
 
-  XcbXevieEvent* {.importc: "xcb_xevie_event_t", bycopy.} = object
+  XcbXevieEvent* {.rename: "xcb_xevie_event_t", bycopy.} = object
     pad0: array[32, uint8]
 
-  XcbXevieEventIterator* {.importc: "xcb_xevie_event_iterator_t", bycopy.} = object
+  XcbXevieEventIterator* {.rename: "xcb_xevie_event_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXevieEvent]
     rem*: cint
     index*: cint
 
-  XcbXevieSendCookie* {.importc: "xcb_xevie_send_cookie_t", bycopy.} = object
+  XcbXevieSendCookie* {.rename: "xcb_xevie_send_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXevieSendRequest* {.importc: "xcb_xevie_send_request_t", bycopy.} = object
+  XcbXevieSendRequest* {.rename: "xcb_xevie_send_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -87,29 +88,31 @@ type
     dataType* {.importc: "data_type".}: uint32
     pad0: array[64, uint8]
 
-  XcbXevieSendReply* {.importc: "xcb_xevie_send_reply_t", bycopy.} = object
+  XcbXevieSendReply* {.rename: "xcb_xevie_send_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
-  XcbXevieSelectInputCookie* {.importc: "xcb_xevie_select_input_cookie_t", bycopy.} = object
+  XcbXevieSelectInputCookie* {.rename: "xcb_xevie_select_input_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXevieSelectInputRequest* {.importc: "xcb_xevie_select_input_request_t", bycopy.} = object
+  XcbXevieSelectInputRequest* {.rename: "xcb_xevie_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbXevieSelectInputReply* {.importc: "xcb_xevie_select_input_reply_t", bycopy.} = object
+  XcbXevieSelectInputReply* {.rename: "xcb_xevie_select_input_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     pad1: array[24, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc xevieQueryVersion*(c: ptr XcbConnection; client_major_version: uint16; client_minor_version: uint16): XcbXevieQueryVersionCookie {.importc: "xcb_xevie_query_version".}

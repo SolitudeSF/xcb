@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbScreensaverMajorVersion* = 1
@@ -11,27 +11,28 @@ const
   xcbScreensaverSuspend* = 5
   xcbScreensaverNotify* = 0
 
-{.passl: "-lxcb-screensaver".}
-{.push header: "xcb/screensaver.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-screensaver".}
+  {.push header: "xcb/screensaver.h".}
 
-var xcbScreensaverId* {.extern: "xcb_screensaver_id".}: XcbExtension
+  var xcbScreensaverId* {.extern: "xcb_screensaver_id".}: XcbExtension
 
 type
-  XcbScreensaverKind* {.importc: "xcb_screensaver_kind_t".} = enum
+  XcbScreensaverKind* {.rename: "xcb_screensaver_kind_t".} = enum
     xcbScreensaverKindBlanked = 0, xcbScreensaverKindInternal = 1,
     xcbScreensaverKindExternal = 2
 
-  XcbScreensaverEvent* {.importc: "xcb_screensaver_event_t".} = enum
+  XcbScreensaverEvent* {.rename: "xcb_screensaver_event_t".} = enum
     xcbScreensaverEventNotifyMask = 1, xcbScreensaverEventCycleMask = 2
 
-  XcbScreensaverState* {.importc: "xcb_screensaver_state_t".} = enum
+  XcbScreensaverState* {.rename: "xcb_screensaver_state_t".} = enum
     xcbScreensaverStateOff = 0, xcbScreensaverStateOn = 1,
     xcbScreensaverStateCycle = 2, xcbScreensaverStateDisabled = 3
 
-  XcbScreensaverQueryVersionCookie* {.importc: "xcb_screensaver_query_version_cookie_t", bycopy.} = object
+  XcbScreensaverQueryVersionCookie* {.rename: "xcb_screensaver_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbScreensaverQueryVersionRequest* {.importc: "xcb_screensaver_query_version_request_t", bycopy.} = object
+  XcbScreensaverQueryVersionRequest* {.rename: "xcb_screensaver_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -39,7 +40,7 @@ type
     clientMinorVersion* {.importc: "client_minor_version".}: uint8
     pad0: array[2, uint8]
 
-  XcbScreensaverQueryVersionReply* {.importc: "xcb_screensaver_query_version_reply_t", bycopy.} = object
+  XcbScreensaverQueryVersionReply* {.rename: "xcb_screensaver_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -48,16 +49,16 @@ type
     serverMinorVersion* {.importc: "server_minor_version".}: uint16
     pad1: array[20, uint8]
 
-  XcbScreensaverQueryInfoCookie* {.importc: "xcb_screensaver_query_info_cookie_t", bycopy.} = object
+  XcbScreensaverQueryInfoCookie* {.rename: "xcb_screensaver_query_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbScreensaverQueryInfoRequest* {.importc: "xcb_screensaver_query_info_request_t", bycopy.} = object
+  XcbScreensaverQueryInfoRequest* {.rename: "xcb_screensaver_query_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbScreensaverQueryInfoReply* {.importc: "xcb_screensaver_query_info_reply_t", bycopy.} = object
+  XcbScreensaverQueryInfoReply* {.rename: "xcb_screensaver_query_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     state*: uint8
     sequence*: uint16
@@ -69,14 +70,14 @@ type
     kind*: uint8
     pad0: array[7, uint8]
 
-  XcbScreensaverSelectInputRequest* {.importc: "xcb_screensaver_select_input_request_t", bycopy.} = object
+  XcbScreensaverSelectInputRequest* {.rename: "xcb_screensaver_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbScreensaverSetAttributesValueList* {.importc: "xcb_screensaver_set_attributes_value_list_t", bycopy.} = object
+  XcbScreensaverSetAttributesValueList* {.rename: "xcb_screensaver_set_attributes_value_list_t", bycopy.} = object
     backgroundPixmap* {.importc: "background_pixmap".}: XcbPixmap
     backgroundPixel* {.importc: "background_pixel".}: uint32
     borderPixmap* {.importc: "border_pixmap".}: XcbPixmap
@@ -93,7 +94,7 @@ type
     colormap*: XcbColormap
     cursor*: XcbCursor
 
-  XcbScreensaverSetAttributesRequest* {.importc: "xcb_screensaver_set_attributes_request_t", bycopy.} = object
+  XcbScreensaverSetAttributesRequest* {.rename: "xcb_screensaver_set_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -108,19 +109,19 @@ type
     visual*: XcbVisualid
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbScreensaverUnsetAttributesRequest* {.importc: "xcb_screensaver_unset_attributes_request_t", bycopy.} = object
+  XcbScreensaverUnsetAttributesRequest* {.rename: "xcb_screensaver_unset_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbScreensaverSuspendRequest* {.importc: "xcb_screensaver_suspend_request_t", bycopy.} = object
+  XcbScreensaverSuspendRequest* {.rename: "xcb_screensaver_suspend_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     suspend*: uint32
 
-  XcbScreensaverNotifyEvent* {.importc: "xcb_screensaver_notify_event_t", bycopy.} = object
+  XcbScreensaverNotifyEvent* {.rename: "xcb_screensaver_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     state*: uint8
     sequence*: uint16
@@ -131,6 +132,8 @@ type
     forced*: uint8
     pad0: array[14, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-screensaver.so(|.0)".}
 {.push cdecl.}
 
 proc screensaverQueryVersion*(c: ptr XcbConnection; client_major_version: uint8; client_minor_version: uint8): XcbScreensaverQueryVersionCookie {.importc: "xcb_screensaver_query_version".}

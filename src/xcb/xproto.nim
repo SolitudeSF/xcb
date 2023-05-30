@@ -1,4 +1,5 @@
-{.push header: "xcb/xproto.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xproto.h".}
 
 const
   xcbKeyPress* = 2
@@ -174,153 +175,153 @@ const
   xcbNoOperation* = 127
 
 type
-  XcbWindow* {.importc: "xcb_window_t".} = distinct uint32
-  XcbPixmap* {.importc: "xcb_pixmap_t".} = distinct uint32
-  XcbCursor* {.importc: "xcb_cursor_t".} = distinct uint32
-  XcbFont* {.importc: "xcb_font_t".} = distinct uint32
-  XcbGcontext* {.importc: "xcb_gcontext_t".} = distinct uint32
-  XcbColormap* {.importc: "xcb_colormap_t".} = distinct uint32
-  XcbAtom* {.importc: "xcb_atom_t".} = distinct uint32
-  XcbDrawable* {.importc: "xcb_drawable_t".} = distinct uint32
-  XcbFontable* {.importc: "xcb_fontable_t".} = distinct uint32
-  XcbBool32* {.importc: "xcb_bool32_t".} = distinct uint32
-  XcbVisualid* {.importc: "xcb_visualid_t".} = distinct uint32
-  XcbTimestamp* {.importc: "xcb_timestamp_t".} = distinct uint32
-  XcbKeysym* {.importc: "xcb_keysym_t".} = distinct uint32
-  XcbKeycode* {.importc: "xcb_keycode_t".} = distinct uint8
-  XcbKeycode32* {.importc: "xcb_keycode32_t".} = distinct uint32
-  XcbButton* {.importc: "xcb_button_t".} = distinct uint8
-  XcbKeyReleaseEvent* {.importc: "xcb_key_release_event_t".} = XcbKeyPressEvent
-  XcbButtonReleaseEvent* {.importc: "xcb_button_release_event_t".} = XcbButtonPressEvent
-  XcbLeaveNotifyEvent* {.importc: "xcb_leave_notify_event_t".} = XcbEnterNotifyEvent
-  XcbFocusOutEvent* {.importc: "xcb_focus_out_event_t".} = XcbFocusInEvent
-  XcbCirculateRequestEvent* {.importc: "xcb_circulate_request_event_t".} = XcbCirculateNotifyEvent
-  XcbWindowError* {.importc: "xcb_window_error_t".} = XcbValueError
-  XcbPixmapError* {.importc: "xcb_pixmap_error_t".} = XcbValueError
-  XcbAtomError* {.importc: "xcb_atom_error_t".} = XcbValueError
-  XcbCursorError* {.importc: "xcb_cursor_error_t".} = XcbValueError
-  XcbFontError* {.importc: "xcb_font_error_t".} = XcbValueError
-  XcbMatchError* {.importc: "xcb_match_error_t".} = XcbRequestError
-  XcbDrawableError* {.importc: "xcb_drawable_error_t".} = XcbValueError
-  XcbAccessError* {.importc: "xcb_access_error_t".} = XcbRequestError
-  XcbAllocError* {.importc: "xcb_alloc_error_t".} = XcbRequestError
-  XcbColormapError* {.importc: "xcb_colormap_error_t".} = XcbValueError
-  XcbGContextError* {.importc: "xcb_g_context_error_t".} = XcbValueError
-  XcbIdChoiceError* {.importc: "xcb_id_choice_error_t".} = XcbValueError
-  XcbNameError* {.importc: "xcb_name_error_t".} = XcbRequestError
-  XcbLengthError* {.importc: "xcb_length_error_t".} = XcbRequestError
-  XcbImplementationError* {.importc: "xcb_implementation_error_t".} = XcbRequestError
+  XcbWindow* {.rename: "xcb_window_t".} = distinct uint32
+  XcbPixmap* {.rename: "xcb_pixmap_t".} = distinct uint32
+  XcbCursor* {.rename: "xcb_cursor_t".} = distinct uint32
+  XcbFont* {.rename: "xcb_font_t".} = distinct uint32
+  XcbGcontext* {.rename: "xcb_gcontext_t".} = distinct uint32
+  XcbColormap* {.rename: "xcb_colormap_t".} = distinct uint32
+  XcbAtom* {.rename: "xcb_atom_t".} = distinct uint32
+  XcbDrawable* {.rename: "xcb_drawable_t".} = distinct uint32
+  XcbFontable* {.rename: "xcb_fontable_t".} = distinct uint32
+  XcbBool32* {.rename: "xcb_bool32_t".} = distinct uint32
+  XcbVisualid* {.rename: "xcb_visualid_t".} = distinct uint32
+  XcbTimestamp* {.rename: "xcb_timestamp_t".} = distinct uint32
+  XcbKeysym* {.rename: "xcb_keysym_t".} = distinct uint32
+  XcbKeycode* {.rename: "xcb_keycode_t".} = distinct uint8
+  XcbKeycode32* {.rename: "xcb_keycode32_t".} = distinct uint32
+  XcbButton* {.rename: "xcb_button_t".} = distinct uint8
+  XcbKeyReleaseEvent* {.rename: "xcb_key_release_event_t".} = XcbKeyPressEvent
+  XcbButtonReleaseEvent* {.rename: "xcb_button_release_event_t".} = XcbButtonPressEvent
+  XcbLeaveNotifyEvent* {.rename: "xcb_leave_notify_event_t".} = XcbEnterNotifyEvent
+  XcbFocusOutEvent* {.rename: "xcb_focus_out_event_t".} = XcbFocusInEvent
+  XcbCirculateRequestEvent* {.rename: "xcb_circulate_request_event_t".} = XcbCirculateNotifyEvent
+  XcbWindowError* {.rename: "xcb_window_error_t".} = XcbValueError
+  XcbPixmapError* {.rename: "xcb_pixmap_error_t".} = XcbValueError
+  XcbAtomError* {.rename: "xcb_atom_error_t".} = XcbValueError
+  XcbCursorError* {.rename: "xcb_cursor_error_t".} = XcbValueError
+  XcbFontError* {.rename: "xcb_font_error_t".} = XcbValueError
+  XcbMatchError* {.rename: "xcb_match_error_t".} = XcbRequestError
+  XcbDrawableError* {.rename: "xcb_drawable_error_t".} = XcbValueError
+  XcbAccessError* {.rename: "xcb_access_error_t".} = XcbRequestError
+  XcbAllocError* {.rename: "xcb_alloc_error_t".} = XcbRequestError
+  XcbColormapError* {.rename: "xcb_colormap_error_t".} = XcbValueError
+  XcbGContextError* {.rename: "xcb_g_context_error_t".} = XcbValueError
+  XcbIdChoiceError* {.rename: "xcb_id_choice_error_t".} = XcbValueError
+  XcbNameError* {.rename: "xcb_name_error_t".} = XcbRequestError
+  XcbLengthError* {.rename: "xcb_length_error_t".} = XcbRequestError
+  XcbImplementationError* {.rename: "xcb_implementation_error_t".} = XcbRequestError
 
-  XcbChar2b* {.importc: "xcb_char2b_t", bycopy.} = object
+  XcbChar2b* {.rename: "xcb_char2b_t", bycopy.} = object
     byte1*: uint8
     byte2*: uint8
 
-  XcbChar2bIterator* {.importc: "xcb_char2b_iterator_t", bycopy.} = object
+  XcbChar2bIterator* {.rename: "xcb_char2b_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbChar2b]
     rem*: cint
     index*: cint
 
-  XcbWindowIterator* {.importc: "xcb_window_iterator_t", bycopy.} = object
+  XcbWindowIterator* {.rename: "xcb_window_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbWindow]
     rem*: cint
     index*: cint
 
-  XcbPixmapIterator* {.importc: "xcb_pixmap_iterator_t", bycopy.} = object
+  XcbPixmapIterator* {.rename: "xcb_pixmap_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbPixmap]
     rem*: cint
     index*: cint
 
-  XcbCursorIterator* {.importc: "xcb_cursor_iterator_t", bycopy.} = object
+  XcbCursorIterator* {.rename: "xcb_cursor_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbCursor]
     rem*: cint
     index*: cint
 
-  XcbFontIterator* {.importc: "xcb_font_iterator_t", bycopy.} = object
+  XcbFontIterator* {.rename: "xcb_font_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbFont]
     rem*: cint
     index*: cint
 
-  XcbGcontextIterator* {.importc: "xcb_gcontext_iterator_t", bycopy.} = object
+  XcbGcontextIterator* {.rename: "xcb_gcontext_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbGcontext]
     rem*: cint
     index*: cint
 
-  XcbColormapIterator* {.importc: "xcb_colormap_iterator_t", bycopy.} = object
+  XcbColormapIterator* {.rename: "xcb_colormap_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbColormap]
     rem*: cint
     index*: cint
 
-  XcbAtomIterator* {.importc: "xcb_atom_iterator_t", bycopy.} = object
+  XcbAtomIterator* {.rename: "xcb_atom_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbAtom]
     rem*: cint
     index*: cint
 
-  XcbDrawableIterator* {.importc: "xcb_drawable_iterator_t", bycopy.} = object
+  XcbDrawableIterator* {.rename: "xcb_drawable_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbDrawable]
     rem*: cint
     index*: cint
 
-  XcbFontableIterator* {.importc: "xcb_fontable_iterator_t", bycopy.} = object
+  XcbFontableIterator* {.rename: "xcb_fontable_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbFontable]
     rem*: cint
     index*: cint
 
-  XcbBool32Iterator* {.importc: "xcb_bool32_iterator_t", bycopy.} = object
+  XcbBool32Iterator* {.rename: "xcb_bool32_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbBool32]
     rem*: cint
     index*: cint
 
-  XcbVisualidIterator* {.importc: "xcb_visualid_iterator_t", bycopy.} = object
+  XcbVisualidIterator* {.rename: "xcb_visualid_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbVisualid]
     rem*: cint
     index*: cint
 
-  XcbTimestampIterator* {.importc: "xcb_timestamp_iterator_t", bycopy.} = object
+  XcbTimestampIterator* {.rename: "xcb_timestamp_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbTimestamp]
     rem*: cint
     index*: cint
 
-  XcbKeysymIterator* {.importc: "xcb_keysym_iterator_t", bycopy.} = object
+  XcbKeysymIterator* {.rename: "xcb_keysym_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbKeysym]
     rem*: cint
     index*: cint
 
-  XcbKeycodeIterator* {.importc: "xcb_keycode_iterator_t", bycopy.} = object
+  XcbKeycodeIterator* {.rename: "xcb_keycode_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbKeycode]
     rem*: cint
     index*: cint
 
-  XcbKeycode32Iterator* {.importc: "xcb_keycode32_iterator_t", bycopy.} = object
+  XcbKeycode32Iterator* {.rename: "xcb_keycode32_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbKeycode32]
     rem*: cint
     index*: cint
 
-  XcbButtonIterator* {.importc: "xcb_button_iterator_t", bycopy.} = object
+  XcbButtonIterator* {.rename: "xcb_button_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbButton]
     rem*: cint
     index*: cint
 
-  XcbPoint* {.importc: "xcb_point_t", bycopy.} = object
+  XcbPoint* {.rename: "xcb_point_t", bycopy.} = object
     x*: int16
     y*: int16
 
-  XcbPointIterator* {.importc: "xcb_point_iterator_t", bycopy.} = object
+  XcbPointIterator* {.rename: "xcb_point_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbPoint]
     rem*: cint
     index*: cint
 
-  XcbRectangle* {.importc: "xcb_rectangle_t", bycopy.} = object
+  XcbRectangle* {.rename: "xcb_rectangle_t", bycopy.} = object
     x*: int16
     y*: int16
     width*: uint16
     height*: uint16
 
-  XcbRectangleIterator* {.importc: "xcb_rectangle_iterator_t", bycopy.} = object
+  XcbRectangleIterator* {.rename: "xcb_rectangle_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRectangle]
     rem*: cint
     index*: cint
 
-  XcbArc* {.importc: "xcb_arc_t", bycopy.} = object
+  XcbArc* {.rename: "xcb_arc_t", bycopy.} = object
     x*: int16
     y*: int16
     width*: uint16
@@ -328,28 +329,28 @@ type
     angle1*: int16
     angle2*: int16
 
-  XcbArcIterator* {.importc: "xcb_arc_iterator_t", bycopy.} = object
+  XcbArcIterator* {.rename: "xcb_arc_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbArc]
     rem*: cint
     index*: cint
 
-  XcbFormat* {.importc: "xcb_format_t", bycopy.} = object
+  XcbFormat* {.rename: "xcb_format_t", bycopy.} = object
     depth*: uint8
     bitsPerPixel* {.importc: "bits_per_pixel".}: uint8
     scanlinePad* {.importc: "scanline_pad".}: uint8
     pad0: array[5, uint8]
 
-  XcbFormatIterator* {.importc: "xcb_format_iterator_t", bycopy.} = object
+  XcbFormatIterator* {.rename: "xcb_format_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbFormat]
     rem*: cint
     index*: cint
 
-  XcbVisualClass* {.importc: "xcb_visual_class_t".} = enum
+  XcbVisualClass* {.rename: "xcb_visual_class_t".} = enum
     xcbVisualClassStaticGray = 0, xcbVisualClassGrayScale = 1,
     xcbVisualClassStaticColor = 2, xcbVisualClassPseudoColor = 3,
     xcbVisualClassTrueColor = 4, xcbVisualClassDirectColor = 5
 
-  XcbVisualtype* {.importc: "xcb_visualtype_t", bycopy.} = object
+  XcbVisualtype* {.rename: "xcb_visualtype_t", bycopy.} = object
     visualId* {.importc: "visual_id".}: XcbVisualid
     class*: uint8
     bitsPerRgbValue* {.importc: "bits_per_rgb_value".}: uint8
@@ -359,23 +360,23 @@ type
     blueMask* {.importc: "blue_mask".}: uint32
     pad0: array[4, uint8]
 
-  XcbVisualtypeIterator* {.importc: "xcb_visualtype_iterator_t", bycopy.} = object
+  XcbVisualtypeIterator* {.rename: "xcb_visualtype_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbVisualtype]
     rem*: cint
     index*: cint
 
-  XcbDepth* {.importc: "xcb_depth_t", bycopy.} = object
+  XcbDepth* {.rename: "xcb_depth_t", bycopy.} = object
     depth*: uint8
     pad0: uint8
     visualsLen* {.importc: "visuals_len".}: uint16
     pad1: array[4, uint8]
 
-  XcbDepthIterator* {.importc: "xcb_depth_iterator_t", bycopy.} = object
+  XcbDepthIterator* {.rename: "xcb_depth_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbDepth]
     rem*: cint
     index*: cint
 
-  XcbEventMask* {.importc: "xcb_event_mask_t".} = enum
+  XcbEventMask* {.rename: "xcb_event_mask_t".} = enum
     xcbEventMaskNoEvent = 0, xcbEventMaskKeyPress = 1,
     xcbEventMaskKeyRelease = 2, xcbEventMaskButtonPress = 4,
     xcbEventMaskButtonRelease = 8, xcbEventMaskEnterWindow = 16,
@@ -394,11 +395,11 @@ type
     xcbEventMaskColorMapChange = 8388608,
     xcbEventMaskOwnerGrabButton = 16777216
 
-  XcbBackingStore* {.importc: "xcb_backing_store_t".} = enum
+  XcbBackingStore* {.rename: "xcb_backing_store_t".} = enum
     xcbBackingStoreNotUseful = 0, xcbBackingStoreWhenMapped = 1,
     xcbBackingStoreAlways = 2
 
-  XcbScreen* {.importc: "xcb_screen_t", bycopy.} = object
+  XcbScreen* {.rename: "xcb_screen_t", bycopy.} = object
     root*: XcbWindow
     defaultColormap* {.importc: "default_colormap".}: XcbColormap
     whitePixel* {.importc: "white_pixel".}: uint32
@@ -416,12 +417,12 @@ type
     rootDepth* {.importc: "root_depth".}: uint8
     allowedDepthsLen* {.importc: "allowed_depths_len".}: uint8
 
-  XcbScreenIterator* {.importc: "xcb_screen_iterator_t", bycopy.} = object
+  XcbScreenIterator* {.rename: "xcb_screen_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbScreen]
     rem*: cint
     index*: cint
 
-  XcbSetupRequest* {.importc: "xcb_setup_request_t", bycopy.} = object
+  XcbSetupRequest* {.rename: "xcb_setup_request_t", bycopy.} = object
     byteOrder* {.importc: "byte_order".}: uint8
     pad0: uint8
     protocolMajorVersion* {.importc: "protocol_major_version".}: uint16
@@ -430,37 +431,37 @@ type
     authorizationProtocolDataLen* {.importc: "authorization_protocol_data_len".}: uint16
     pad1: array[2, uint8]
 
-  XcbSetupRequestIterator* {.importc: "xcb_setup_request_iterator_t", bycopy.} = object
+  XcbSetupRequestIterator* {.rename: "xcb_setup_request_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSetupRequest]
     rem*: cint
     index*: cint
 
-  XcbSetupFailed* {.importc: "xcb_setup_failed_t", bycopy.} = object
+  XcbSetupFailed* {.rename: "xcb_setup_failed_t", bycopy.} = object
     status*: uint8
     reasonLen* {.importc: "reason_len".}: uint8
     protocolMajorVersion* {.importc: "protocol_major_version".}: uint16
     protocolMinorVersion* {.importc: "protocol_minor_version".}: uint16
     length*: uint16
 
-  XcbSetupFailedIterator* {.importc: "xcb_setup_failed_iterator_t", bycopy.} = object
+  XcbSetupFailedIterator* {.rename: "xcb_setup_failed_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSetupFailed]
     rem*: cint
     index*: cint
 
-  XcbSetupAuthenticate* {.importc: "xcb_setup_authenticate_t", bycopy.} = object
+  XcbSetupAuthenticate* {.rename: "xcb_setup_authenticate_t", bycopy.} = object
     status*: uint8
     pad0: array[5, uint8]
     length*: uint16
 
-  XcbSetupAuthenticateIterator* {.importc: "xcb_setup_authenticate_iterator_t", bycopy.} = object
+  XcbSetupAuthenticateIterator* {.rename: "xcb_setup_authenticate_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSetupAuthenticate]
     rem*: cint
     index*: cint
 
-  XcbImageOrder* {.importc: "xcb_image_order_t".} = enum
+  XcbImageOrder* {.rename: "xcb_image_order_t".} = enum
     xcbImageOrderLsbFirst = 0, xcbImageOrderMsbFirst = 1
 
-  XcbSetup* {.importc: "xcb_setup_t", bycopy.} = object
+  XcbSetup* {.rename: "xcb_setup_t", bycopy.} = object
     status*: uint8
     pad0: uint8
     protocolMajorVersion* {.importc: "protocol_major_version".}: uint16
@@ -482,17 +483,17 @@ type
     maxKeycode* {.importc: "max_keycode".}: XcbKeycode
     pad1: array[4, uint8]
 
-  XcbSetupIterator* {.importc: "xcb_setup_iterator_t", bycopy.} = object
+  XcbSetupIterator* {.rename: "xcb_setup_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSetup]
     rem*: cint
     index*: cint
 
-  XcbModMask* {.importc: "xcb_mod_mask_t".} = enum
+  XcbModMask* {.rename: "xcb_mod_mask_t".} = enum
     xcbModMaskShift = 1, xcbModMaskLock = 2, xcbModMaskControl = 4,
     xcbModMask1 = 8, xcbModMask2 = 16, xcbModMask3 = 32, xcbModMask4 = 64,
     xcbModMask5 = 128, xcbModMaskAny = 32768
 
-  XcbKeyButMask* {.importc: "xcb_key_but_mask_t".} = enum
+  XcbKeyButMask* {.rename: "xcb_key_but_mask_t".} = enum
     xcbKeyButMaskShift = 1, xcbKeyButMaskLock = 2,
     xcbKeyButMaskControl = 4, xcbKeyButMaskMod1 = 8,
     xcbKeyButMaskMod2 = 16, xcbKeyButMaskMod3 = 32,
@@ -501,10 +502,10 @@ type
     xcbKeyButMaskButton3 = 1024, xcbKeyButMaskButton4 = 2048,
     xcbKeyButMaskButton5 = 4096
 
-  XcbWindowEnum* {.importc: "xcb_window_enum_t".} = enum
+  XcbWindowEnum* {.rename: "xcb_window_enum_t".} = enum
     xcbWindowNone = 0
 
-  XcbKeyPressEvent* {.importc: "xcb_key_press_event_t", bycopy.} = object
+  XcbKeyPressEvent* {.rename: "xcb_key_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: XcbKeycode
     sequence*: uint16
@@ -520,11 +521,11 @@ type
     sameScreen* {.importc: "same_screen".}: uint8
     pad0: uint8
 
-  XcbButtonMask* {.importc: "xcb_button_mask_t".} = enum
+  XcbButtonMask* {.rename: "xcb_button_mask_t".} = enum
     xcbButtonMask1 = 256, xcbButtonMask2 = 512, xcbButtonMask3 = 1024,
     xcbButtonMask4 = 2048, xcbButtonMask5 = 4096, xcbButtonMaskAny = 32768
 
-  XcbButtonPressEvent* {.importc: "xcb_button_press_event_t", bycopy.} = object
+  XcbButtonPressEvent* {.rename: "xcb_button_press_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: XcbButton
     sequence*: uint16
@@ -540,10 +541,10 @@ type
     sameScreen* {.importc: "same_screen".}: uint8
     pad0: uint8
 
-  XcbMotion* {.importc: "xcb_motion_t".} = enum
+  XcbMotion* {.rename: "xcb_motion_t".} = enum
     xcbMotionNormal = 0, xcbMotionHint = 1
 
-  XcbMotionNotifyEvent* {.importc: "xcb_motion_notify_event_t", bycopy.} = object
+  XcbMotionNotifyEvent* {.rename: "xcb_motion_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
@@ -559,17 +560,17 @@ type
     sameScreen* {.importc: "same_screen".}: uint8
     pad0: uint8
 
-  XcbNotifyDetail* {.importc: "xcb_notify_detail_t".} = enum
+  XcbNotifyDetail* {.rename: "xcb_notify_detail_t".} = enum
     xcbNotifyDetailAncestor = 0, xcbNotifyDetailVirtual = 1,
     xcbNotifyDetailInferior = 2, xcbNotifyDetailNonlinear = 3,
     xcbNotifyDetailNonlinearVirtual = 4, xcbNotifyDetailPointer = 5,
     xcbNotifyDetailPointerRoot = 6, xcbNotifyDetailNone = 7
 
-  XcbNotifyMode* {.importc: "xcb_notify_mode_t".} = enum
+  XcbNotifyMode* {.rename: "xcb_notify_mode_t".} = enum
     xcbNotifyModeNormal = 0, xcbNotifyModeGrab = 1, xcbNotifyModeUngrab = 2,
     xcbNotifyModeWhileGrabbed = 3
 
-  XcbEnterNotifyEvent* {.importc: "xcb_enter_notify_event_t", bycopy.} = object
+  XcbEnterNotifyEvent* {.rename: "xcb_enter_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
@@ -586,7 +587,7 @@ type
     sameScreenFocus* {.importc: "same_screen_focus".}: uint8
 
 
-  XcbFocusInEvent* {.importc: "xcb_focus_in_event_t", bycopy.} = object
+  XcbFocusInEvent* {.rename: "xcb_focus_in_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
@@ -595,11 +596,11 @@ type
     pad0: array[3, uint8]
 
 
-  XcbKeymapNotifyEvent* {.importc: "xcb_keymap_notify_event_t", bycopy.} = object
+  XcbKeymapNotifyEvent* {.rename: "xcb_keymap_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     keys*: array[31, uint8]
 
-  XcbExposeEvent* {.importc: "xcb_expose_event_t", bycopy.} = object
+  XcbExposeEvent* {.rename: "xcb_expose_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -611,7 +612,7 @@ type
     count*: uint16
     pad1: array[2, uint8]
 
-  XcbGraphicsExposureEvent* {.importc: "xcb_graphics_exposure_event_t", bycopy.} = object
+  XcbGraphicsExposureEvent* {.rename: "xcb_graphics_exposure_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -625,7 +626,7 @@ type
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad1: array[3, uint8]
 
-  XcbNoExposureEvent* {.importc: "xcb_no_exposure_event_t", bycopy.} = object
+  XcbNoExposureEvent* {.rename: "xcb_no_exposure_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -634,11 +635,11 @@ type
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad1: uint8
 
-  XcbVisibility* {.importc: "xcb_visibility_t".} = enum
+  XcbVisibility* {.rename: "xcb_visibility_t".} = enum
     xcbVisibilityUnobscured = 0, xcbVisibilityPartiallyObscured = 1,
     xcbVisibilityFullyObscured = 2
 
-  XcbVisibilityNotifyEvent* {.importc: "xcb_visibility_notify_event_t", bycopy.} = object
+  XcbVisibilityNotifyEvent* {.rename: "xcb_visibility_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -646,7 +647,7 @@ type
     state*: uint8
     pad1: array[3, uint8]
 
-  XcbCreateNotifyEvent* {.importc: "xcb_create_notify_event_t", bycopy.} = object
+  XcbCreateNotifyEvent* {.rename: "xcb_create_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -660,14 +661,14 @@ type
     overrideRedirect* {.importc: "override_redirect".}: uint8
     pad1: uint8
 
-  XcbDestroyNotifyEvent* {.importc: "xcb_destroy_notify_event_t", bycopy.} = object
+  XcbDestroyNotifyEvent* {.rename: "xcb_destroy_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     event*: XcbWindow
     window*: XcbWindow
 
-  XcbUnmapNotifyEvent* {.importc: "xcb_unmap_notify_event_t", bycopy.} = object
+  XcbUnmapNotifyEvent* {.rename: "xcb_unmap_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -676,7 +677,7 @@ type
     fromConfigure* {.importc: "from_configure".}: uint8
     pad1: array[3, uint8]
 
-  XcbMapNotifyEvent* {.importc: "xcb_map_notify_event_t", bycopy.} = object
+  XcbMapNotifyEvent* {.rename: "xcb_map_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -685,14 +686,14 @@ type
     overrideRedirect* {.importc: "override_redirect".}: uint8
     pad1: array[3, uint8]
 
-  XcbMapRequestEvent* {.importc: "xcb_map_request_event_t", bycopy.} = object
+  XcbMapRequestEvent* {.rename: "xcb_map_request_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     parent*: XcbWindow
     window*: XcbWindow
 
-  XcbReparentNotifyEvent* {.importc: "xcb_reparent_notify_event_t", bycopy.} = object
+  XcbReparentNotifyEvent* {.rename: "xcb_reparent_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -704,7 +705,7 @@ type
     overrideRedirect* {.importc: "override_redirect".}: uint8
     pad1: array[3, uint8]
 
-  XcbConfigureNotifyEvent* {.importc: "xcb_configure_notify_event_t", bycopy.} = object
+  XcbConfigureNotifyEvent* {.rename: "xcb_configure_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -719,7 +720,7 @@ type
     overrideRedirect* {.importc: "override_redirect".}: uint8
     pad1: uint8
 
-  XcbConfigureRequestEvent* {.importc: "xcb_configure_request_event_t", bycopy.} = object
+  XcbConfigureRequestEvent* {.rename: "xcb_configure_request_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     stackMode* {.importc: "stack_mode".}: uint8
     sequence*: uint16
@@ -733,7 +734,7 @@ type
     borderWidth* {.importc: "border_width".}: uint16
     valueMask* {.importc: "value_mask".}: uint16
 
-  XcbGravityNotifyEvent* {.importc: "xcb_gravity_notify_event_t", bycopy.} = object
+  XcbGravityNotifyEvent* {.rename: "xcb_gravity_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -742,7 +743,7 @@ type
     x*: int16
     y*: int16
 
-  XcbResizeRequestEvent* {.importc: "xcb_resize_request_event_t", bycopy.} = object
+  XcbResizeRequestEvent* {.rename: "xcb_resize_request_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -750,10 +751,10 @@ type
     width*: uint16
     height*: uint16
 
-  XcbPlace* {.importc: "xcb_place_t".} = enum
+  XcbPlace* {.rename: "xcb_place_t".} = enum
     xcbPlaceOnTop = 0, xcbPlaceOnBottom = 1
 
-  XcbCirculateNotifyEvent* {.importc: "xcb_circulate_notify_event_t", bycopy.} = object
+  XcbCirculateNotifyEvent* {.rename: "xcb_circulate_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -763,10 +764,10 @@ type
     place*: uint8
     pad2: array[3, uint8]
 
-  XcbProperty* {.importc: "xcb_property_t".} = enum
+  XcbProperty* {.rename: "xcb_property_t".} = enum
     xcbPropertyNewValue = 0, xcbPropertyDelete = 1
 
-  XcbPropertyNotifyEvent* {.importc: "xcb_property_notify_event_t", bycopy.} = object
+  XcbPropertyNotifyEvent* {.rename: "xcb_property_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -776,7 +777,7 @@ type
     state*: uint8
     pad1: array[3, uint8]
 
-  XcbSelectionClearEvent* {.importc: "xcb_selection_clear_event_t", bycopy.} = object
+  XcbSelectionClearEvent* {.rename: "xcb_selection_clear_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -784,10 +785,10 @@ type
     owner*: XcbWindow
     selection*: XcbAtom
 
-  XcbTime* {.importc: "xcb_time_t".} = enum
+  XcbTime* {.rename: "xcb_time_t".} = enum
     xcbTimeCurrentTime = 0
 
-  XcbAtomEnum* {.importc: "xcb_atom_enum_t".} = enum
+  XcbAtomEnum* {.rename: "xcb_atom_enum_t".} = enum
     xcbAtomNone = 0, xcbAtomPrimary = 1, xcbAtomSecondary = 2, xcbAtomArc = 3,
     xcbAtomAtom = 4, xcbAtomBitmap = 5, xcbAtomCardinal = 6, xcbAtomColormap = 7,
     xcbAtomCursor = 8, xcbAtomCutBuffer0 = 9, xcbAtomCutBuffer1 = 10,
@@ -814,7 +815,7 @@ type
     xcbAtomFamilyName = 64, xcbAtomFullName = 65, xcbAtomCapHeight = 66,
     xcbAtomWmClass = 67, xcbAtomWmTransientFor = 68
 
-  XcbSelectionRequestEvent* {.importc: "xcb_selection_request_event_t", bycopy.} = object
+  XcbSelectionRequestEvent* {.rename: "xcb_selection_request_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -825,7 +826,7 @@ type
     target*: XcbAtom
     property*: XcbAtom
 
-  XcbSelectionNotifyEvent* {.importc: "xcb_selection_notify_event_t", bycopy.} = object
+  XcbSelectionNotifyEvent* {.rename: "xcb_selection_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -835,13 +836,13 @@ type
     target*: XcbAtom
     property*: XcbAtom
 
-  XcbColormapState* {.importc: "xcb_colormap_state_t".} = enum
+  XcbColormapState* {.rename: "xcb_colormap_state_t".} = enum
     xcbColormapStateUninstalled = 0, xcbColormapStateInstalled = 1
 
-  XcbColormapEnum* {.importc: "xcb_colormap_enum_t".} = enum
+  XcbColormapEnum* {.rename: "xcb_colormap_enum_t".} = enum
     xcbColormapNone = 0
 
-  XcbColormapNotifyEvent* {.importc: "xcb_colormap_notify_event_t", bycopy.} = object
+  XcbColormapNotifyEvent* {.rename: "xcb_colormap_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -851,17 +852,17 @@ type
     state*: uint8
     pad1: array[2, uint8]
 
-  XcbClientMessageData* {.importc: "xcb_client_message_data_t", bycopy, union.} = object
+  XcbClientMessageData* {.rename: "xcb_client_message_data_t", bycopy, union.} = object
     data8*: array[20, uint8]
     data16*: array[10, uint16]
     data32*: array[5, uint32]
 
-  XcbClientMessageDataIterator* {.importc: "xcb_client_message_data_iterator_t", bycopy.} = object
+  XcbClientMessageDataIterator* {.rename: "xcb_client_message_data_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbClientMessageData]
     rem*: cint
     index*: cint
 
-  XcbClientMessageEvent* {.importc: "xcb_client_message_event_t", bycopy.} = object
+  XcbClientMessageEvent* {.rename: "xcb_client_message_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     format*: uint8
     sequence*: uint16
@@ -869,10 +870,10 @@ type
     `type`*: XcbAtom
     data*: XcbClientMessageData
 
-  XcbMapping* {.importc: "xcb_mapping_t".} = enum
+  XcbMapping* {.rename: "xcb_mapping_t".} = enum
     xcbMappingModifier = 0, xcbMappingKeyboard = 1, xcbMappingPointer = 2
 
-  XcbMappingNotifyEvent* {.importc: "xcb_mapping_notify_event_t", bycopy.} = object
+  XcbMappingNotifyEvent* {.rename: "xcb_mapping_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -881,7 +882,7 @@ type
     count*: uint8
     pad1: uint8
 
-  XcbGeGenericEvent* {.importc: "xcb_ge_generic_event_t", bycopy.} = object
+  XcbGeGenericEvent* {.rename: "xcb_ge_generic_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -890,7 +891,7 @@ type
     pad0: array[22, uint8]
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbRequestError* {.importc: "xcb_request_error_t", bycopy.} = object
+  XcbRequestError* {.rename: "xcb_request_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -899,7 +900,7 @@ type
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
 
-  XcbValueError* {.importc: "xcb_value_error_t", bycopy.} = object
+  XcbValueError* {.rename: "xcb_value_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -908,11 +909,11 @@ type
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
 
-  XcbWindowClass* {.importc: "xcb_window_class_t".} = enum
+  XcbWindowClass* {.rename: "xcb_window_class_t".} = enum
     xcbWindowClassCopyFromParent = 0, xcbWindowClassInputOutput = 1,
     xcbWindowClassInputOnly = 2
 
-  XcbCw* {.importc: "xcb_cw_t".} = enum
+  XcbCw* {.rename: "xcb_cw_t".} = enum
     xcbCwBackPixmap = 1, xcbCwBackPixel = 2, xcbCwBorderPixmap = 4,
     xcbCwBorderPixel = 8, xcbCwBitGravity = 16, xcbCwWinGravity = 32,
     xcbCwBackingStore = 64, xcbCwBackingPlanes = 128,
@@ -920,16 +921,16 @@ type
     xcbCwSaveUnder = 1024, xcbCwEventMask = 2048, xcbCwDontPropagate = 4096,
     xcbCwColormap = 8192, xcbCwCursor = 16384
 
-  XcbBackPixmap* {.importc: "xcb_back_pixmap_t".} = enum
+  XcbBackPixmap* {.rename: "xcb_back_pixmap_t".} = enum
     xcbBackPixmapNone = 0, xcbBackPixmapParentRelative = 1
 
-  XcbGravity* {.importc: "xcb_gravity_t".} = enum
+  XcbGravity* {.rename: "xcb_gravity_t".} = enum
     xcbGravityBitForget = 0, xcbGravityNorthWest = 1, xcbGravityNorth = 2,
     xcbGravityNorthEast = 3, xcbGravityWest = 4, xcbGravityCenter = 5,
     xcbGravityEast = 6, xcbGravitySouthWest = 7, xcbGravitySouth = 8,
     xcbGravitySouthEast = 9, xcbGravityStatic = 10
 
-  XcbCreateWindowValueList* {.importc: "xcb_create_window_value_list_t", bycopy.} = object
+  XcbCreateWindowValueList* {.rename: "xcb_create_window_value_list_t", bycopy.} = object
     backgroundPixmap* {.importc: "background_pixmap".}: XcbPixmap
     backgroundPixel* {.importc: "background_pixel".}: uint32
     borderPixmap* {.importc: "border_pixmap".}: XcbPixmap
@@ -946,7 +947,7 @@ type
     colormap*: XcbColormap
     cursor*: XcbCursor
 
-  XcbCreateWindowRequest* {.importc: "xcb_create_window_request_t", bycopy.} = object
+  XcbCreateWindowRequest* {.rename: "xcb_create_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     depth*: uint8
     length*: uint16
@@ -961,7 +962,7 @@ type
     visual*: XcbVisualid
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbChangeWindowAttributesValueList* {.importc: "xcb_change_window_attributes_value_list_t", bycopy.} = object
+  XcbChangeWindowAttributesValueList* {.rename: "xcb_change_window_attributes_value_list_t", bycopy.} = object
     backgroundPixmap* {.importc: "background_pixmap".}: XcbPixmap
     backgroundPixel* {.importc: "background_pixel".}: uint32
     borderPixmap* {.importc: "border_pixmap".}: XcbPixmap
@@ -978,26 +979,26 @@ type
     colormap*: XcbColormap
     cursor*: XcbCursor
 
-  XcbChangeWindowAttributesRequest* {.importc: "xcb_change_window_attributes_request_t", bycopy.} = object
+  XcbChangeWindowAttributesRequest* {.rename: "xcb_change_window_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbMapState* {.importc: "xcb_map_state_t".} = enum
+  XcbMapState* {.rename: "xcb_map_state_t".} = enum
     xcbMapStateUnmapped = 0, xcbMapStateUnviewable = 1,
     xcbMapStateViewable = 2
-  XcbGetWindowAttributesCookie* {.importc: "xcb_get_window_attributes_cookie_t", bycopy.} = object
+  XcbGetWindowAttributesCookie* {.rename: "xcb_get_window_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetWindowAttributesRequest* {.importc: "xcb_get_window_attributes_request_t", bycopy.} = object
+  XcbGetWindowAttributesRequest* {.rename: "xcb_get_window_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbGetWindowAttributesReply* {.importc: "xcb_get_window_attributes_reply_t", bycopy.} = object
+  XcbGetWindowAttributesReply* {.rename: "xcb_get_window_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     backingStore* {.importc: "backing_store".}: uint8
     sequence*: uint16
@@ -1018,28 +1019,28 @@ type
     doNotPropagateMask* {.importc: "do_not_propagate_mask".}: uint16
     pad0: array[2, uint8]
 
-  XcbDestroyWindowRequest* {.importc: "xcb_destroy_window_request_t", bycopy.} = object
+  XcbDestroyWindowRequest* {.rename: "xcb_destroy_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbDestroySubwindowsRequest* {.importc: "xcb_destroy_subwindows_request_t", bycopy.} = object
+  XcbDestroySubwindowsRequest* {.rename: "xcb_destroy_subwindows_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbSetMode* {.importc: "xcb_set_mode_t".} = enum
+  XcbSetMode* {.rename: "xcb_set_mode_t".} = enum
     xcbSetModeInsert = 0, xcbSetModeDelete = 1
 
-  XcbChangeSaveSetRequest* {.importc: "xcb_change_save_set_request_t", bycopy.} = object
+  XcbChangeSaveSetRequest* {.rename: "xcb_change_save_set_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbReparentWindowRequest* {.importc: "xcb_reparent_window_request_t", bycopy.} = object
+  XcbReparentWindowRequest* {.rename: "xcb_reparent_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1048,40 +1049,40 @@ type
     x*: int16
     y*: int16
 
-  XcbMapWindowRequest* {.importc: "xcb_map_window_request_t", bycopy.} = object
+  XcbMapWindowRequest* {.rename: "xcb_map_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbMapSubwindowsRequest* {.importc: "xcb_map_subwindows_request_t", bycopy.} = object
+  XcbMapSubwindowsRequest* {.rename: "xcb_map_subwindows_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbUnmapWindowRequest* {.importc: "xcb_unmap_window_request_t", bycopy.} = object
+  XcbUnmapWindowRequest* {.rename: "xcb_unmap_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbUnmapSubwindowsRequest* {.importc: "xcb_unmap_subwindows_request_t", bycopy.} = object
+  XcbUnmapSubwindowsRequest* {.rename: "xcb_unmap_subwindows_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbConfigWindow* {.importc: "xcb_config_window_t".} = enum
+  XcbConfigWindow* {.rename: "xcb_config_window_t".} = enum
     xcbConfigWindowX = 1, xcbConfigWindowY = 2, xcbConfigWindowWidth = 4,
     xcbConfigWindowHeight = 8, xcbConfigWindowBorderWidth = 16,
     xcbConfigWindowSibling = 32, xcbConfigWindowStackMode = 64
 
-  XcbStackMode* {.importc: "xcb_stack_mode_t".} = enum
+  XcbStackMode* {.rename: "xcb_stack_mode_t".} = enum
     xcbStackModeAbove = 0, xcbStackModeBelow = 1, xcbStackModeTopIf = 2,
     xcbStackModeBottomIf = 3, xcbStackModeOpposite = 4
 
-  XcbConfigureWindowValueList* {.importc: "xcb_configure_window_value_list_t", bycopy.} = object
+  XcbConfigureWindowValueList* {.rename: "xcb_configure_window_value_list_t", bycopy.} = object
     x*: int32
     y*: int32
     width*: uint32
@@ -1090,7 +1091,7 @@ type
     sibling*: XcbWindow
     stackMode* {.importc: "stack_mode".}: uint32
 
-  XcbConfigureWindowRequest* {.importc: "xcb_configure_window_request_t", bycopy.} = object
+  XcbConfigureWindowRequest* {.rename: "xcb_configure_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1098,25 +1099,25 @@ type
     valueMask* {.importc: "value_mask".}: uint16
     pad1: array[2, uint8]
 
-  XcbCirculate* {.importc: "xcb_circulate_t".} = enum
+  XcbCirculate* {.rename: "xcb_circulate_t".} = enum
     xcbCirculateRaiseLowest = 0, xcbCirculateLowerHighest = 1
 
-  XcbCirculateWindowRequest* {.importc: "xcb_circulate_window_request_t", bycopy.} = object
+  XcbCirculateWindowRequest* {.rename: "xcb_circulate_window_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     direction*: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbGetGeometryCookie* {.importc: "xcb_get_geometry_cookie_t", bycopy.} = object
+  XcbGetGeometryCookie* {.rename: "xcb_get_geometry_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetGeometryRequest* {.importc: "xcb_get_geometry_request_t", bycopy.} = object
+  XcbGetGeometryRequest* {.rename: "xcb_get_geometry_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
 
-  XcbGetGeometryReply* {.importc: "xcb_get_geometry_reply_t", bycopy.} = object
+  XcbGetGeometryReply* {.rename: "xcb_get_geometry_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     depth*: uint8
     sequence*: uint16
@@ -1129,16 +1130,16 @@ type
     borderWidth* {.importc: "border_width".}: uint16
     pad0: array[2, uint8]
 
-  XcbQueryTreeCookie* {.importc: "xcb_query_tree_cookie_t", bycopy.} = object
+  XcbQueryTreeCookie* {.rename: "xcb_query_tree_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryTreeRequest* {.importc: "xcb_query_tree_request_t", bycopy.} = object
+  XcbQueryTreeRequest* {.rename: "xcb_query_tree_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbQueryTreeReply* {.importc: "xcb_query_tree_reply_t", bycopy.} = object
+  XcbQueryTreeReply* {.rename: "xcb_query_tree_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1148,33 +1149,33 @@ type
     childrenLen* {.importc: "children_len".}: uint16
     pad1: array[14, uint8]
 
-  XcbInternAtomCookie* {.importc: "xcb_intern_atom_cookie_t", bycopy.} = object
+  XcbInternAtomCookie* {.rename: "xcb_intern_atom_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbInternAtomRequest* {.importc: "xcb_intern_atom_request_t", bycopy.} = object
+  XcbInternAtomRequest* {.rename: "xcb_intern_atom_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     onlyIfExists* {.importc: "only_if_exists".}: uint8
     length*: uint16
     nameLen* {.importc: "name_len".}: uint16
     pad0: array[2, uint8]
 
-  XcbInternAtomReply* {.importc: "xcb_intern_atom_reply_t", bycopy.} = object
+  XcbInternAtomReply* {.rename: "xcb_intern_atom_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     atom*: XcbAtom
 
-  XcbGetAtomNameCookie* {.importc: "xcb_get_atom_name_cookie_t", bycopy.} = object
+  XcbGetAtomNameCookie* {.rename: "xcb_get_atom_name_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetAtomNameRequest* {.importc: "xcb_get_atom_name_request_t", bycopy.} = object
+  XcbGetAtomNameRequest* {.rename: "xcb_get_atom_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     atom*: XcbAtom
 
-  XcbGetAtomNameReply* {.importc: "xcb_get_atom_name_reply_t", bycopy.} = object
+  XcbGetAtomNameReply* {.rename: "xcb_get_atom_name_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1182,10 +1183,10 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbPropMode* {.importc: "xcb_prop_mode_t", size: 1.} = enum
+  XcbPropMode* {.rename: "xcb_prop_mode_t", size: 1.} = enum
     xcbPropModeReplace = 0, xcbPropModePrepend = 1, xcbPropModeAppend = 2
 
-  XcbChangePropertyRequest* {.importc: "xcb_change_property_request_t", bycopy.} = object
+  XcbChangePropertyRequest* {.rename: "xcb_change_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
@@ -1196,19 +1197,19 @@ type
     pad0: array[3, uint8]
     dataLen* {.importc: "data_len".}: uint32
 
-  XcbDeletePropertyRequest* {.importc: "xcb_delete_property_request_t", bycopy.} = object
+  XcbDeletePropertyRequest* {.rename: "xcb_delete_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
     property*: XcbAtom
 
-  XcbGetPropertyType* {.importc: "xcb_get_property_type_t".} = enum
+  XcbGetPropertyType* {.rename: "xcb_get_property_type_t".} = enum
     xcbGetPropertyTypeAny = 0
-  XcbGetPropertyCookie* {.importc: "xcb_get_property_cookie_t", bycopy.} = object
+  XcbGetPropertyCookie* {.rename: "xcb_get_property_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetPropertyRequest* {.importc: "xcb_get_property_request_t", bycopy.} = object
+  XcbGetPropertyRequest* {.rename: "xcb_get_property_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     delete*: uint8
     length*: uint16
@@ -1218,7 +1219,7 @@ type
     longOffset* {.importc: "long_offset".}: uint32
     longLength* {.importc: "long_length".}: uint32
 
-  XcbGetPropertyReply* {.importc: "xcb_get_property_reply_t", bycopy.} = object
+  XcbGetPropertyReply* {.rename: "xcb_get_property_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     format*: uint8
     sequence*: uint16
@@ -1228,16 +1229,16 @@ type
     valueLen* {.importc: "value_len".}: uint32
     pad0: array[12, uint8]
 
-  XcbListPropertiesCookie* {.importc: "xcb_list_properties_cookie_t", bycopy.} = object
+  XcbListPropertiesCookie* {.rename: "xcb_list_properties_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListPropertiesRequest* {.importc: "xcb_list_properties_request_t", bycopy.} = object
+  XcbListPropertiesRequest* {.rename: "xcb_list_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbListPropertiesReply* {.importc: "xcb_list_properties_reply_t", bycopy.} = object
+  XcbListPropertiesReply* {.rename: "xcb_list_properties_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1245,7 +1246,7 @@ type
     atomsLen* {.importc: "atoms_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbSetSelectionOwnerRequest* {.importc: "xcb_set_selection_owner_request_t", bycopy.} = object
+  XcbSetSelectionOwnerRequest* {.rename: "xcb_set_selection_owner_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1253,23 +1254,23 @@ type
     selection*: XcbAtom
     time*: XcbTimestamp
 
-  XcbGetSelectionOwnerCookie* {.importc: "xcb_get_selection_owner_cookie_t", bycopy.} = object
+  XcbGetSelectionOwnerCookie* {.rename: "xcb_get_selection_owner_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetSelectionOwnerRequest* {.importc: "xcb_get_selection_owner_request_t", bycopy.} = object
+  XcbGetSelectionOwnerRequest* {.rename: "xcb_get_selection_owner_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     selection*: XcbAtom
 
-  XcbGetSelectionOwnerReply* {.importc: "xcb_get_selection_owner_reply_t", bycopy.} = object
+  XcbGetSelectionOwnerReply* {.rename: "xcb_get_selection_owner_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     owner*: XcbWindow
 
-  XcbConvertSelectionRequest* {.importc: "xcb_convert_selection_request_t", bycopy.} = object
+  XcbConvertSelectionRequest* {.rename: "xcb_convert_selection_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1279,10 +1280,10 @@ type
     property*: XcbAtom
     time*: XcbTimestamp
 
-  XcbSendEventDest* {.importc: "xcb_send_event_dest_t".} = enum
+  XcbSendEventDest* {.rename: "xcb_send_event_dest_t".} = enum
     xcbSendEventDestPointerWindow = 0, xcbSendEventDestItemFocus = 1
 
-  XcbSendEventRequest* {.importc: "xcb_send_event_request_t", bycopy.} = object
+  XcbSendEventRequest* {.rename: "xcb_send_event_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     propagate*: uint8
     length*: uint16
@@ -1290,21 +1291,21 @@ type
     eventMask* {.importc: "event_mask".}: uint32
     event*: array[32, char]
 
-  XcbGrabMode* {.importc: "xcb_grab_mode_t".} = enum
+  XcbGrabMode* {.rename: "xcb_grab_mode_t".} = enum
     xcbGrabModeSync = 0, xcbGrabModeAsync = 1
 
-  XcbGrabStatus* {.importc: "xcb_grab_status_t".} = enum
+  XcbGrabStatus* {.rename: "xcb_grab_status_t".} = enum
     xcbGrabStatusSuccess = 0, xcbGrabStatusAlreadyGrabbed = 1,
     xcbGrabStatusInvalidTime = 2, xcbGrabStatusNotViewable = 3,
     xcbGrabStatusFrozen = 4
 
-  XcbCursorEnum* {.importc: "xcb_cursor_enum_t".} = enum
+  XcbCursorEnum* {.rename: "xcb_cursor_enum_t".} = enum
     xcbCursorNone = 0
 
-  XcbGrabPointerCookie* {.importc: "xcb_grab_pointer_cookie_t", bycopy.} = object
+  XcbGrabPointerCookie* {.rename: "xcb_grab_pointer_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGrabPointerRequest* {.importc: "xcb_grab_pointer_request_t", bycopy.} = object
+  XcbGrabPointerRequest* {.rename: "xcb_grab_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     ownerEvents* {.importc: "owner_events".}: uint8
     length*: uint16
@@ -1316,23 +1317,23 @@ type
     cursor*: XcbCursor
     time*: XcbTimestamp
 
-  XcbGrabPointerReply* {.importc: "xcb_grab_pointer_reply_t", bycopy.} = object
+  XcbGrabPointerReply* {.rename: "xcb_grab_pointer_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbUngrabPointerRequest* {.importc: "xcb_ungrab_pointer_request_t", bycopy.} = object
+  XcbUngrabPointerRequest* {.rename: "xcb_ungrab_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     time*: XcbTimestamp
 
-  XcbButtonIndex* {.importc: "xcb_button_index_t".} = enum
+  XcbButtonIndex* {.rename: "xcb_button_index_t".} = enum
     xcbButtonIndexAny = 0, xcbButtonIndex1 = 1, xcbButtonIndex2 = 2,
     xcbButtonIndex3 = 3, xcbButtonIndex4 = 4, xcbButtonIndex5 = 5
 
-  XcbGrabButtonRequest* {.importc: "xcb_grab_button_request_t", bycopy.} = object
+  XcbGrabButtonRequest* {.rename: "xcb_grab_button_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     ownerEvents* {.importc: "owner_events".}: uint8
     length*: uint16
@@ -1346,7 +1347,7 @@ type
     pad0: uint8
     modifiers*: uint16
 
-  XcbUngrabButtonRequest* {.importc: "xcb_ungrab_button_request_t", bycopy.} = object
+  XcbUngrabButtonRequest* {.rename: "xcb_ungrab_button_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     button*: uint8
     length*: uint16
@@ -1354,7 +1355,7 @@ type
     modifiers*: uint16
     pad0: array[2, uint8]
 
-  XcbChangeActivePointerGrabRequest* {.importc: "xcb_change_active_pointer_grab_request_t", bycopy.} = object
+  XcbChangeActivePointerGrabRequest* {.rename: "xcb_change_active_pointer_grab_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1363,10 +1364,10 @@ type
     eventMask* {.importc: "event_mask".}: uint16
     pad1: array[2, uint8]
 
-  XcbGrabKeyboardCookie* {.importc: "xcb_grab_keyboard_cookie_t", bycopy.} = object
+  XcbGrabKeyboardCookie* {.rename: "xcb_grab_keyboard_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGrabKeyboardRequest* {.importc: "xcb_grab_keyboard_request_t", bycopy.} = object
+  XcbGrabKeyboardRequest* {.rename: "xcb_grab_keyboard_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     ownerEvents* {.importc: "owner_events".}: uint8
     length*: uint16
@@ -1376,22 +1377,22 @@ type
     keyboardMode* {.importc: "keyboard_mode".}: uint8
     pad0: array[2, uint8]
 
-  XcbGrabKeyboardReply* {.importc: "xcb_grab_keyboard_reply_t", bycopy.} = object
+  XcbGrabKeyboardReply* {.rename: "xcb_grab_keyboard_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbUngrabKeyboardRequest* {.importc: "xcb_ungrab_keyboard_request_t", bycopy.} = object
+  XcbUngrabKeyboardRequest* {.rename: "xcb_ungrab_keyboard_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     time*: XcbTimestamp
 
-  XcbGrab* {.importc: "xcb_grab_t".} = enum
+  XcbGrab* {.rename: "xcb_grab_t".} = enum
     xcbGrabAny = 0
 
-  XcbGrabKeyRequest* {.importc: "xcb_grab_key_request_t", bycopy.} = object
+  XcbGrabKeyRequest* {.rename: "xcb_grab_key_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     ownerEvents* {.importc: "owner_events".}: uint8
     length*: uint16
@@ -1402,7 +1403,7 @@ type
     keyboardMode* {.importc: "keyboard_mode".}: uint8
     pad0: array[3, uint8]
 
-  XcbUngrabKeyRequest* {.importc: "xcb_ungrab_key_request_t", bycopy.} = object
+  XcbUngrabKeyRequest* {.rename: "xcb_ungrab_key_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     key*: XcbKeycode
     length*: uint16
@@ -1410,38 +1411,38 @@ type
     modifiers*: uint16
     pad0: array[2, uint8]
 
-  XcbAllow* {.importc: "xcb_allow_t".} = enum
+  XcbAllow* {.rename: "xcb_allow_t".} = enum
     xcbAllowAsyncPointer = 0, xcbAllowSyncPointer = 1,
     xcbAllowReplayPointer = 2, xcbAllowAsyncKeyboard = 3,
     xcbAllowSyncKeyboard = 4, xcbAllowReplayKeyboard = 5,
     xcbAllowAsyncBoth = 6, xcbAllowSyncBoth = 7
 
-  XcbAllowEventsRequest* {.importc: "xcb_allow_events_request_t", bycopy.} = object
+  XcbAllowEventsRequest* {.rename: "xcb_allow_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
     time*: XcbTimestamp
 
-  XcbGrabServerRequest* {.importc: "xcb_grab_server_request_t", bycopy.} = object
+  XcbGrabServerRequest* {.rename: "xcb_grab_server_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbUngrabServerRequest* {.importc: "xcb_ungrab_server_request_t", bycopy.} = object
+  XcbUngrabServerRequest* {.rename: "xcb_ungrab_server_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbQueryPointerCookie* {.importc: "xcb_query_pointer_cookie_t", bycopy.} = object
+  XcbQueryPointerCookie* {.rename: "xcb_query_pointer_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryPointerRequest* {.importc: "xcb_query_pointer_request_t", bycopy.} = object
+  XcbQueryPointerRequest* {.rename: "xcb_query_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbQueryPointerReply* {.importc: "xcb_query_pointer_reply_t", bycopy.} = object
+  XcbQueryPointerReply* {.rename: "xcb_query_pointer_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     sameScreen* {.importc: "same_screen".}: uint8
     sequence*: uint16
@@ -1455,20 +1456,20 @@ type
     mask*: uint16
     pad0: array[2, uint8]
 
-  XcbTimecoord* {.importc: "xcb_timecoord_t", bycopy.} = object
+  XcbTimecoord* {.rename: "xcb_timecoord_t", bycopy.} = object
     time*: XcbTimestamp
     x*: int16
     y*: int16
 
-  XcbTimecoordIterator* {.importc: "xcb_timecoord_iterator_t", bycopy.} = object
+  XcbTimecoordIterator* {.rename: "xcb_timecoord_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbTimecoord]
     rem*: cint
     index*: cint
 
-  XcbGetMotionEventsCookie* {.importc: "xcb_get_motion_events_cookie_t", bycopy.} = object
+  XcbGetMotionEventsCookie* {.rename: "xcb_get_motion_events_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetMotionEventsRequest* {.importc: "xcb_get_motion_events_request_t", bycopy.} = object
+  XcbGetMotionEventsRequest* {.rename: "xcb_get_motion_events_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1476,7 +1477,7 @@ type
     start*: XcbTimestamp
     stop*: XcbTimestamp
 
-  XcbGetMotionEventsReply* {.importc: "xcb_get_motion_events_reply_t", bycopy.} = object
+  XcbGetMotionEventsReply* {.rename: "xcb_get_motion_events_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1484,10 +1485,10 @@ type
     eventsLen* {.importc: "events_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbTranslateCoordinatesCookie* {.importc: "xcb_translate_coordinates_cookie_t", bycopy.} = object
+  XcbTranslateCoordinatesCookie* {.rename: "xcb_translate_coordinates_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbTranslateCoordinatesRequest* {.importc: "xcb_translate_coordinates_request_t", bycopy.} = object
+  XcbTranslateCoordinatesRequest* {.rename: "xcb_translate_coordinates_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1496,7 +1497,7 @@ type
     srcX* {.importc: "src_x".}: int16
     srcY* {.importc: "src_y".}: int16
 
-  XcbTranslateCoordinatesReply* {.importc: "xcb_translate_coordinates_reply_t", bycopy.} = object
+  XcbTranslateCoordinatesReply* {.rename: "xcb_translate_coordinates_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     sameScreen* {.importc: "same_screen".}: uint8
     sequence*: uint16
@@ -1505,7 +1506,7 @@ type
     dstX* {.importc: "dst_x".}: int16
     dstY* {.importc: "dst_y".}: int16
 
-  XcbWarpPointerRequest* {.importc: "xcb_warp_pointer_request_t", bycopy.} = object
+  XcbWarpPointerRequest* {.rename: "xcb_warp_pointer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1518,48 +1519,48 @@ type
     dstX* {.importc: "dst_x".}: int16
     dstY* {.importc: "dst_y".}: int16
 
-  XcbInputFocus* {.importc: "xcb_input_focus_t".} = enum
+  XcbInputFocus* {.rename: "xcb_input_focus_t".} = enum
     xcbInputFocusNone = 0, xcbInputFocusPointerRoot = 1,
     xcbInputFocusParent = 2, xcbInputFocusFollowKeyboard = 3
 
-  XcbSetInputFocusRequest* {.importc: "xcb_set_input_focus_request_t", bycopy.} = object
+  XcbSetInputFocusRequest* {.rename: "xcb_set_input_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     revertTo* {.importc: "revert_to".}: uint8
     length*: uint16
     focus*: XcbWindow
     time*: XcbTimestamp
 
-  XcbGetInputFocusCookie* {.importc: "xcb_get_input_focus_cookie_t", bycopy.} = object
+  XcbGetInputFocusCookie* {.rename: "xcb_get_input_focus_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetInputFocusRequest* {.importc: "xcb_get_input_focus_request_t", bycopy.} = object
+  XcbGetInputFocusRequest* {.rename: "xcb_get_input_focus_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetInputFocusReply* {.importc: "xcb_get_input_focus_reply_t", bycopy.} = object
+  XcbGetInputFocusReply* {.rename: "xcb_get_input_focus_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     revertTo* {.importc: "revert_to".}: uint8
     sequence*: uint16
     length*: uint32
     focus*: XcbWindow
 
-  XcbQueryKeymapCookie* {.importc: "xcb_query_keymap_cookie_t", bycopy.} = object
+  XcbQueryKeymapCookie* {.rename: "xcb_query_keymap_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryKeymapRequest* {.importc: "xcb_query_keymap_request_t", bycopy.} = object
+  XcbQueryKeymapRequest* {.rename: "xcb_query_keymap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbQueryKeymapReply* {.importc: "xcb_query_keymap_reply_t", bycopy.} = object
+  XcbQueryKeymapReply* {.rename: "xcb_query_keymap_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     keys*: array[32, uint8]
 
-  XcbOpenFontRequest* {.importc: "xcb_open_font_request_t", bycopy.} = object
+  XcbOpenFontRequest* {.rename: "xcb_open_font_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1567,24 +1568,24 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[2, uint8]
 
-  XcbCloseFontRequest* {.importc: "xcb_close_font_request_t", bycopy.} = object
+  XcbCloseFontRequest* {.rename: "xcb_close_font_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     font*: XcbFont
 
-  XcbFontDraw* {.importc: "xcb_font_draw_t".} = enum
+  XcbFontDraw* {.rename: "xcb_font_draw_t".} = enum
     xcbFontDrawLeftToRight = 0, xcbFontDrawRightToLeft = 1
-  XcbFontprop* {.importc: "xcb_fontprop_t", bycopy.} = object
+  XcbFontprop* {.rename: "xcb_fontprop_t", bycopy.} = object
     name*: XcbAtom
     value*: uint32
 
-  XcbFontpropIterator* {.importc: "xcb_fontprop_iterator_t", bycopy.} = object
+  XcbFontpropIterator* {.rename: "xcb_fontprop_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbFontprop]
     rem*: cint
     index*: cint
 
-  XcbCharinfo* {.importc: "xcb_charinfo_t", bycopy.} = object
+  XcbCharinfo* {.rename: "xcb_charinfo_t", bycopy.} = object
     leftSideBearing* {.importc: "left_side_bearing".}: int16
     rightSideBearing* {.importc: "right_side_bearing".}: int16
     characterWidth* {.importc: "character_width".}: int16
@@ -1592,21 +1593,21 @@ type
     descent*: int16
     attributes*: uint16
 
-  XcbCharinfoIterator* {.importc: "xcb_charinfo_iterator_t", bycopy.} = object
+  XcbCharinfoIterator* {.rename: "xcb_charinfo_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbCharinfo]
     rem*: cint
     index*: cint
 
-  XcbQueryFontCookie* {.importc: "xcb_query_font_cookie_t", bycopy.} = object
+  XcbQueryFontCookie* {.rename: "xcb_query_font_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryFontRequest* {.importc: "xcb_query_font_request_t", bycopy.} = object
+  XcbQueryFontRequest* {.rename: "xcb_query_font_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     font*: XcbFontable
 
-  XcbQueryFontReply* {.importc: "xcb_query_font_reply_t", bycopy.} = object
+  XcbQueryFontReply* {.rename: "xcb_query_font_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1627,16 +1628,16 @@ type
     fontDescent* {.importc: "font_descent".}: int16
     charInfosLen* {.importc: "char_infos_len".}: uint32
 
-  XcbQueryTextExtentsCookie* {.importc: "xcb_query_text_extents_cookie_t", bycopy.} = object
+  XcbQueryTextExtentsCookie* {.rename: "xcb_query_text_extents_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryTextExtentsRequest* {.importc: "xcb_query_text_extents_request_t", bycopy.} = object
+  XcbQueryTextExtentsRequest* {.rename: "xcb_query_text_extents_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     oddLength* {.importc: "odd_length".}: uint8
     length*: uint16
     font*: XcbFontable
 
-  XcbQueryTextExtentsReply* {.importc: "xcb_query_text_extents_reply_t", bycopy.} = object
+  XcbQueryTextExtentsReply* {.rename: "xcb_query_text_extents_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     drawDirection* {.importc: "draw_direction".}: uint8
     sequence*: uint16
@@ -1649,25 +1650,25 @@ type
     overallLeft* {.importc: "overall_left".}: int32
     overallRight* {.importc: "overall_right".}: int32
 
-  XcbStr* {.importc: "xcb_str_t", bycopy.} = object
+  XcbStr* {.rename: "xcb_str_t", bycopy.} = object
     nameLen* {.importc: "name_len".}: uint8
 
-  XcbStrIterator* {.importc: "xcb_str_iterator_t", bycopy.} = object
+  XcbStrIterator* {.rename: "xcb_str_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbStr]
     rem*: cint
     index*: cint
 
-  XcbListFontsCookie* {.importc: "xcb_list_fonts_cookie_t", bycopy.} = object
+  XcbListFontsCookie* {.rename: "xcb_list_fonts_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListFontsRequest* {.importc: "xcb_list_fonts_request_t", bycopy.} = object
+  XcbListFontsRequest* {.rename: "xcb_list_fonts_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     maxNames* {.importc: "max_names".}: uint16
     patternLen* {.importc: "pattern_len".}: uint16
 
-  XcbListFontsReply* {.importc: "xcb_list_fonts_reply_t", bycopy.} = object
+  XcbListFontsReply* {.rename: "xcb_list_fonts_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1675,17 +1676,17 @@ type
     namesLen* {.importc: "names_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbListFontsWithInfoCookie* {.importc: "xcb_list_fonts_with_info_cookie_t", bycopy.} = object
+  XcbListFontsWithInfoCookie* {.rename: "xcb_list_fonts_with_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListFontsWithInfoRequest* {.importc: "xcb_list_fonts_with_info_request_t", bycopy.} = object
+  XcbListFontsWithInfoRequest* {.rename: "xcb_list_fonts_with_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     maxNames* {.importc: "max_names".}: uint16
     patternLen* {.importc: "pattern_len".}: uint16
 
-  XcbListFontsWithInfoReply* {.importc: "xcb_list_fonts_with_info_reply_t", bycopy.} = object
+  XcbListFontsWithInfoReply* {.rename: "xcb_list_fonts_with_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nameLen* {.importc: "name_len".}: uint8
     sequence*: uint16
@@ -1706,22 +1707,22 @@ type
     fontDescent* {.importc: "font_descent".}: int16
     repliesHint* {.importc: "replies_hint".}: uint32
 
-  XcbSetFontPathRequest* {.importc: "xcb_set_font_path_request_t", bycopy.} = object
+  XcbSetFontPathRequest* {.rename: "xcb_set_font_path_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     fontQty* {.importc: "font_qty".}: uint16
     pad1: array[2, uint8]
 
-  XcbGetFontPathCookie* {.importc: "xcb_get_font_path_cookie_t", bycopy.} = object
+  XcbGetFontPathCookie* {.rename: "xcb_get_font_path_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetFontPathRequest* {.importc: "xcb_get_font_path_request_t", bycopy.} = object
+  XcbGetFontPathRequest* {.rename: "xcb_get_font_path_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetFontPathReply* {.importc: "xcb_get_font_path_reply_t", bycopy.} = object
+  XcbGetFontPathReply* {.rename: "xcb_get_font_path_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -1729,7 +1730,7 @@ type
     pathLen* {.importc: "path_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbCreatePixmapRequest* {.importc: "xcb_create_pixmap_request_t", bycopy.} = object
+  XcbCreatePixmapRequest* {.rename: "xcb_create_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     depth*: uint8
     length*: uint16
@@ -1738,13 +1739,13 @@ type
     width*: uint16
     height*: uint16
 
-  XcbFreePixmapRequest* {.importc: "xcb_free_pixmap_request_t", bycopy.} = object
+  XcbFreePixmapRequest* {.rename: "xcb_free_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     pixmap*: XcbPixmap
 
-  XcbGc* {.importc: "xcb_gc_t".} = enum
+  XcbGc* {.rename: "xcb_gc_t".} = enum
     xcbGcFunction = 1, xcbGcPlaneMask = 2, xcbGcForeground = 4,
     xcbGcBackground = 8, xcbGcLineWidth = 16, xcbGcLineStyle = 32,
     xcbGcCapStyle = 64, xcbGcJoinStyle = 128, xcbGcFillStyle = 256,
@@ -1756,38 +1757,38 @@ type
     xcbGcDashOffset = 1048576, xcbGcDashList = 2097152,
     xcbGcArcMode = 4194304
 
-  XcbGx* {.importc: "xcb_gx_t".} = enum
+  XcbGx* {.rename: "xcb_gx_t".} = enum
     xcbGxClear = 0, xcbGxAnd = 1, xcbGxAndReverse = 2, xcbGxCopy = 3,
     xcbGxAndInverted = 4, xcbGxNoop = 5, xcbGxXor = 6, xcbGxOr = 7, xcbGxNor = 8,
     xcbGxEquiv = 9, xcbGxInvert = 10, xcbGxOrReverse = 11,
     xcbGxCopyInverted = 12, xcbGxOrInverted = 13, xcbGxNand = 14, xcbGxSet = 15
 
-  XcbLineStyle* {.importc: "xcb_line_style_t".} = enum
+  XcbLineStyle* {.rename: "xcb_line_style_t".} = enum
     xcbLineStyleSolid = 0, xcbLineStyleOnOffDash = 1,
     xcbLineStyleDoubleDash = 2
 
-  XcbCapStyle* {.importc: "xcb_cap_style_t".} = enum
+  XcbCapStyle* {.rename: "xcb_cap_style_t".} = enum
     xcbCapStyleNotLast = 0, xcbCapStyleButt = 1, xcbCapStyleRound = 2,
     xcbCapStyleProjecting = 3
 
-  XcbJoinStyle* {.importc: "xcb_join_style_t".} = enum
+  XcbJoinStyle* {.rename: "xcb_join_style_t".} = enum
     xcbJoinStyleMiter = 0, xcbJoinStyleRound = 1, xcbJoinStyleBevel = 2
 
-  XcbFillStyle* {.importc: "xcb_fill_style_t".} = enum
+  XcbFillStyle* {.rename: "xcb_fill_style_t".} = enum
     xcbFillStyleSolid = 0, xcbFillStyleTiled = 1, xcbFillStyleStippled = 2,
     xcbFillStyleOpaqueStippled = 3
 
-  XcbFillRule* {.importc: "xcb_fill_rule_t".} = enum
+  XcbFillRule* {.rename: "xcb_fill_rule_t".} = enum
     xcbFillRuleEvenOdd = 0, xcbFillRuleWinding = 1
 
-  XcbSubwindowMode* {.importc: "xcb_subwindow_mode_t".} = enum
+  XcbSubwindowMode* {.rename: "xcb_subwindow_mode_t".} = enum
     xcbSubwindowModeClipByChildren = 0,
     xcbSubwindowModeIncludeInferiors = 1
 
-  XcbArcMode* {.importc: "xcb_arc_mode_t".} = enum
+  XcbArcMode* {.rename: "xcb_arc_mode_t".} = enum
     xcbArcModeChord = 0, xcbArcModePieSlice = 1
 
-  XcbCreateGcValueList* {.importc: "xcb_create_gc_value_list_t", bycopy.} = object
+  XcbCreateGcValueList* {.rename: "xcb_create_gc_value_list_t", bycopy.} = object
     function*: uint32
     planeMask* {.importc: "plane_mask".}: uint32
     foreground*: uint32
@@ -1812,7 +1813,7 @@ type
     dashes*: uint32
     arcMode* {.importc: "arc_mode".}: uint32
 
-  XcbCreateGcRequest* {.importc: "xcb_create_gc_request_t", bycopy.} = object
+  XcbCreateGcRequest* {.rename: "xcb_create_gc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1820,7 +1821,7 @@ type
     drawable*: XcbDrawable
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbChangeGcValueList* {.importc: "xcb_change_gc_value_list_t", bycopy.} = object
+  XcbChangeGcValueList* {.rename: "xcb_change_gc_value_list_t", bycopy.} = object
     function*: uint32
     planeMask* {.importc: "plane_mask".}: uint32
     foreground*: uint32
@@ -1845,14 +1846,14 @@ type
     dashes*: uint32
     arcMode* {.importc: "arc_mode".}: uint32
 
-  XcbChangeGcRequest* {.importc: "xcb_change_gc_request_t", bycopy.} = object
+  XcbChangeGcRequest* {.rename: "xcb_change_gc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     gc*: XcbGcontext
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbCopyGcRequest* {.importc: "xcb_copy_gc_request_t", bycopy.} = object
+  XcbCopyGcRequest* {.rename: "xcb_copy_gc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1860,7 +1861,7 @@ type
     dstGc* {.importc: "dst_gc".}: XcbGcontext
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbSetDashesRequest* {.importc: "xcb_set_dashes_request_t", bycopy.} = object
+  XcbSetDashesRequest* {.rename: "xcb_set_dashes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1868,11 +1869,11 @@ type
     dashOffset* {.importc: "dash_offset".}: uint16
     dashesLen* {.importc: "dashes_len".}: uint16
 
-  XcbClipOrdering* {.importc: "xcb_clip_ordering_t".} = enum
+  XcbClipOrdering* {.rename: "xcb_clip_ordering_t".} = enum
     xcbClipOrderingUnsorted = 0, xcbClipOrderingYSorted = 1,
     xcbClipOrderingYxSorted = 2, xcbClipOrderingYxBanded = 3
 
-  XcbSetClipRectanglesRequest* {.importc: "xcb_set_clip_rectangles_request_t", bycopy.} = object
+  XcbSetClipRectanglesRequest* {.rename: "xcb_set_clip_rectangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     ordering*: uint8
     length*: uint16
@@ -1880,13 +1881,13 @@ type
     clipXOrigin* {.importc: "clip_x_origin".}: int16
     clipYOrigin* {.importc: "clip_y_origin".}: int16
 
-  XcbFreeGcRequest* {.importc: "xcb_free_gc_request_t", bycopy.} = object
+  XcbFreeGcRequest* {.rename: "xcb_free_gc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     gc*: XcbGcontext
 
-  XcbClearAreaRequest* {.importc: "xcb_clear_area_request_t", bycopy.} = object
+  XcbClearAreaRequest* {.rename: "xcb_clear_area_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     exposures*: uint8
     length*: uint16
@@ -1896,7 +1897,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbCopyAreaRequest* {.importc: "xcb_copy_area_request_t", bycopy.} = object
+  XcbCopyAreaRequest* {.rename: "xcb_copy_area_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1910,7 +1911,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbCopyPlaneRequest* {.importc: "xcb_copy_plane_request_t", bycopy.} = object
+  XcbCopyPlaneRequest* {.rename: "xcb_copy_plane_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1925,60 +1926,60 @@ type
     height*: uint16
     bitPlane* {.importc: "bit_plane".}: uint32
 
-  XcbCoordMode* {.importc: "xcb_coord_mode_t", size: 1.} = enum
+  XcbCoordMode* {.rename: "xcb_coord_mode_t", size: 1.} = enum
     xcbCoordModeOrigin = 0, xcbCoordModePrevious = 1
 
-  XcbPolyPointRequest* {.importc: "xcb_poly_point_request_t", bycopy.} = object
+  XcbPolyPointRequest* {.rename: "xcb_poly_point_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbPolyLineRequest* {.importc: "xcb_poly_line_request_t", bycopy.} = object
+  XcbPolyLineRequest* {.rename: "xcb_poly_line_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbSegment* {.importc: "xcb_segment_t", bycopy.} = object
+  XcbSegment* {.rename: "xcb_segment_t", bycopy.} = object
     x1*: int16
     y1*: int16
     x2*: int16
     y2*: int16
 
-  XcbSegmentIterator* {.importc: "xcb_segment_iterator_t", bycopy.} = object
+  XcbSegmentIterator* {.rename: "xcb_segment_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSegment]
     rem*: cint
     index*: cint
 
-  XcbPolySegmentRequest* {.importc: "xcb_poly_segment_request_t", bycopy.} = object
+  XcbPolySegmentRequest* {.rename: "xcb_poly_segment_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbPolyRectangleRequest* {.importc: "xcb_poly_rectangle_request_t", bycopy.} = object
+  XcbPolyRectangleRequest* {.rename: "xcb_poly_rectangle_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbPolyArcRequest* {.importc: "xcb_poly_arc_request_t", bycopy.} = object
+  XcbPolyArcRequest* {.rename: "xcb_poly_arc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbPolyShape* {.importc: "xcb_poly_shape_t".} = enum
+  XcbPolyShape* {.rename: "xcb_poly_shape_t".} = enum
     xcbPolyShapeComplex = 0, xcbPolyShapeNonconvex = 1,
     xcbPolyShapeConvex = 2
 
-  XcbFillPolyRequest* {.importc: "xcb_fill_poly_request_t", bycopy.} = object
+  XcbFillPolyRequest* {.rename: "xcb_fill_poly_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -1988,25 +1989,25 @@ type
     coordinateMode* {.importc: "coordinate_mode".}: XcbCoordMode
     pad1: array[2, uint8]
 
-  XcbPolyFillRectangleRequest* {.importc: "xcb_poly_fill_rectangle_request_t", bycopy.} = object
+  XcbPolyFillRectangleRequest* {.rename: "xcb_poly_fill_rectangle_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbPolyFillArcRequest* {.importc: "xcb_poly_fill_arc_request_t", bycopy.} = object
+  XcbPolyFillArcRequest* {.rename: "xcb_poly_fill_arc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     drawable*: XcbDrawable
     gc*: XcbGcontext
 
-  XcbImageFormat* {.importc: "xcb_image_format_t".} = enum
+  XcbImageFormat* {.rename: "xcb_image_format_t".} = enum
     xcbImageFormatXyBitmap = 0, xcbImageFormatXyPixmap = 1,
     xcbImageFormatZPixmap = 2
 
-  XcbPutImageRequest* {.importc: "xcb_put_image_request_t", bycopy.} = object
+  XcbPutImageRequest* {.rename: "xcb_put_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     format*: uint8
     length*: uint16
@@ -2020,10 +2021,10 @@ type
     depth*: uint8
     pad0: array[2, uint8]
 
-  XcbGetImageCookie* {.importc: "xcb_get_image_cookie_t", bycopy.} = object
+  XcbGetImageCookie* {.rename: "xcb_get_image_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetImageRequest* {.importc: "xcb_get_image_request_t", bycopy.} = object
+  XcbGetImageRequest* {.rename: "xcb_get_image_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     format*: uint8
     length*: uint16
@@ -2034,7 +2035,7 @@ type
     height*: uint16
     planeMask* {.importc: "plane_mask".}: uint32
 
-  XcbGetImageReply* {.importc: "xcb_get_image_reply_t", bycopy.} = object
+  XcbGetImageReply* {.rename: "xcb_get_image_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     depth*: uint8
     sequence*: uint16
@@ -2042,7 +2043,7 @@ type
     visual*: XcbVisualid
     pad0: array[20, uint8]
 
-  XcbPolyText8Request* {.importc: "xcb_poly_text8_request_t", bycopy.} = object
+  XcbPolyText8Request* {.rename: "xcb_poly_text8_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2051,7 +2052,7 @@ type
     x*: int16
     y*: int16
 
-  XcbPolyText16Request* {.importc: "xcb_poly_text16_request_t", bycopy.} = object
+  XcbPolyText16Request* {.rename: "xcb_poly_text16_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2060,7 +2061,7 @@ type
     x*: int16
     y*: int16
 
-  XcbImageText8Request* {.importc: "xcb_image_text8_request_t", bycopy.} = object
+  XcbImageText8Request* {.rename: "xcb_image_text8_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     stringLen* {.importc: "string_len".}: uint8
     length*: uint16
@@ -2069,7 +2070,7 @@ type
     x*: int16
     y*: int16
 
-  XcbImageText16Request* {.importc: "xcb_image_text16_request_t", bycopy.} = object
+  XcbImageText16Request* {.rename: "xcb_image_text16_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     stringLen* {.importc: "string_len".}: uint8
     length*: uint16
@@ -2078,10 +2079,10 @@ type
     x*: int16
     y*: int16
 
-  XcbColormapAlloc* {.importc: "xcb_colormap_alloc_t".} = enum
+  XcbColormapAlloc* {.rename: "xcb_colormap_alloc_t".} = enum
     xcbColormapAllocNone = 0, xcbColormapAllocAll = 1
 
-  XcbCreateColormapRequest* {.importc: "xcb_create_colormap_request_t", bycopy.} = object
+  XcbCreateColormapRequest* {.rename: "xcb_create_colormap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     alloc*: uint8
     length*: uint16
@@ -2089,41 +2090,41 @@ type
     window*: XcbWindow
     visual*: XcbVisualid
 
-  XcbFreeColormapRequest* {.importc: "xcb_free_colormap_request_t", bycopy.} = object
+  XcbFreeColormapRequest* {.rename: "xcb_free_colormap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
 
-  XcbCopyColormapAndFreeRequest* {.importc: "xcb_copy_colormap_and_free_request_t", bycopy.} = object
+  XcbCopyColormapAndFreeRequest* {.rename: "xcb_copy_colormap_and_free_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     mid*: XcbColormap
     srcCmap* {.importc: "src_cmap".}: XcbColormap
 
-  XcbInstallColormapRequest* {.importc: "xcb_install_colormap_request_t", bycopy.} = object
+  XcbInstallColormapRequest* {.rename: "xcb_install_colormap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
 
-  XcbUninstallColormapRequest* {.importc: "xcb_uninstall_colormap_request_t", bycopy.} = object
+  XcbUninstallColormapRequest* {.rename: "xcb_uninstall_colormap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
 
-  XcbListInstalledColormapsCookie* {.importc: "xcb_list_installed_colormaps_cookie_t", bycopy.} = object
+  XcbListInstalledColormapsCookie* {.rename: "xcb_list_installed_colormaps_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListInstalledColormapsRequest* {.importc: "xcb_list_installed_colormaps_request_t", bycopy.} = object
+  XcbListInstalledColormapsRequest* {.rename: "xcb_list_installed_colormaps_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbListInstalledColormapsReply* {.importc: "xcb_list_installed_colormaps_reply_t", bycopy.} = object
+  XcbListInstalledColormapsReply* {.rename: "xcb_list_installed_colormaps_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2131,10 +2132,10 @@ type
     cmapsLen* {.importc: "cmaps_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbAllocColorCookie* {.importc: "xcb_alloc_color_cookie_t", bycopy.} = object
+  XcbAllocColorCookie* {.rename: "xcb_alloc_color_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbAllocColorRequest* {.importc: "xcb_alloc_color_request_t", bycopy.} = object
+  XcbAllocColorRequest* {.rename: "xcb_alloc_color_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2144,7 +2145,7 @@ type
     blue*: uint16
     pad1: array[2, uint8]
 
-  XcbAllocColorReply* {.importc: "xcb_alloc_color_reply_t", bycopy.} = object
+  XcbAllocColorReply* {.rename: "xcb_alloc_color_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2155,10 +2156,10 @@ type
     pad1: array[2, uint8]
     pixel*: uint32
 
-  XcbAllocNamedColorCookie* {.importc: "xcb_alloc_named_color_cookie_t", bycopy.} = object
+  XcbAllocNamedColorCookie* {.rename: "xcb_alloc_named_color_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbAllocNamedColorRequest* {.importc: "xcb_alloc_named_color_request_t", bycopy.} = object
+  XcbAllocNamedColorRequest* {.rename: "xcb_alloc_named_color_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2166,7 +2167,7 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[2, uint8]
 
-  XcbAllocNamedColorReply* {.importc: "xcb_alloc_named_color_reply_t", bycopy.} = object
+  XcbAllocNamedColorReply* {.rename: "xcb_alloc_named_color_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2179,10 +2180,10 @@ type
     visualGreen* {.importc: "visual_green".}: uint16
     visualBlue* {.importc: "visual_blue".}: uint16
 
-  XcbAllocColorCellsCookie* {.importc: "xcb_alloc_color_cells_cookie_t", bycopy.} = object
+  XcbAllocColorCellsCookie* {.rename: "xcb_alloc_color_cells_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbAllocColorCellsRequest* {.importc: "xcb_alloc_color_cells_request_t", bycopy.} = object
+  XcbAllocColorCellsRequest* {.rename: "xcb_alloc_color_cells_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     contiguous*: uint8
     length*: uint16
@@ -2190,7 +2191,7 @@ type
     colors*: uint16
     planes*: uint16
 
-  XcbAllocColorCellsReply* {.importc: "xcb_alloc_color_cells_reply_t", bycopy.} = object
+  XcbAllocColorCellsReply* {.rename: "xcb_alloc_color_cells_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2199,10 +2200,10 @@ type
     masksLen* {.importc: "masks_len".}: uint16
     pad1: array[20, uint8]
 
-  XcbAllocColorPlanesCookie* {.importc: "xcb_alloc_color_planes_cookie_t", bycopy.} = object
+  XcbAllocColorPlanesCookie* {.rename: "xcb_alloc_color_planes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbAllocColorPlanesRequest* {.importc: "xcb_alloc_color_planes_request_t", bycopy.} = object
+  XcbAllocColorPlanesRequest* {.rename: "xcb_alloc_color_planes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     contiguous*: uint8
     length*: uint16
@@ -2212,7 +2213,7 @@ type
     greens*: uint16
     blues*: uint16
 
-  XcbAllocColorPlanesReply* {.importc: "xcb_alloc_color_planes_reply_t", bycopy.} = object
+  XcbAllocColorPlanesReply* {.rename: "xcb_alloc_color_planes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2224,16 +2225,16 @@ type
     blueMask* {.importc: "blue_mask".}: uint32
     pad2: array[8, uint8]
 
-  XcbFreeColorsRequest* {.importc: "xcb_free_colors_request_t", bycopy.} = object
+  XcbFreeColorsRequest* {.rename: "xcb_free_colors_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
     planeMask* {.importc: "plane_mask".}: uint32
 
-  XcbColorFlag* {.importc: "xcb_color_flag_t".} = enum
+  XcbColorFlag* {.rename: "xcb_color_flag_t".} = enum
     xcbColorFlagRed = 1, xcbColorFlagGreen = 2, xcbColorFlagBlue = 4
-  XcbColoritem* {.importc: "xcb_coloritem_t", bycopy.} = object
+  XcbColoritem* {.rename: "xcb_coloritem_t", bycopy.} = object
     pixel*: uint32
     red*: uint16
     green*: uint16
@@ -2241,18 +2242,18 @@ type
     flags*: uint8
     pad0: uint8
 
-  XcbColoritemIterator* {.importc: "xcb_coloritem_iterator_t", bycopy.} = object
+  XcbColoritemIterator* {.rename: "xcb_coloritem_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbColoritem]
     rem*: cint
     index*: cint
 
-  XcbStoreColorsRequest* {.importc: "xcb_store_colors_request_t", bycopy.} = object
+  XcbStoreColorsRequest* {.rename: "xcb_store_colors_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
 
-  XcbStoreNamedColorRequest* {.importc: "xcb_store_named_color_request_t", bycopy.} = object
+  XcbStoreNamedColorRequest* {.rename: "xcb_store_named_color_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     flags*: uint8
     length*: uint16
@@ -2261,27 +2262,27 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad0: array[2, uint8]
 
-  XcbRgb* {.importc: "xcb_rgb_t", bycopy.} = object
+  XcbRgb* {.rename: "xcb_rgb_t", bycopy.} = object
     red*: uint16
     green*: uint16
     blue*: uint16
     pad0: array[2, uint8]
 
-  XcbRgbIterator* {.importc: "xcb_rgb_iterator_t", bycopy.} = object
+  XcbRgbIterator* {.rename: "xcb_rgb_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbRgb]
     rem*: cint
     index*: cint
 
-  XcbQueryColorsCookie* {.importc: "xcb_query_colors_cookie_t", bycopy.} = object
+  XcbQueryColorsCookie* {.rename: "xcb_query_colors_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryColorsRequest* {.importc: "xcb_query_colors_request_t", bycopy.} = object
+  XcbQueryColorsRequest* {.rename: "xcb_query_colors_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cmap*: XcbColormap
 
-  XcbQueryColorsReply* {.importc: "xcb_query_colors_reply_t", bycopy.} = object
+  XcbQueryColorsReply* {.rename: "xcb_query_colors_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2289,10 +2290,10 @@ type
     colorsLen* {.importc: "colors_len".}: uint16
     pad1: array[22, uint8]
 
-  XcbLookupColorCookie* {.importc: "xcb_lookup_color_cookie_t", bycopy.} = object
+  XcbLookupColorCookie* {.rename: "xcb_lookup_color_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbLookupColorRequest* {.importc: "xcb_lookup_color_request_t", bycopy.} = object
+  XcbLookupColorRequest* {.rename: "xcb_lookup_color_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2300,7 +2301,7 @@ type
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[2, uint8]
 
-  XcbLookupColorReply* {.importc: "xcb_lookup_color_reply_t", bycopy.} = object
+  XcbLookupColorReply* {.rename: "xcb_lookup_color_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2312,10 +2313,10 @@ type
     visualGreen* {.importc: "visual_green".}: uint16
     visualBlue* {.importc: "visual_blue".}: uint16
 
-  XcbPixmapEnum* {.importc: "xcb_pixmap_enum_t".} = enum
+  XcbPixmapEnum* {.rename: "xcb_pixmap_enum_t".} = enum
     xcbPixmapNone = 0
 
-  XcbCreateCursorRequest* {.importc: "xcb_create_cursor_request_t", bycopy.} = object
+  XcbCreateCursorRequest* {.rename: "xcb_create_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2331,10 +2332,10 @@ type
     x*: uint16
     y*: uint16
 
-  XcbFontEnum* {.importc: "xcb_font_enum_t".} = enum
+  XcbFontEnum* {.rename: "xcb_font_enum_t".} = enum
     xcbFontNone = 0
 
-  XcbCreateGlyphCursorRequest* {.importc: "xcb_create_glyph_cursor_request_t", bycopy.} = object
+  XcbCreateGlyphCursorRequest* {.rename: "xcb_create_glyph_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2350,13 +2351,13 @@ type
     backGreen* {.importc: "back_green".}: uint16
     backBlue* {.importc: "back_blue".}: uint16
 
-  XcbFreeCursorRequest* {.importc: "xcb_free_cursor_request_t", bycopy.} = object
+  XcbFreeCursorRequest* {.rename: "xcb_free_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     cursor*: XcbCursor
 
-  XcbRecolorCursorRequest* {.importc: "xcb_recolor_cursor_request_t", bycopy.} = object
+  XcbRecolorCursorRequest* {.rename: "xcb_recolor_cursor_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2368,13 +2369,13 @@ type
     backGreen* {.importc: "back_green".}: uint16
     backBlue* {.importc: "back_blue".}: uint16
 
-  XcbQueryShapeOf* {.importc: "xcb_query_shape_of_t".} = enum
+  XcbQueryShapeOf* {.rename: "xcb_query_shape_of_t".} = enum
     xcbQueryShapeOfLargestCursor = 0, xcbQueryShapeOfFastestTile = 1,
     xcbQueryShapeOfFastestStipple = 2
-  XcbQueryBestSizeCookie* {.importc: "xcb_query_best_size_cookie_t", bycopy.} = object
+  XcbQueryBestSizeCookie* {.rename: "xcb_query_best_size_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryBestSizeRequest* {.importc: "xcb_query_best_size_request_t", bycopy.} = object
+  XcbQueryBestSizeRequest* {.rename: "xcb_query_best_size_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     class*: uint8
     length*: uint16
@@ -2382,7 +2383,7 @@ type
     width*: uint16
     height*: uint16
 
-  XcbQueryBestSizeReply* {.importc: "xcb_query_best_size_reply_t", bycopy.} = object
+  XcbQueryBestSizeReply* {.rename: "xcb_query_best_size_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2390,17 +2391,17 @@ type
     width*: uint16
     height*: uint16
 
-  XcbQueryExtensionCookie* {.importc: "xcb_query_extension_cookie_t", bycopy.} = object
+  XcbQueryExtensionCookie* {.rename: "xcb_query_extension_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbQueryExtensionRequest* {.importc: "xcb_query_extension_request_t", bycopy.} = object
+  XcbQueryExtensionRequest* {.rename: "xcb_query_extension_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     nameLen* {.importc: "name_len".}: uint16
     pad1: array[2, uint8]
 
-  XcbQueryExtensionReply* {.importc: "xcb_query_extension_reply_t", bycopy.} = object
+  XcbQueryExtensionReply* {.rename: "xcb_query_extension_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2410,22 +2411,22 @@ type
     firstEvent* {.importc: "first_event".}: uint8
     firstError* {.importc: "first_error".}: uint8
 
-  XcbListExtensionsCookie* {.importc: "xcb_list_extensions_cookie_t", bycopy.} = object
+  XcbListExtensionsCookie* {.rename: "xcb_list_extensions_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListExtensionsRequest* {.importc: "xcb_list_extensions_request_t", bycopy.} = object
+  XcbListExtensionsRequest* {.rename: "xcb_list_extensions_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbListExtensionsReply* {.importc: "xcb_list_extensions_reply_t", bycopy.} = object
+  XcbListExtensionsReply* {.rename: "xcb_list_extensions_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     namesLen* {.importc: "names_len".}: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbChangeKeyboardMappingRequest* {.importc: "xcb_change_keyboard_mapping_request_t", bycopy.} = object
+  XcbChangeKeyboardMappingRequest* {.rename: "xcb_change_keyboard_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     keycodeCount* {.importc: "keycode_count".}: uint8
     length*: uint16
@@ -2433,33 +2434,33 @@ type
     keysymsPerKeycode* {.importc: "keysyms_per_keycode".}: uint8
     pad0: array[2, uint8]
 
-  XcbGetKeyboardMappingCookie* {.importc: "xcb_get_keyboard_mapping_cookie_t", bycopy.} = object
+  XcbGetKeyboardMappingCookie* {.rename: "xcb_get_keyboard_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetKeyboardMappingRequest* {.importc: "xcb_get_keyboard_mapping_request_t", bycopy.} = object
+  XcbGetKeyboardMappingRequest* {.rename: "xcb_get_keyboard_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     firstKeycode* {.importc: "first_keycode".}: XcbKeycode
     count*: uint8
 
-  XcbGetKeyboardMappingReply* {.importc: "xcb_get_keyboard_mapping_reply_t", bycopy.} = object
+  XcbGetKeyboardMappingReply* {.rename: "xcb_get_keyboard_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     keysymsPerKeycode* {.importc: "keysyms_per_keycode".}: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbKb* {.importc: "xcb_kb_t".} = enum
+  XcbKb* {.rename: "xcb_kb_t".} = enum
     xcbKbKeyClickPercent = 1, xcbKbBellPercent = 2, xcbKbBellPitch = 4,
     xcbKbBellDuration = 8, xcbKbLed = 16, xcbKbLedMode = 32, xcbKbKey = 64,
     xcbKbAutoRepeatMode = 128
-  XcbLedMode* {.importc: "xcb_led_mode_t".} = enum
+  XcbLedMode* {.rename: "xcb_led_mode_t".} = enum
     xcbLedModeOff = 0, xcbLedModeOn = 1
-  XcbAutoRepeatMode* {.importc: "xcb_auto_repeat_mode_t".} = enum
+  XcbAutoRepeatMode* {.rename: "xcb_auto_repeat_mode_t".} = enum
     xcbAutoRepeatModeOff = 0, xcbAutoRepeatModeOn = 1,
     xcbAutoRepeatModeDefault = 2
-  XcbChangeKeyboardControlValueList* {.importc: "xcb_change_keyboard_control_value_list_t", bycopy.} = object
+  XcbChangeKeyboardControlValueList* {.rename: "xcb_change_keyboard_control_value_list_t", bycopy.} = object
     keyClickPercent* {.importc: "key_click_percent".}: int32
     bellPercent* {.importc: "bell_percent".}: int32
     bellPitch* {.importc: "bell_pitch".}: int32
@@ -2469,21 +2470,21 @@ type
     key*: XcbKeycode32
     autoRepeatMode* {.importc: "auto_repeat_mode".}: uint32
 
-  XcbChangeKeyboardControlRequest* {.importc: "xcb_change_keyboard_control_request_t", bycopy.} = object
+  XcbChangeKeyboardControlRequest* {.rename: "xcb_change_keyboard_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbGetKeyboardControlCookie* {.importc: "xcb_get_keyboard_control_cookie_t", bycopy.} = object
+  XcbGetKeyboardControlCookie* {.rename: "xcb_get_keyboard_control_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetKeyboardControlRequest* {.importc: "xcb_get_keyboard_control_request_t", bycopy.} = object
+  XcbGetKeyboardControlRequest* {.rename: "xcb_get_keyboard_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetKeyboardControlReply* {.importc: "xcb_get_keyboard_control_reply_t", bycopy.} = object
+  XcbGetKeyboardControlReply* {.rename: "xcb_get_keyboard_control_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     globalAutoRepeat* {.importc: "global_auto_repeat".}: uint8
     sequence*: uint16
@@ -2496,12 +2497,12 @@ type
     pad0: array[2, uint8]
     autoRepeats* {.importc: "auto_repeats".}: array[32, uint8]
 
-  XcbBellRequest* {.importc: "xcb_bell_request_t", bycopy.} = object
+  XcbBellRequest* {.rename: "xcb_bell_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     percent*: int8
     length*: uint16
 
-  XcbChangePointerControlRequest* {.importc: "xcb_change_pointer_control_request_t", bycopy.} = object
+  XcbChangePointerControlRequest* {.rename: "xcb_change_pointer_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2511,15 +2512,15 @@ type
     doAcceleration* {.importc: "do_acceleration".}: uint8
     doThreshold* {.importc: "do_threshold".}: uint8
 
-  XcbGetPointerControlCookie* {.importc: "xcb_get_pointer_control_cookie_t", bycopy.} = object
+  XcbGetPointerControlCookie* {.rename: "xcb_get_pointer_control_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetPointerControlRequest* {.importc: "xcb_get_pointer_control_request_t", bycopy.} = object
+  XcbGetPointerControlRequest* {.rename: "xcb_get_pointer_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetPointerControlReply* {.importc: "xcb_get_pointer_control_reply_t", bycopy.} = object
+  XcbGetPointerControlReply* {.rename: "xcb_get_pointer_control_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2529,15 +2530,15 @@ type
     threshold*: uint16
     pad1: array[18, uint8]
 
-  XcbBlanking* {.importc: "xcb_blanking_t".} = enum
+  XcbBlanking* {.rename: "xcb_blanking_t".} = enum
     xcbBlankingNotPreferred = 0, xcbBlankingPreferred = 1,
     xcbBlankingDefault = 2
 
-  XcbExposures* {.importc: "xcb_exposures_t".} = enum
+  XcbExposures* {.rename: "xcb_exposures_t".} = enum
     xcbExposuresNotAllowed = 0, xcbExposuresAllowed = 1,
     xcbExposuresDefault = 2
 
-  XcbSetScreenSaverRequest* {.importc: "xcb_set_screen_saver_request_t", bycopy.} = object
+  XcbSetScreenSaverRequest* {.rename: "xcb_set_screen_saver_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2546,15 +2547,15 @@ type
     preferBlanking* {.importc: "prefer_blanking".}: uint8
     allowExposures* {.importc: "allow_exposures".}: uint8
 
-  XcbGetScreenSaverCookie* {.importc: "xcb_get_screen_saver_cookie_t", bycopy.} = object
+  XcbGetScreenSaverCookie* {.rename: "xcb_get_screen_saver_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetScreenSaverRequest* {.importc: "xcb_get_screen_saver_request_t", bycopy.} = object
+  XcbGetScreenSaverRequest* {.rename: "xcb_get_screen_saver_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetScreenSaverReply* {.importc: "xcb_get_screen_saver_reply_t", bycopy.} = object
+  XcbGetScreenSaverReply* {.rename: "xcb_get_screen_saver_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -2565,14 +2566,14 @@ type
     allowExposures* {.importc: "allow_exposures".}: uint8
     pad1: array[18, uint8]
 
-  XcbHostMode* {.importc: "xcb_host_mode_t".} = enum
+  XcbHostMode* {.rename: "xcb_host_mode_t".} = enum
     xcbHostModeInsert = 0, xcbHostModeDelete = 1
 
-  XcbFamily* {.importc: "xcb_family_t".} = enum
+  XcbFamily* {.rename: "xcb_family_t".} = enum
     xcbFamilyInternet = 0, xcbFamilyDecnet = 1, xcbFamilyChaos = 2,
     xcbFamilyServerInterpreted = 5, xcbFamilyInternet6 = 6
 
-  XcbChangeHostsRequest* {.importc: "xcb_change_hosts_request_t", bycopy.} = object
+  XcbChangeHostsRequest* {.rename: "xcb_change_hosts_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
@@ -2580,25 +2581,25 @@ type
     pad0: uint8
     addressLen* {.importc: "address_len".}: uint16
 
-  XcbHost* {.importc: "xcb_host_t", bycopy.} = object
+  XcbHost* {.rename: "xcb_host_t", bycopy.} = object
     family*: uint8
     pad0: uint8
     addressLen* {.importc: "address_len".}: uint16
 
-  XcbHostIterator* {.importc: "xcb_host_iterator_t", bycopy.} = object
+  XcbHostIterator* {.rename: "xcb_host_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbHost]
     rem*: cint
     index*: cint
 
-  XcbListHostsCookie* {.importc: "xcb_list_hosts_cookie_t", bycopy.} = object
+  XcbListHostsCookie* {.rename: "xcb_list_hosts_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbListHostsRequest* {.importc: "xcb_list_hosts_request_t", bycopy.} = object
+  XcbListHostsRequest* {.rename: "xcb_list_hosts_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbListHostsReply* {.importc: "xcb_list_hosts_reply_t", bycopy.} = object
+  XcbListHostsReply* {.rename: "xcb_list_hosts_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     mode*: uint8
     sequence*: uint16
@@ -2606,33 +2607,33 @@ type
     hostsLen* {.importc: "hosts_len".}: uint16
     pad0: array[22, uint8]
 
-  XcbAccessControl* {.importc: "xcb_access_control_t".} = enum
+  XcbAccessControl* {.rename: "xcb_access_control_t".} = enum
     xcbAccessControlDisable = 0, xcbAccessControlEnable = 1
 
-  XcbSetAccessControlRequest* {.importc: "xcb_set_access_control_request_t", bycopy.} = object
+  XcbSetAccessControlRequest* {.rename: "xcb_set_access_control_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
 
-  XcbCloseDown* {.importc: "xcb_close_down_t".} = enum
+  XcbCloseDown* {.rename: "xcb_close_down_t".} = enum
     xcbCloseDownDestroyAll = 0, xcbCloseDownRetainPermanent = 1,
     xcbCloseDownRetainTemporary = 2
 
-  XcbSetCloseDownModeRequest* {.importc: "xcb_set_close_down_mode_request_t", bycopy.} = object
+  XcbSetCloseDownModeRequest* {.rename: "xcb_set_close_down_mode_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
 
-  XcbKill* {.importc: "xcb_kill_t".} = enum
+  XcbKill* {.rename: "xcb_kill_t".} = enum
     xcbKillAllTemporary = 0
 
-  XcbKillClientRequest* {.importc: "xcb_kill_client_request_t", bycopy.} = object
+  XcbKillClientRequest* {.rename: "xcb_kill_client_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
     resource*: uint32
 
-  XcbRotatePropertiesRequest* {.importc: "xcb_rotate_properties_request_t", bycopy.} = object
+  XcbRotatePropertiesRequest* {.rename: "xcb_rotate_properties_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
@@ -2640,93 +2641,97 @@ type
     atomsLen* {.importc: "atoms_len".}: uint16
     delta*: int16
 
-  XcbScreenSaver* {.importc: "xcb_screen_saver_t".} = enum
+  XcbScreenSaver* {.rename: "xcb_screen_saver_t".} = enum
     xcbScreenSaverReset = 0, xcbScreenSaverActive = 1
 
-  XcbForceScreenSaverRequest* {.importc: "xcb_force_screen_saver_request_t", bycopy.} = object
+  XcbForceScreenSaverRequest* {.rename: "xcb_force_screen_saver_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mode*: uint8
     length*: uint16
 
-  XcbMappingStatus* {.importc: "xcb_mapping_status_t".} = enum
+  XcbMappingStatus* {.rename: "xcb_mapping_status_t".} = enum
     xcbMappingStatusSuccess = 0, xcbMappingStatusBusy = 1,
     xcbMappingStatusFailure = 2
 
-  XcbSetPointerMappingCookie* {.importc: "xcb_set_pointer_mapping_cookie_t", bycopy.} = object
+  XcbSetPointerMappingCookie* {.rename: "xcb_set_pointer_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSetPointerMappingRequest* {.importc: "xcb_set_pointer_mapping_request_t", bycopy.} = object
+  XcbSetPointerMappingRequest* {.rename: "xcb_set_pointer_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     mapLen* {.importc: "map_len".}: uint8
     length*: uint16
 
-  XcbSetPointerMappingReply* {.importc: "xcb_set_pointer_mapping_reply_t", bycopy.} = object
+  XcbSetPointerMappingReply* {.rename: "xcb_set_pointer_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbGetPointerMappingCookie* {.importc: "xcb_get_pointer_mapping_cookie_t", bycopy.} = object
+  XcbGetPointerMappingCookie* {.rename: "xcb_get_pointer_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetPointerMappingRequest* {.importc: "xcb_get_pointer_mapping_request_t", bycopy.} = object
+  XcbGetPointerMappingRequest* {.rename: "xcb_get_pointer_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetPointerMappingReply* {.importc: "xcb_get_pointer_mapping_reply_t", bycopy.} = object
+  XcbGetPointerMappingReply* {.rename: "xcb_get_pointer_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     mapLen* {.importc: "map_len".}: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbMapIndex* {.importc: "xcb_map_index_t".} = enum
+  XcbMapIndex* {.rename: "xcb_map_index_t".} = enum
     xcbMapIndexShift = 0, xcbMapIndexLock = 1, xcbMapIndexControl = 2,
     xcbMapIndex1 = 3, xcbMapIndex2 = 4, xcbMapIndex3 = 5, xcbMapIndex4 = 6,
     xcbMapIndex5 = 7
 
-  XcbSetModifierMappingCookie* {.importc: "xcb_set_modifier_mapping_cookie_t", bycopy.} = object
+  XcbSetModifierMappingCookie* {.rename: "xcb_set_modifier_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSetModifierMappingRequest* {.importc: "xcb_set_modifier_mapping_request_t", bycopy.} = object
+  XcbSetModifierMappingRequest* {.rename: "xcb_set_modifier_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     keycodesPerModifier* {.importc: "keycodes_per_modifier".}: uint8
     length*: uint16
 
-  XcbSetModifierMappingReply* {.importc: "xcb_set_modifier_mapping_reply_t", bycopy.} = object
+  XcbSetModifierMappingReply* {.rename: "xcb_set_modifier_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbGetModifierMappingCookie* {.importc: "xcb_get_modifier_mapping_cookie_t", bycopy.} = object
+  XcbGetModifierMappingCookie* {.rename: "xcb_get_modifier_mapping_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbGetModifierMappingRequest* {.importc: "xcb_get_modifier_mapping_request_t", bycopy.} = object
+  XcbGetModifierMappingRequest* {.rename: "xcb_get_modifier_mapping_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-  XcbGetModifierMappingReply* {.importc: "xcb_get_modifier_mapping_reply_t", bycopy.} = object
+  XcbGetModifierMappingReply* {.rename: "xcb_get_modifier_mapping_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     keycodesPerModifier* {.importc: "keycodes_per_modifier".}: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbNoOperationRequest* {.importc: "xcb_no_operation_request_t", bycopy.} = object
+  XcbNoOperationRequest* {.rename: "xcb_no_operation_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     pad0: uint8
     length*: uint16
 
-{.pop.}
+when not xcbDynlib:
+  {.pop.}
 
 const
   xcbAtomAny* = xcbAtomNone
   xcbGravityWinUnmap* = xcbGravityBitForget
 
-{.push cdecl, header: "xcb/xproto.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb.so(|.1)".}
+else:
+  {.push cdecl, header: "xcb/xproto.h".}
 
 proc next*(i: ptr XcbChar2bIterator) {.importc: "xcb_char2b_next".}
 proc iterEnd*(i: XcbChar2bIterator): XcbGenericIterator {.importc: "xcb_char2b_end".}

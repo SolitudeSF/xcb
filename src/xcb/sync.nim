@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbSyncMajorVersion* = 3
@@ -28,88 +28,89 @@ const
   xcbSyncCounterNotify* = 0
   xcbSyncAlarmNotify* = 1
 
-{.passl: "-lxcb-sync".}
-{.push header: "xcb/sync.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-sync".}
+  {.push header: "xcb/sync.h".}
 
-var xcbSyncId* {.extern: "xcb_sync_id".}: XcbExtension
+  var xcbSyncId* {.extern: "xcb_sync_id".}: XcbExtension
 
 type
-  XcbSyncAlarm* {.importc: "xcb_sync_alarm_t".} = distinct uint32
-  XcbSyncCounter* {.importc: "xcb_sync_counter_t".} = distinct uint32
-  XcbSyncFence* {.importc: "xcb_sync_fence_t".} = distinct uint32
+  XcbSyncAlarm* {.rename: "xcb_sync_alarm_t".} = distinct uint32
+  XcbSyncCounter* {.rename: "xcb_sync_counter_t".} = distinct uint32
+  XcbSyncFence* {.rename: "xcb_sync_fence_t".} = distinct uint32
 
-  XcbSyncAlarmIterator* {.importc: "xcb_sync_alarm_iterator_t", bycopy.} = object
+  XcbSyncAlarmIterator* {.rename: "xcb_sync_alarm_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncAlarm]
     rem*: cint
     index*: cint
 
-  XcbSyncAlarmstate* {.importc: "xcb_sync_alarmstate_t".} = enum
+  XcbSyncAlarmstate* {.rename: "xcb_sync_alarmstate_t".} = enum
     xcbSyncAlarmstateActive = 0, xcbSyncAlarmstateInactive = 1,
     xcbSyncAlarmstateDestroyed = 2
 
-  XcbSyncCounterIterator* {.importc: "xcb_sync_counter_iterator_t", bycopy.} = object
+  XcbSyncCounterIterator* {.rename: "xcb_sync_counter_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncCounter]
     rem*: cint
     index*: cint
 
-  XcbSyncFenceIterator* {.importc: "xcb_sync_fence_iterator_t", bycopy.} = object
+  XcbSyncFenceIterator* {.rename: "xcb_sync_fence_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncFence]
     rem*: cint
     index*: cint
 
-  XcbSyncTesttype* {.importc: "xcb_sync_testtype_t".} = enum
+  XcbSyncTesttype* {.rename: "xcb_sync_testtype_t".} = enum
     xcbSyncTesttypePositiveTransition = 0,
     xcbSyncTesttypeNegativeTransition = 1,
     xcbSyncTesttypePositiveComparison = 2,
     xcbSyncTesttypeNegativeComparison = 3
 
-  XcbSyncValuetype* {.importc: "xcb_sync_valuetype_t".} = enum
+  XcbSyncValuetype* {.rename: "xcb_sync_valuetype_t".} = enum
     xcbSyncValuetypeAbsolute = 0, xcbSyncValuetypeRelative = 1
 
-  XcbSyncCa* {.importc: "xcb_sync_ca_t".} = enum
+  XcbSyncCa* {.rename: "xcb_sync_ca_t".} = enum
     xcbSyncCaCounter = 1, xcbSyncCaValueType = 2, xcbSyncCaValue = 4,
     xcbSyncCaTestType = 8, xcbSyncCaDelta = 16, xcbSyncCaEvents = 32
 
-  XcbSyncInt64* {.importc: "xcb_sync_int64_t", bycopy.} = object
+  XcbSyncInt64* {.rename: "xcb_sync_int64_t", bycopy.} = object
     hi*: int32
     lo*: uint32
 
-  XcbSyncInt64Iterator* {.importc: "xcbSyncInt64_iterator_t", bycopy.} = object
+  XcbSyncInt64Iterator* {.rename: "xcbSyncInt64_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncInt64]
     rem*: cint
     index*: cint
 
-  XcbSyncSystemcounter* {.importc: "xcb_sync_systemcounter_t", bycopy.} = object
+  XcbSyncSystemcounter* {.rename: "xcb_sync_systemcounter_t", bycopy.} = object
     counter*: XcbSyncCounter
     resolution*: XcbSyncInt64
     nameLen* {.importc: "name_len".}: uint16
 
-  XcbSyncSystemcounterIterator* {.importc: "xcb_sync_systemcounter_iterator_t", bycopy.} = object
+  XcbSyncSystemcounterIterator* {.rename: "xcb_sync_systemcounter_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncSystemcounter]
     rem*: cint
     index*: cint
 
-  XcbSyncTrigger* {.importc: "xcb_sync_trigger_t", bycopy.} = object
+  XcbSyncTrigger* {.rename: "xcb_sync_trigger_t", bycopy.} = object
     counter*: XcbSyncCounter
     waitType* {.importc: "wait_type".}: uint32
     waitValue* {.importc: "wait_value".}: XcbSyncInt64
     testType* {.importc: "test_type".}: uint32
 
-  XcbSyncTriggerIterator* {.importc: "xcb_sync_trigger_iterator_t", bycopy.} = object
+  XcbSyncTriggerIterator* {.rename: "xcb_sync_trigger_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncTrigger]
     rem*: cint
     index*: cint
 
-  XcbSyncWaitcondition* {.importc: "xcb_sync_waitcondition_t", bycopy.} = object
+  XcbSyncWaitcondition* {.rename: "xcb_sync_waitcondition_t", bycopy.} = object
     trigger*: XcbSyncTrigger
     eventThreshold* {.importc: "event_threshold".}: XcbSyncInt64
 
-  XcbSyncWaitconditionIterator* {.importc: "xcb_sync_waitcondition_iterator_t", bycopy.} = object
+  XcbSyncWaitconditionIterator* {.rename: "xcb_sync_waitcondition_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbSyncWaitcondition]
     rem*: cint
     index*: cint
 
-  XcbSyncCounterError* {.importc: "xcb_sync_counter_error_t", bycopy.} = object
+  XcbSyncCounterError* {.rename: "xcb_sync_counter_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -117,7 +118,7 @@ type
     minorOpcode* {.importc: "minor_opcode".}: uint16
     majorOpcode* {.importc: "major_opcode".}: uint8
 
-  XcbSyncAlarmError* {.importc: "xcb_sync_alarm_error_t", bycopy.} = object
+  XcbSyncAlarmError* {.rename: "xcb_sync_alarm_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
@@ -125,17 +126,17 @@ type
     minorOpcode* {.importc: "minor_opcode".}: uint16
     majorOpcode* {.importc: "major_opcode".}: uint8
 
-  XcbSyncInitializeCookie* {.importc: "xcb_sync_initialize_cookie_t", bycopy.} = object
+  XcbSyncInitializeCookie* {.rename: "xcb_sync_initialize_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncInitializeRequest* {.importc: "xcb_sync_initialize_request_t", bycopy.} = object
+  XcbSyncInitializeRequest* {.rename: "xcb_sync_initialize_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     desiredMajorVersion* {.importc: "desired_major_version".}: uint8
     desiredMinorVersion* {.importc: "desired_minor_version".}: uint8
 
-  XcbSyncInitializeReply* {.importc: "xcb_sync_initialize_reply_t", bycopy.} = object
+  XcbSyncInitializeReply* {.rename: "xcb_sync_initialize_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -144,15 +145,15 @@ type
     minorVersion* {.importc: "minor_version".}: uint8
     pad1: array[22, uint8]
 
-  XcbSyncListSystemCountersCookie* {.importc: "xcb_sync_list_system_counters_cookie_t", bycopy.} = object
+  XcbSyncListSystemCountersCookie* {.rename: "xcb_sync_list_system_counters_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncListSystemCountersRequest* {.importc: "xcb_sync_list_system_counters_request_t", bycopy.} = object
+  XcbSyncListSystemCountersRequest* {.rename: "xcb_sync_list_system_counters_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSyncListSystemCountersReply* {.importc: "xcb_sync_list_system_counters_reply_t", bycopy.} = object
+  XcbSyncListSystemCountersReply* {.rename: "xcb_sync_list_system_counters_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -160,70 +161,55 @@ type
     countersLen* {.importc: "counters_len".}: uint32
     pad1: array[20, uint8]
 
-  XcbSyncCreateCounterRequest* {.importc: "xcb_sync_create_counter_request_t", bycopy.} = object
+  XcbSyncCreateCounterRequest* {.rename: "xcb_sync_create_counter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     id*: XcbSyncCounter
     initialValue* {.importc: "initial_value".}: XcbSyncInt64
 
-  XcbSyncDestroyCounterRequest* {.importc: "xcb_sync_destroy_counter_request_t", bycopy.} = object
+  XcbSyncDestroyCounterRequest* {.rename: "xcb_sync_destroy_counter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     counter*: XcbSyncCounter
 
-  XcbSyncQueryCounterCookie* {.importc: "xcb_sync_query_counter_cookie_t", bycopy.} = object
+  XcbSyncQueryCounterCookie* {.rename: "xcb_sync_query_counter_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncQueryCounterRequest* {.importc: "xcb_sync_query_counter_request_t", bycopy.} = object
+  XcbSyncQueryCounterRequest* {.rename: "xcb_sync_query_counter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     counter*: XcbSyncCounter
 
-  XcbSyncQueryCounterReply* {.importc: "xcb_sync_query_counter_reply_t", bycopy.} = object
+  XcbSyncQueryCounterReply* {.rename: "xcb_sync_query_counter_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     counterValue* {.importc: "counter_value".}: XcbSyncInt64
 
-  XcbSyncAwaitRequest* {.importc: "xcb_sync_await_request_t", bycopy.} = object
+  XcbSyncAwaitRequest* {.rename: "xcb_sync_await_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSyncChangeCounterRequest* {.importc: "xcb_sync_change_counter_request_t", bycopy.} = object
+  XcbSyncChangeCounterRequest* {.rename: "xcb_sync_change_counter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     counter*: XcbSyncCounter
     amount*: XcbSyncInt64
 
-  XcbSyncSetCounterRequest* {.importc: "xcb_sync_set_counter_request_t", bycopy.} = object
+  XcbSyncSetCounterRequest* {.rename: "xcb_sync_set_counter_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     counter*: XcbSyncCounter
     value*: XcbSyncInt64
 
-  XcbSyncCreateAlarmValueList* {.importc: "xcb_sync_create_alarm_value_list_t", bycopy.} = object
-    counter*: XcbSyncCounter
-    valueType*: uint32
-    value*: XcbSyncInt64
-    testType*: uint32
-    delta*: XcbSyncInt64
-    events*: uint32
-
-  XcbSyncCreateAlarmRequest* {.importc: "xcb_sync_create_alarm_request_t", bycopy.} = object
-    majorOpcode* {.importc: "major_opcode".}: uint8
-    minorOpcode* {.importc: "minor_opcode".}: uint8
-    length*: uint16
-    id*: XcbSyncAlarm
-    valueMask* {.importc: "value_mask".}: uint32
-
-  XcbSyncChangeAlarmValueList* {.importc: "xcb_sync_change_alarm_value_list_t", bycopy.} = object
+  XcbSyncCreateAlarmValueList* {.rename: "xcb_sync_create_alarm_value_list_t", bycopy.} = object
     counter*: XcbSyncCounter
     valueType*: uint32
     value*: XcbSyncInt64
@@ -231,29 +217,44 @@ type
     delta*: XcbSyncInt64
     events*: uint32
 
-  XcbSyncChangeAlarmRequest* {.importc: "xcb_sync_change_alarm_request_t", bycopy.} = object
+  XcbSyncCreateAlarmRequest* {.rename: "xcb_sync_create_alarm_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     id*: XcbSyncAlarm
     valueMask* {.importc: "value_mask".}: uint32
 
-  XcbSyncDestroyAlarmRequest* {.importc: "xcb_sync_destroy_alarm_request_t", bycopy.} = object
+  XcbSyncChangeAlarmValueList* {.rename: "xcb_sync_change_alarm_value_list_t", bycopy.} = object
+    counter*: XcbSyncCounter
+    valueType*: uint32
+    value*: XcbSyncInt64
+    testType*: uint32
+    delta*: XcbSyncInt64
+    events*: uint32
+
+  XcbSyncChangeAlarmRequest* {.rename: "xcb_sync_change_alarm_request_t", bycopy.} = object
+    majorOpcode* {.importc: "major_opcode".}: uint8
+    minorOpcode* {.importc: "minor_opcode".}: uint8
+    length*: uint16
+    id*: XcbSyncAlarm
+    valueMask* {.importc: "value_mask".}: uint32
+
+  XcbSyncDestroyAlarmRequest* {.rename: "xcb_sync_destroy_alarm_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     alarm*: XcbSyncAlarm
 
-  XcbSyncQueryAlarmCookie* {.importc: "xcb_sync_query_alarm_cookie_t", bycopy.} = object
+  XcbSyncQueryAlarmCookie* {.rename: "xcb_sync_query_alarm_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncQueryAlarmRequest* {.importc: "xcb_sync_query_alarm_request_t", bycopy.} = object
+  XcbSyncQueryAlarmRequest* {.rename: "xcb_sync_query_alarm_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     alarm*: XcbSyncAlarm
 
-  XcbSyncQueryAlarmReply* {.importc: "xcb_sync_query_alarm_reply_t", bycopy.} = object
+  XcbSyncQueryAlarmReply* {.rename: "xcb_sync_query_alarm_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -264,30 +265,30 @@ type
     state*: uint8
     pad1: array[2, uint8]
 
-  XcbSyncSetPriorityRequest* {.importc: "xcb_sync_set_priority_request_t", bycopy.} = object
+  XcbSyncSetPriorityRequest* {.rename: "xcb_sync_set_priority_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     id*: uint32
     priority*: int32
 
-  XcbSyncGetPriorityCookie* {.importc: "xcb_sync_get_priority_cookie_t", bycopy.} = object
+  XcbSyncGetPriorityCookie* {.rename: "xcb_sync_get_priority_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncGetPriorityRequest* {.importc: "xcb_sync_get_priority_request_t", bycopy.} = object
+  XcbSyncGetPriorityRequest* {.rename: "xcb_sync_get_priority_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     id*: uint32
 
-  XcbSyncGetPriorityReply* {.importc: "xcb_sync_get_priority_reply_t", bycopy.} = object
+  XcbSyncGetPriorityReply* {.rename: "xcb_sync_get_priority_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     priority*: int32
 
-  XcbSyncCreateFenceRequest* {.importc: "xcb_sync_create_fence_request_t", bycopy.} = object
+  XcbSyncCreateFenceRequest* {.rename: "xcb_sync_create_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -295,34 +296,34 @@ type
     fence*: XcbSyncFence
     initiallyTriggered* {.importc: "initially_triggered".}: uint8
 
-  XcbSyncTriggerFenceRequest* {.importc: "xcb_sync_trigger_fence_request_t", bycopy.} = object
+  XcbSyncTriggerFenceRequest* {.rename: "xcb_sync_trigger_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     fence*: XcbSyncFence
 
-  XcbSyncResetFenceRequest* {.importc: "xcb_sync_reset_fence_request_t", bycopy.} = object
+  XcbSyncResetFenceRequest* {.rename: "xcb_sync_reset_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     fence*: XcbSyncFence
 
-  XcbSyncDestroyFenceRequest* {.importc: "xcb_sync_destroy_fence_request_t", bycopy.} = object
+  XcbSyncDestroyFenceRequest* {.rename: "xcb_sync_destroy_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     fence*: XcbSyncFence
 
-  XcbSyncQueryFenceCookie* {.importc: "xcb_sync_query_fence_cookie_t", bycopy.} = object
+  XcbSyncQueryFenceCookie* {.rename: "xcb_sync_query_fence_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbSyncQueryFenceRequest* {.importc: "xcb_sync_query_fence_request_t", bycopy.} = object
+  XcbSyncQueryFenceRequest* {.rename: "xcb_sync_query_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     fence*: XcbSyncFence
 
-  XcbSyncQueryFenceReply* {.importc: "xcb_sync_query_fence_reply_t", bycopy.} = object
+  XcbSyncQueryFenceReply* {.rename: "xcb_sync_query_fence_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -330,12 +331,12 @@ type
     triggered*: uint8
     pad1: array[23, uint8]
 
-  XcbSyncAwaitFenceRequest* {.importc: "xcb_sync_await_fence_request_t", bycopy.} = object
+  XcbSyncAwaitFenceRequest* {.rename: "xcb_sync_await_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbSyncCounterNotifyEvent* {.importc: "xcb_sync_counter_notify_event_t", bycopy.} = object
+  XcbSyncCounterNotifyEvent* {.rename: "xcb_sync_counter_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     kind*: uint8
     sequence*: uint16
@@ -347,7 +348,7 @@ type
     destroyed*: uint8
     pad0: uint8
 
-  XcbSyncAlarmNotifyEvent* {.importc: "xcb_sync_alarm_notify_event_t", bycopy.} = object
+  XcbSyncAlarmNotifyEvent* {.rename: "xcb_sync_alarm_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     kind*: uint8
     sequence*: uint16
@@ -358,6 +359,8 @@ type
     state*: uint8
     pad0: array[3, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-sync.so(|.1)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbSyncAlarmIterator) {.importc: "xcb_sync_alarm_next".}

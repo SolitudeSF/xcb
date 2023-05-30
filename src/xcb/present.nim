@@ -1,4 +1,4 @@
-import ./xcb, ./randr, ./xfixes, ./sync
+import ./xcb, ./randr, ./xfixes, ./sync, private/importutil
 
 const
   xcbPresentMajorVersion* = 1
@@ -14,62 +14,63 @@ const
   xcbPresentIdleNotify* = 2
   xcbPresentRedirectNotify* = 3
 
-{.passl: "-lxcb-present".}
-{.push header: "xcb/present.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-present".}
+  {.push header: "xcb/present.h".}
 
-var xcbPresentId* {.extern: "xcb_present_id".}: XcbExtension
+  var xcbPresentId* {.extern: "xcb_present_id".}: XcbExtension
 
 type
-  XcbPresentEvent* {.importc: "xcb_present_event_t".} = distinct uint32
+  XcbPresentEvent* {.rename: "xcb_present_event_t".} = distinct uint32
 
-  XcbPresentEventEnum* {.importc: "xcb_present_event_enum_t".} = enum
+  XcbPresentEventEnum* {.rename: "xcb_present_event_enum_t".} = enum
     xcbPresentEventConfigureNotify = 0, xcbPresentEventCompleteNotify = 1,
     xcbPresentEventIdleNotify = 2, xcbPresentEventRedirectNotify = 3
 
-  XcbPresentEventMask* {.importc: "xcb_present_event_mask_t".} = enum
+  XcbPresentEventMask* {.rename: "xcb_present_event_mask_t".} = enum
     xcbPresentEventMaskNoEvent = 0,
     xcbPresentEventMaskConfigureNotify = 1,
     xcbPresentEventMaskCompleteNotify = 2,
     xcbPresentEventMaskIdleNotify = 4,
     xcbPresentEventMaskRedirectNotify = 8
 
-  XcbPresentOption* {.importc: "xcb_present_option_t".} = enum
+  XcbPresentOption* {.rename: "xcb_present_option_t".} = enum
     xcbPresentOptionNone = 0, xcbPresentOptionAsync = 1,
     xcbPresentOptionCopy = 2, xcbPresentOptionUst = 4,
     xcbPresentOptionSuboptimal = 8
 
-  XcbPresentCapability* {.importc: "xcb_present_capability_t".} = enum
+  XcbPresentCapability* {.rename: "xcb_present_capability_t".} = enum
     xcbPresentCapabilityNone = 0, xcbPresentCapabilityAsync = 1,
     xcbPresentCapabilityFence = 2, xcbPresentCapabilityUst = 4
 
-  XcbPresentCompleteKind* {.importc: "xcb_present_complete_kind_t".} = enum
+  XcbPresentCompleteKind* {.rename: "xcb_present_complete_kind_t".} = enum
     xcbPresentCompleteKindPixmap = 0, xcbPresentCompleteKindNotifyMsc = 1
 
-  XcbPresentCompleteMode* {.importc: "xcb_present_complete_mode_t".} = enum
+  XcbPresentCompleteMode* {.rename: "xcb_present_complete_mode_t".} = enum
     xcbPresentCompleteModeCopy = 0, xcbPresentCompleteModeFlip = 1,
     xcbPresentCompleteModeSkip = 2,
     xcbPresentCompleteModeSuboptimalCopy = 3
 
-  XcbPresentNotify* {.importc: "xcb_present_notify_t", bycopy.} = object
+  XcbPresentNotify* {.rename: "xcb_present_notify_t", bycopy.} = object
     window*: XcbWindow
     serial*: uint32
 
-  XcbPresentNotifyIterator* {.importc: "xcb_present_notify_iterator_t", bycopy.} = object
+  XcbPresentNotifyIterator* {.rename: "xcb_present_notify_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbPresentNotify]
     rem*: cint
     index*: cint
 
-  XcbPresentQueryVersionCookie* {.importc: "xcb_present_query_version_cookie_t", bycopy.} = object
+  XcbPresentQueryVersionCookie* {.rename: "xcb_present_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbPresentQueryVersionRequest* {.importc: "xcb_present_query_version_request_t", bycopy.} = object
+  XcbPresentQueryVersionRequest* {.rename: "xcb_present_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbPresentQueryVersionReply* {.importc: "xcb_present_query_version_reply_t", bycopy.} = object
+  XcbPresentQueryVersionReply* {.rename: "xcb_present_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -77,7 +78,7 @@ type
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbPresentPixmapRequest* {.importc: "xcb_present_pixmap_request_t", bycopy.} = object
+  XcbPresentPixmapRequest* {.rename: "xcb_present_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -97,7 +98,7 @@ type
     divisor*: uint64
     remainder*: uint64
 
-  XcbPresentNotifyMscRequest* {.importc: "xcb_present_notify_msc_request_t", bycopy.} = object
+  XcbPresentNotifyMscRequest* {.rename: "xcb_present_notify_msc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -108,12 +109,12 @@ type
     divisor*: uint64
     remainder*: uint64
 
-  XcbPresentEventIterator* {.importc: "xcb_present_event_iterator_t", bycopy.} = object
+  XcbPresentEventIterator* {.rename: "xcb_present_event_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbPresentEvent]
     rem*: cint
     index*: cint
 
-  XcbPresentSelectInputRequest* {.importc: "xcb_present_select_input_request_t", bycopy.} = object
+  XcbPresentSelectInputRequest* {.rename: "xcb_present_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -121,23 +122,23 @@ type
     window*: XcbWindow
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbPresentQueryCapabilitiesCookie* {.importc: "xcb_present_query_capabilities_cookie_t", bycopy.} = object
+  XcbPresentQueryCapabilitiesCookie* {.rename: "xcb_present_query_capabilities_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbPresentQueryCapabilitiesRequest* {.importc: "xcb_present_query_capabilities_request_t", bycopy.} = object
+  XcbPresentQueryCapabilitiesRequest* {.rename: "xcb_present_query_capabilities_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     target*: uint32
 
-  XcbPresentQueryCapabilitiesReply* {.importc: "xcb_present_query_capabilities_reply_t", bycopy.} = object
+  XcbPresentQueryCapabilitiesReply* {.rename: "xcb_present_query_capabilities_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     capabilities*: uint32
 
-  XcbPresentGenericEvent* {.importc: "xcb_present_generic_event_t", bycopy.} = object
+  XcbPresentGenericEvent* {.rename: "xcb_present_generic_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -146,7 +147,7 @@ type
     pad0: array[2, uint8]
     event*: XcbPresentEvent
 
-  XcbPresentConfigureNotifyEvent* {.importc: "xcb_present_configure_notify_event_t", bycopy.} = object
+  XcbPresentConfigureNotifyEvent* {.rename: "xcb_present_configure_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -166,7 +167,7 @@ type
     pixmapHeight* {.importc: "pixmap_height".}: uint16
     pixmapFlags* {.importc: "pixmap_flags".}: uint32
 
-  XcbPresentCompleteNotifyEvent* {.importc: "xcb_present_complete_notify_event_t", bycopy, packed.} = object
+  XcbPresentCompleteNotifyEvent* {.rename: "xcb_present_complete_notify_event_t", bycopy, packed.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -181,7 +182,7 @@ type
     fullSequence* {.importc: "full_sequence".}: uint32
     msc*: uint64
 
-  XcbPresentIdleNotifyEvent* {.importc: "xcb_present_idle_notify_event_t", bycopy.} = object
+  XcbPresentIdleNotifyEvent* {.rename: "xcb_present_idle_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -195,7 +196,7 @@ type
     idleFence* {.importc: "idle_fence".}: XcbSyncFence
     fullSequence* {.importc: "full_sequence".}: uint32
 
-  XcbPresentRedirectNotifyEvent* {.importc: "xcb_present_redirect_notify_event_t", bycopy, packed.} = object
+  XcbPresentRedirectNotifyEvent* {.rename: "xcb_present_redirect_notify_event_t", bycopy, packed.} = object
     responseType* {.importc: "response_type".}: uint8
     extension*: uint8
     sequence*: uint16
@@ -224,6 +225,8 @@ type
     divisor*: uint64
     remainder*: uint64
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-present.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbPresentNotifyIterator) {.importc: "xcb_present_notify_next".}

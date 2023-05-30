@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbShapeMajorVersion* = 1
@@ -14,32 +14,34 @@ const
   xcbShapeInputSelected* = 7
   xcbShapeGetRectangles* = 8
 
-{.push header: "xcb/shape.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-shape".}
+  {.push header: "xcb/shape.h".}
 
-var xcbShapeId* {.extern: "xcb_shape_id".}: XcbExtension
+  var xcbShapeId* {.extern: "xcb_shape_id".}: XcbExtension
 
 type
-  XcbShapeOp* {.importc: "xcb_shape_op_t".} = distinct uint8
-  XcbShapeKind* {.importc: "xcb_shape_kind_t".} = distinct uint8
+  XcbShapeOp* {.rename: "xcb_shape_op_t".} = distinct uint8
+  XcbShapeKind* {.rename: "xcb_shape_kind_t".} = distinct uint8
 
-  XcbShapeOpIterator* {.importc: "xcb_shape_op_iterator_t", bycopy.} = object
+  XcbShapeOpIterator* {.rename: "xcb_shape_op_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbShapeOp]
     rem*: cint
     index*: cint
 
-  XcbShapeKindIterator* {.importc: "xcb_shape_kind_iterator_t", bycopy.} = object
+  XcbShapeKindIterator* {.rename: "xcb_shape_kind_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbShapeKind]
     rem*: cint
     index*: cint
 
-  XcbShapeSo* {.importc: "xcb_shape_so_t".} = enum
+  XcbShapeSo* {.rename: "xcb_shape_so_t".} = enum
     xcbShapeSoSet = 0, xcbShapeSoUnion = 1, xcbShapeSoIntersect = 2,
     xcbShapeSoSubtract = 3, xcbShapeSoInvert = 4
 
-  XcbShapeSk* {.importc: "xcb_shape_sk_t".} = enum
+  XcbShapeSk* {.rename: "xcb_shape_sk_t".} = enum
     xcbShapeSkBounding = 0, xcbShapeSkClip = 1, xcbShapeSkInput = 2
 
-  XcbShapeNotifyEvent* {.importc: "xcb_shape_notify_event_t", bycopy.} = object
+  XcbShapeNotifyEvent* {.rename: "xcb_shape_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     shapeKind* {.importc: "shape_kind".}: XcbShapeKind
     sequence*: uint16
@@ -52,15 +54,15 @@ type
     shaped*: uint8
     pad0: array[11, uint8]
 
-  XcbShapeQueryVersionCookie* {.importc: "xcb_shape_query_version_cookie_t", bycopy.} = object
+  XcbShapeQueryVersionCookie* {.rename: "xcb_shape_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShapeQueryVersionRequest* {.importc: "xcb_shape_query_version_request_t", bycopy.} = object
+  XcbShapeQueryVersionRequest* {.rename: "xcb_shape_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbShapeQueryVersionReply* {.importc: "xcb_shape_query_version_reply_t", bycopy.} = object
+  XcbShapeQueryVersionReply* {.rename: "xcb_shape_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -68,7 +70,7 @@ type
     majorVersion* {.importc: "major_version".}: uint16
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbShapeRectanglesRequest* {.importc: "xcb_shape_rectangles_request_t", bycopy.} = object
+  XcbShapeRectanglesRequest* {.rename: "xcb_shape_rectangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -80,7 +82,7 @@ type
     xOffset* {.importc: "x_offset".}: int16
     yOffset* {.importc: "y_offset".}: int16
 
-  XcbShapeMaskRequest* {.importc: "xcb_shape_mask_request_t", bycopy.} = object
+  XcbShapeMaskRequest* {.rename: "xcb_shape_mask_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -92,7 +94,7 @@ type
     yOffset* {.importc: "y_offset".}: int16
     sourceBitmap* {.importc: "source_bitmap".}: XcbPixmap
 
-  XcbShapeCombineRequest* {.importc: "xcb_shape_combine_request_t", bycopy.} = object
+  XcbShapeCombineRequest* {.rename: "xcb_shape_combine_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -105,7 +107,7 @@ type
     yOffset* {.importc: "y_offset".}: int16
     sourceWindow* {.importc: "source_window".}: XcbWindow
 
-  XcbShapeOffsetRequest* {.importc: "xcb_shape_offset_request_t", bycopy.} = object
+  XcbShapeOffsetRequest* {.rename: "xcb_shape_offset_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -115,16 +117,16 @@ type
     xOffset* {.importc: "x_offset".}: int16
     yOffset* {.importc: "y_offset".}: int16
 
-  XcbShapeQueryExtentsCookie* {.importc: "xcb_shape_query_extents_cookie_t", bycopy.} = object
+  XcbShapeQueryExtentsCookie* {.rename: "xcb_shape_query_extents_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShapeQueryExtentsRequest* {.importc: "xcb_shape_query_extents_request_t", bycopy.} = object
+  XcbShapeQueryExtentsRequest* {.rename: "xcb_shape_query_extents_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     destinationWindow* {.importc: "destination_window".}: XcbWindow
 
-  XcbShapeQueryExtentsReply* {.importc: "xcb_shape_query_extents_reply_t", bycopy.} = object
+  XcbShapeQueryExtentsReply* {.rename: "xcb_shape_query_extents_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -141,7 +143,7 @@ type
     clipShapeExtentsWidth* {.importc: "clip_shape_extents_width".}: uint16
     clipShapeExtentsHeight* {.importc: "clip_shape_extents_height".}: uint16
 
-  XcbShapeSelectInputRequest* {.importc: "xcb_shape_select_input_request_t", bycopy.} = object
+  XcbShapeSelectInputRequest* {.rename: "xcb_shape_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -149,25 +151,25 @@ type
     enable*: uint8
     pad0: array[3, uint8]
 
-  XcbShapeInputSelectedCookie* {.importc: "xcb_shape_input_selected_cookie_t", bycopy.} = object
+  XcbShapeInputSelectedCookie* {.rename: "xcb_shape_input_selected_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShapeInputSelectedRequest* {.importc: "xcb_shape_input_selected_request_t", bycopy.} = object
+  XcbShapeInputSelectedRequest* {.rename: "xcb_shape_input_selected_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     destinationWindow* {.importc: "destination_window".}: XcbWindow
 
-  XcbShapeInputSelectedReply* {.importc: "xcb_shape_input_selected_reply_t", bycopy.} = object
+  XcbShapeInputSelectedReply* {.rename: "xcb_shape_input_selected_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     enabled*: uint8
     sequence*: uint16
     length*: uint32
 
-  XcbShapeGetRectanglesCookie* {.importc: "xcb_shape_get_rectangles_cookie_t", bycopy.} = object
+  XcbShapeGetRectanglesCookie* {.rename: "xcb_shape_get_rectangles_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbShapeGetRectanglesRequest* {.importc: "xcb_shape_get_rectangles_request_t", bycopy.} = object
+  XcbShapeGetRectanglesRequest* {.rename: "xcb_shape_get_rectangles_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -175,7 +177,7 @@ type
     sourceKind* {.importc: "source_kind".}: XcbShapeKind
     pad0: array[3, uint8]
 
-  XcbShapeGetRectanglesReply* {.importc: "xcb_shape_get_rectangles_reply_t", bycopy.} = object
+  XcbShapeGetRectanglesReply* {.rename: "xcb_shape_get_rectangles_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     ordering*: uint8
     sequence*: uint16
@@ -183,7 +185,8 @@ type
     rectanglesLen* {.importc: "rectangles_len".}: uint32
     pad0: array[20, uint8]
 
-{.passl: "-lxcb-shape".}
+when xcbDynlib:
+  {.push dynlib: "libxcb-shape.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbShapeOpIterator) {.importc: "xcb_shape_op_next".}

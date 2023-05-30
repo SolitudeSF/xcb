@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbDri3MajorVersion* = 1
@@ -13,23 +13,24 @@ const
   xcbDri3PixmapFromBuffers* = 7
   xcbDri3BuffersFromPixmap* = 8
 
-{.passl: "-lxcb-dri3".}
-{.push header: "xcb/dri3.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-dri3".}
+  {.push header: "xcb/dri3.h".}
 
-var xcbDri3Id* {.extern: "xcb_dri3_id".}: XcbExtension
+  var xcbDri3Id* {.extern: "xcb_dri3_id".}: XcbExtension
 
 type
-  XcbDri3QueryVersionCookie* {.importc: "xcb_dri3_query_version_cookie_t", bycopy.} = object
+  XcbDri3QueryVersionCookie* {.rename: "xcb_dri3_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3QueryVersionRequest* {.importc: "xcb_dri3_query_version_request_t", bycopy.} = object
+  XcbDri3QueryVersionRequest* {.rename: "xcb_dri3_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbDri3QueryVersionReply* {.importc: "xcb_dri3_query_version_reply_t", bycopy.} = object
+  XcbDri3QueryVersionReply* {.rename: "xcb_dri3_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -37,24 +38,24 @@ type
     majorVersion* {.importc: "major_version".}: uint32
     minorVersion* {.importc: "minor_version".}: uint32
 
-  XcbDri3OpenCookie* {.importc: "xcb_dri3_open_cookie_t", bycopy.} = object
+  XcbDri3OpenCookie* {.rename: "xcb_dri3_open_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3OpenRequest* {.importc: "xcb_dri3_open_request_t", bycopy.} = object
+  XcbDri3OpenRequest* {.rename: "xcb_dri3_open_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     provider*: uint32
 
-  XcbDri3OpenReply* {.importc: "xcb_dri3_open_reply_t", bycopy.} = object
+  XcbDri3OpenReply* {.rename: "xcb_dri3_open_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbDri3PixmapFromBufferRequest* {.importc: "xcb_dri3_pixmap_from_buffer_request_t", bycopy.} = object
+  XcbDri3PixmapFromBufferRequest* {.rename: "xcb_dri3_pixmap_from_buffer_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -67,16 +68,16 @@ type
     depth*: uint8
     bpp*: uint8
 
-  XcbDri3BufferFromPixmapCookie* {.importc: "xcb_dri3_buffer_from_pixmap_cookie_t", bycopy.} = object
+  XcbDri3BufferFromPixmapCookie* {.rename: "xcb_dri3_buffer_from_pixmap_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3BufferFromPixmapRequest* {.importc: "xcb_dri3_buffer_from_pixmap_request_t", bycopy.} = object
+  XcbDri3BufferFromPixmapRequest* {.rename: "xcb_dri3_buffer_from_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     pixmap*: XcbPixmap
 
-  XcbDri3BufferFromPixmapReply* {.importc: "xcb_dri3_buffer_from_pixmap_reply_t", bycopy.} = object
+  XcbDri3BufferFromPixmapReply* {.rename: "xcb_dri3_buffer_from_pixmap_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
@@ -89,7 +90,7 @@ type
     bpp*: uint8
     pad0: array[12, uint8]
 
-  XcbDri3FenceFromFdRequest* {.importc: "xcb_dri3_fence_from_fd_request_t", bycopy.} = object
+  XcbDri3FenceFromFdRequest* {.rename: "xcb_dri3_fence_from_fd_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -98,27 +99,27 @@ type
     initiallyTriggered* {.importc: "initially_triggered".}: uint8
     pad0: array[3, uint8]
 
-  XcbDri3FdFromFenceCookie* {.importc: "xcb_dri3_fd_from_fence_cookie_t", bycopy.} = object
+  XcbDri3FdFromFenceCookie* {.rename: "xcb_dri3_fd_from_fence_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3FdFromFenceRequest* {.importc: "xcb_dri3_fd_from_fence_request_t", bycopy.} = object
+  XcbDri3FdFromFenceRequest* {.rename: "xcb_dri3_fd_from_fence_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     drawable*: XcbDrawable
     fence*: uint32
 
-  XcbDri3FdFromFenceReply* {.importc: "xcb_dri3_fd_from_fence_reply_t", bycopy.} = object
+  XcbDri3FdFromFenceReply* {.rename: "xcb_dri3_fd_from_fence_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
     length*: uint32
     pad0: array[24, uint8]
 
-  XcbDri3GetSupportedModifiersCookie* {.importc: "xcb_dri3_get_supported_modifiers_cookie_t", bycopy.} = object
+  XcbDri3GetSupportedModifiersCookie* {.rename: "xcb_dri3_get_supported_modifiers_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3GetSupportedModifiersRequest* {.importc: "xcb_dri3_get_supported_modifiers_request_t", bycopy.} = object
+  XcbDri3GetSupportedModifiersRequest* {.rename: "xcb_dri3_get_supported_modifiers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -127,7 +128,7 @@ type
     bpp*: uint8
     pad0: array[2, uint8]
 
-  XcbDri3GetSupportedModifiersReply* {.importc: "xcb_dri3_get_supported_modifiers_reply_t", bycopy.} = object
+  XcbDri3GetSupportedModifiersReply* {.rename: "xcb_dri3_get_supported_modifiers_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -136,7 +137,7 @@ type
     numScreenModifiers* {.importc: "num_screen_modifiers".}: uint32
     pad1: array[16, uint8]
 
-  XcbDri3PixmapFromBuffersRequest* {.importc: "xcb_dri3_pixmap_from_buffers_request_t", bycopy.} = object
+  XcbDri3PixmapFromBuffersRequest* {.rename: "xcb_dri3_pixmap_from_buffers_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -159,16 +160,16 @@ type
     pad1: array[2, uint8]
     modifier*: uint64
 
-  XcbDri3BuffersFromPixmapCookie* {.importc: "xcb_dri3_buffers_from_pixmap_cookie_t", bycopy.} = object
+  XcbDri3BuffersFromPixmapCookie* {.rename: "xcb_dri3_buffers_from_pixmap_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbDri3BuffersFromPixmapRequest* {.importc: "xcb_dri3_buffers_from_pixmap_request_t", bycopy.} = object
+  XcbDri3BuffersFromPixmapRequest* {.rename: "xcb_dri3_buffers_from_pixmap_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     pixmap*: XcbPixmap
 
-  XcbDri3BuffersFromPixmapReply* {.importc: "xcb_dri3_buffers_from_pixmap_reply_t", bycopy.} = object
+  XcbDri3BuffersFromPixmapReply* {.rename: "xcb_dri3_buffers_from_pixmap_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     nfd*: uint8
     sequence*: uint16
@@ -181,6 +182,8 @@ type
     bpp*: uint8
     pad1: array[6, uint8]
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-dri3.so(|.0)".}
 {.push cdecl.}
 
 proc dri3QueryVersion*(c: ptr XcbConnection; majorVersion: uint32; minorVersion: uint32): XcbDri3QueryVersionCookie {.importc: "xcb_dri3_query_version".}

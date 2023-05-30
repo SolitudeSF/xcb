@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbXf86driMajorVersion* = 4
@@ -16,32 +16,33 @@ const
   xcbXf86driGetDeviceInfo* = 10
   xcbXf86driAuthConnection* = 11
 
-{.passl: "-lxcb-xf86dri".}
-{.push header: "xcb/xf86dri.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-xf86dri".}
+  {.push header: "xcb/xf86dri.h".}
 
-var xcbXf86driId* {.extern: "xcb_xf86dri_id".}: XcbExtension
+  var xcbXf86driId* {.extern: "xcb_xf86dri_id".}: XcbExtension
 
 type
-  XcbXf86driDrmClipRect* {.importc: "xcb_xf86dri_drm_clip_rect_t", bycopy.} = object
+  XcbXf86driDrmClipRect* {.rename: "xcb_xf86dri_drm_clip_rect_t", bycopy.} = object
     x1*: int16
     y1*: int16
     x2*: int16
     x3*: int16
 
-  XcbXf86driDrmClipRectIterator* {.importc: "xcb_xf86dri_drm_clip_rect_iterator_t", bycopy.} = object
+  XcbXf86driDrmClipRectIterator* {.rename: "xcb_xf86dri_drm_clip_rect_iterator_t", bycopy.} = object
     data*: ptr XcbXf86driDrmClipRect
     rem*: cint
     index*: cint
 
-  XcbXf86driQueryVersionCookie* {.importc: "xcb_xf86dri_query_version_cookie_t", bycopy.} = object
+  XcbXf86driQueryVersionCookie* {.rename: "xcb_xf86dri_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driQueryVersionRequest* {.importc: "xcb_xf86dri_query_version_request_t", bycopy.} = object
+  XcbXf86driQueryVersionRequest* {.rename: "xcb_xf86dri_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXf86driQueryVersionReply* {.importc: "xcb_xf86dri_query_version_reply_t", bycopy.} = object
+  XcbXf86driQueryVersionReply* {.rename: "xcb_xf86dri_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -50,32 +51,32 @@ type
     driMinorVersion* {.importc: "dri_minor_version".}: uint16
     driMinorPatch* {.importc: "dri_minor_patch".}: uint32
 
-  XcbXf86driQueryDirectRenderingCapableCookie* {.importc: "xcb_xf86dri_query_direct_rendering_capable_cookie_t", bycopy.} = object
+  XcbXf86driQueryDirectRenderingCapableCookie* {.rename: "xcb_xf86dri_query_direct_rendering_capable_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driQueryDirectRenderingCapableRequest* {.importc: "xcb_xf86dri_query_direct_rendering_capable_request_t", bycopy.} = object
+  XcbXf86driQueryDirectRenderingCapableRequest* {.rename: "xcb_xf86dri_query_direct_rendering_capable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXf86driQueryDirectRenderingCapableReply* {.importc: "xcb_xf86dri_query_direct_rendering_capable_reply_t", bycopy.} = object
+  XcbXf86driQueryDirectRenderingCapableReply* {.rename: "xcb_xf86dri_query_direct_rendering_capable_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     isCapable* {.importc: "is_capable".}: uint8
 
-  XcbXf86driOpenConnectionCookie* {.importc: "xcb_xf86dri_open_connection_cookie_t", bycopy.} = object
+  XcbXf86driOpenConnectionCookie* {.rename: "xcb_xf86dri_open_connection_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driOpenConnectionRequest* {.importc: "xcb_xf86dri_open_connection_request_t", bycopy.} = object
+  XcbXf86driOpenConnectionRequest* {.rename: "xcb_xf86dri_open_connection_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXf86driOpenConnectionReply* {.importc: "xcb_xf86dri_open_connection_reply_t", bycopy.} = object
+  XcbXf86driOpenConnectionReply* {.rename: "xcb_xf86dri_open_connection_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -85,22 +86,22 @@ type
     busIdLen* {.importc: "bus_id_len".}: uint32
     pad1: array[12, uint8]
 
-  XcbXf86driCloseConnectionRequest* {.importc: "xcb_xf86dri_close_connection_request_t", bycopy.} = object
+  XcbXf86driCloseConnectionRequest* {.rename: "xcb_xf86dri_close_connection_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXf86driGetClientDriverNameCookie* {.importc: "xcb_xf86dri_get_client_driver_name_cookie_t", bycopy.} = object
+  XcbXf86driGetClientDriverNameCookie* {.rename: "xcb_xf86dri_get_client_driver_name_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driGetClientDriverNameRequest* {.importc: "xcb_xf86dri_get_client_driver_name_request_t", bycopy.} = object
+  XcbXf86driGetClientDriverNameRequest* {.rename: "xcb_xf86dri_get_client_driver_name_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXf86driGetClientDriverNameReply* {.importc: "xcb_xf86dri_get_client_driver_name_reply_t", bycopy.} = object
+  XcbXf86driGetClientDriverNameReply* {.rename: "xcb_xf86dri_get_client_driver_name_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -111,10 +112,10 @@ type
     clientDriverNameLen* {.importc: "client_driver_name_len".}: uint32
     pad1: array[8, uint8]
 
-  XcbXf86driCreateContextCookie* {.importc: "xcb_xf86dri_create_context_cookie_t", bycopy.} = object
+  XcbXf86driCreateContextCookie* {.rename: "xcb_xf86dri_create_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driCreateContextRequest* {.importc: "xcb_xf86dri_create_context_request_t", bycopy.} = object
+  XcbXf86driCreateContextRequest* {.rename: "xcb_xf86dri_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -122,55 +123,55 @@ type
     visual*: uint32
     context*: uint32
 
-  XcbXf86driCreateContextReply* {.importc: "xcb_xf86dri_create_context_reply_t", bycopy.} = object
+  XcbXf86driCreateContextReply* {.rename: "xcb_xf86dri_create_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     hwContext* {.importc: "hw_context".}: uint32
 
-  XcbXf86driDestroyContextRequest* {.importc: "xcb_xf86dri_destroy_context_request_t", bycopy.} = object
+  XcbXf86driDestroyContextRequest* {.rename: "xcb_xf86dri_destroy_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     context*: uint32
 
-  XcbXf86driCreateDrawableCookie* {.importc: "xcb_xf86dri_create_drawable_cookie_t", bycopy.} = object
+  XcbXf86driCreateDrawableCookie* {.rename: "xcb_xf86dri_create_drawable_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driCreateDrawableRequest* {.importc: "xcb_xf86dri_create_drawable_request_t", bycopy.} = object
+  XcbXf86driCreateDrawableRequest* {.rename: "xcb_xf86dri_create_drawable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     drawable*: uint32
 
-  XcbXf86driCreateDrawableReply* {.importc: "xcb_xf86dri_create_drawable_reply_t", bycopy.} = object
+  XcbXf86driCreateDrawableReply* {.rename: "xcb_xf86dri_create_drawable_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     hwDrawableHandle* {.importc: "hw_drawable_handle".}: uint32
 
-  XcbXf86driDestroyDrawableRequest* {.importc: "xcb_xf86dri_destroy_drawable_request_t", bycopy.} = object
+  XcbXf86driDestroyDrawableRequest* {.rename: "xcb_xf86dri_destroy_drawable_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     drawable*: uint32
 
-  XcbXf86driGetDrawableInfoCookie* {.importc: "xcb_xf86dri_get_drawable_info_cookie_t", bycopy.} = object
+  XcbXf86driGetDrawableInfoCookie* {.rename: "xcb_xf86dri_get_drawable_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driGetDrawableInfoRequest* {.importc: "xcb_xf86dri_get_drawable_info_request_t", bycopy.} = object
+  XcbXf86driGetDrawableInfoRequest* {.rename: "xcb_xf86dri_get_drawable_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     drawable*: uint32
 
-  XcbXf86driGetDrawableInfoReply* {.importc: "xcb_xf86dri_get_drawable_info_reply_t", bycopy.} = object
+  XcbXf86driGetDrawableInfoReply* {.rename: "xcb_xf86dri_get_drawable_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -186,16 +187,16 @@ type
     backY* {.importc: "back_y".}: int16
     numBackClipRects* {.importc: "num_back_clip_rects".}: uint32
 
-  XcbXf86driGetDeviceInfoCookie* {.importc: "xcb_xf86dri_get_device_info_cookie_t", bycopy.} = object
+  XcbXf86driGetDeviceInfoCookie* {.rename: "xcb_xf86dri_get_device_info_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driGetDeviceInfoRequest* {.importc: "xcb_xf86dri_get_device_info_request_t", bycopy.} = object
+  XcbXf86driGetDeviceInfoRequest* {.rename: "xcb_xf86dri_get_device_info_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
 
-  XcbXf86driGetDeviceInfoReply* {.importc: "xcb_xf86dri_get_device_info_reply_t", bycopy.} = object
+  XcbXf86driGetDeviceInfoReply* {.rename: "xcb_xf86dri_get_device_info_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -207,23 +208,25 @@ type
     framebufferStride* {.importc: "framebuffer_stride".}: uint32
     devicePrivateSize* {.importc: "device_private_size".}: uint32
 
-  XcbXf86driAuthConnectionCookie* {.importc: "xcb_xf86dri_auth_connection_cookie_t", bycopy.} = object
+  XcbXf86driAuthConnectionCookie* {.rename: "xcb_xf86dri_auth_connection_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXf86driAuthConnectionRequest* {.importc: "xcb_xf86dri_auth_connection_request_t", bycopy.} = object
+  XcbXf86driAuthConnectionRequest* {.rename: "xcb_xf86dri_auth_connection_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     screen*: uint32
     magic*: uint32
 
-  XcbXf86driAuthConnectionReply* {.importc: "xcb_xf86dri_auth_connection_reply_t", bycopy.} = object
+  XcbXf86driAuthConnectionReply* {.rename: "xcb_xf86dri_auth_connection_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     authenticated*: uint32
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-xf86dri.so(|.0)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbXf86driDrmClipRectIterator) {.importc: "xcb_xf86dri_drm_clip_rect_next".}

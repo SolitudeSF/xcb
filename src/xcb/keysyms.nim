@@ -1,10 +1,13 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-keysyms".}
-{.push header: "xcb/xcb_keysyms.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-keysyms".}
+  {.push header: "xcb/xcb_keysyms.h".}
 
-type XcbKeySymbols* {.importc: "xcb_key_symbols_t", incompleteStruct.} = object
+type XcbKeySymbols* {.rename: "xcb_key_symbols_t", incompleteStruct.} = object
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-keysyms.so(|.1)".}
 {.push cdecl.}
 
 proc keySymbolsAlloc*(c: ptr XcbConnection): ptr XcbKeySymbols {.importc: "xcb_key_symbols_alloc".}

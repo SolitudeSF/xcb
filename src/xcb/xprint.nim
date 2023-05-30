@@ -1,4 +1,4 @@
-import ./xcb
+import ./xcb, private/importutil
 
 const
   xcbXprintMajorVersion* = 1
@@ -33,61 +33,62 @@ const
   xcbXPrintBadContext* = 0
   xcbXPrintBadSequence* = 1
 
-{.push header: "xcb/xprint.h".}
+when not xcbDynlib:
+  {.push header: "xcb/xprint.h".}
 
-var xcbXPrintId* {.extern: "xcb_x_print_id".}: XcbExtension
+  var xcbXPrintId* {.extern: "xcb_x_print_id".}: XcbExtension
 
 type
-  XcbXPrintPcontext* {.importc: "xcb_x_print_pcontext_t".} = distinct uint32
-  XcbXPrintString8* {.importc: "xcb_x_print_string8_t".} = char
+  XcbXPrintPcontext* {.rename: "xcb_x_print_pcontext_t".} = distinct uint32
+  XcbXPrintString8* {.rename: "xcb_x_print_string8_t".} = char
 
-  XcbXPrintString8Iterator* {.importc: "xcb_x_print_string8_iterator_t", bycopy.} = object
+  XcbXPrintString8Iterator* {.rename: "xcb_x_print_string8_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXPrintString8]
     rem*: cint
     index*: cint
 
-  XcbXPrintPrinter* {.importc: "xcb_x_print_printer_t", bycopy.} = object
+  XcbXPrintPrinter* {.rename: "xcb_x_print_printer_t", bycopy.} = object
     nameLen*: uint32
     descLen*: uint32
 
-  XcbXPrintPrinterIterator* {.importc: "xcb_x_print_printer_iterator_t", bycopy.} = object
+  XcbXPrintPrinterIterator* {.rename: "xcb_x_print_printer_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXPrintPrinter]
     rem*: cint
     index*: cint
 
-  XcbXPrintPcontextIterator* {.importc: "xcb_x_print_pcontext_iterator_t", bycopy.} = object
+  XcbXPrintPcontextIterator* {.rename: "xcb_x_print_pcontext_iterator_t", bycopy.} = object
     data*: ptr UncheckedArray[XcbXPrintPcontext]
     rem*: cint
     index*: cint
 
-  XcbXPrintGetDoc* {.importc: "xcb_x_print_get_doc_t".} = enum
+  XcbXPrintGetDoc* {.rename: "xcb_x_print_get_doc_t".} = enum
     xcbXPrintGetDocFinished = 0, xcbXPrintGetDocSecondConsumer = 1
 
-  XcbXPrintEvMask* {.importc: "xcb_x_print_ev_mask_t".} = enum
+  XcbXPrintEvMask* {.rename: "xcb_x_print_ev_mask_t".} = enum
     xcbXPrintEvMaskNoEventMask = 0, xcbXPrintEvMaskPrintMask = 1,
     xcbXPrintEvMaskAttributeMask = 2
 
-  XcbXPrintDetail* {.importc: "xcb_x_print_detail_t".} = enum
+  XcbXPrintDetail* {.rename: "xcb_x_print_detail_t".} = enum
     xcbXPrintDetailStartJobNotify = 1, xcbXPrintDetailEndJobNotify = 2,
     xcbXPrintDetailStartDocNotify = 3, xcbXPrintDetailEndDocNotify = 4,
     xcbXPrintDetailStartPageNotify = 5,
     xcbXPrintDetailEndPageNotify = 6
 
-  XcbXPrintAttr* {.importc: "xcb_x_print_attr_t".} = enum
+  XcbXPrintAttr* {.rename: "xcb_x_print_attr_t".} = enum
     xcbXPrintAttrJobAttr = 1, xcbXPrintAttrDocAttr = 2,
     xcbXPrintAttrPageAttr = 3, xcbXPrintAttrPrinterAttr = 4,
     xcbXPrintAttrServerAttr = 5, xcbXPrintAttrMediumAttr = 6,
     xcbXPrintAttrSpoolerAttr = 7
 
-  XcbXPrintPrintQueryVersionCookie* {.importc: "xcb_x_print_print_query_version_cookie_t", bycopy.} = object
+  XcbXPrintPrintQueryVersionCookie* {.rename: "xcb_x_print_print_query_version_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintQueryVersionRequest* {.importc: "xcb_x_print_print_query_version_request_t", bycopy.} = object
+  XcbXPrintPrintQueryVersionRequest* {.rename: "xcb_x_print_print_query_version_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXPrintPrintQueryVersionReply* {.importc: "xcb_x_print_print_query_version_reply_t", bycopy.} = object
+  XcbXPrintPrintQueryVersionReply* {.rename: "xcb_x_print_print_query_version_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -95,17 +96,17 @@ type
     majorVersion* {.importc: "major_version".}: uint16
     minorVersion* {.importc: "minor_version".}: uint16
 
-  XcbXPrintPrintGetPrinterListCookie* {.importc: "xcb_x_print_print_get_printer_list_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetPrinterListCookie* {.rename: "xcb_x_print_print_get_printer_list_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetPrinterListRequest* {.importc: "xcb_x_print_print_get_printer_list_request_t", bycopy.} = object
+  XcbXPrintPrintGetPrinterListRequest* {.rename: "xcb_x_print_print_get_printer_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     printerNameLen*: uint32
     localeLen*: uint32
 
-  XcbXPrintPrintGetPrinterListReply* {.importc: "xcb_x_print_print_get_printer_list_reply_t", bycopy.} = object
+  XcbXPrintPrintGetPrinterListReply* {.rename: "xcb_x_print_print_get_printer_list_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -113,12 +114,12 @@ type
     listCount*: uint32
     pad1: array[20, uint8]
 
-  XcbXPrintPrintRehashPrinterListRequest* {.importc: "xcb_x_print_print_rehash_printer_list_request_t", bycopy.} = object
+  XcbXPrintPrintRehashPrinterListRequest* {.rename: "xcb_x_print_print_rehash_printer_list_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXPrintCreateContextRequest* {.importc: "xcb_x_print_create_context_request_t", bycopy.} = object
+  XcbXPrintCreateContextRequest* {.rename: "xcb_x_print_create_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -126,73 +127,73 @@ type
     printerNameLen*: uint32
     localeLen*: uint32
 
-  XcbXPrintPrintSetContextRequest* {.importc: "xcb_x_print_print_set_context_request_t", bycopy.} = object
+  XcbXPrintPrintSetContextRequest* {.rename: "xcb_x_print_print_set_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: uint32
 
-  XcbXPrintPrintGetContextCookie* {.importc: "xcb_x_print_print_get_context_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetContextCookie* {.rename: "xcb_x_print_print_get_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetContextRequest* {.importc: "xcb_x_print_print_get_context_request_t", bycopy.} = object
+  XcbXPrintPrintGetContextRequest* {.rename: "xcb_x_print_print_get_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXPrintPrintGetContextReply* {.importc: "xcb_x_print_print_get_context_reply_t", bycopy.} = object
+  XcbXPrintPrintGetContextReply* {.rename: "xcb_x_print_print_get_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     context*: uint32
 
-  XcbXPrintPrintDestroyContextRequest* {.importc: "xcb_x_print_print_destroy_context_request_t", bycopy.} = object
+  XcbXPrintPrintDestroyContextRequest* {.rename: "xcb_x_print_print_destroy_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: uint32
 
-  XcbXPrintPrintGetScreenOfContextCookie* {.importc: "xcb_x_print_print_get_screen_of_context_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetScreenOfContextCookie* {.rename: "xcb_x_print_print_get_screen_of_context_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetScreenOfContextRequest* {.importc: "xcb_x_print_print_get_screen_of_context_request_t", bycopy.} = object
+  XcbXPrintPrintGetScreenOfContextRequest* {.rename: "xcb_x_print_print_get_screen_of_context_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXPrintPrintGetScreenOfContextReply* {.importc: "xcb_x_print_print_get_screen_of_context_reply_t", bycopy.} = object
+  XcbXPrintPrintGetScreenOfContextReply* {.rename: "xcb_x_print_print_get_screen_of_context_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     root*: XcbWindow
 
-  XcbXPrintPrintStartJobRequest* {.importc: "xcb_x_print_print_start_job_request_t", bycopy.} = object
+  XcbXPrintPrintStartJobRequest* {.rename: "xcb_x_print_print_start_job_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     outputMode* {.importc: "output_mode".}: uint8
 
-  XcbXPrintPrintEndJobRequest* {.importc: "xcb_x_print_print_end_job_request_t", bycopy.} = object
+  XcbXPrintPrintEndJobRequest* {.rename: "xcb_x_print_print_end_job_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cancel*: uint8
 
-  XcbXPrintPrintStartDocRequest* {.importc: "xcb_x_print_print_start_doc_request_t", bycopy.} = object
+  XcbXPrintPrintStartDocRequest* {.rename: "xcb_x_print_print_start_doc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     driverMode* {.importc: "driver_mode".}: uint8
 
-  XcbXPrintPrintEndDocRequest* {.importc: "xcb_x_print_print_end_doc_request_t", bycopy.} = object
+  XcbXPrintPrintEndDocRequest* {.rename: "xcb_x_print_print_end_doc_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cancel*: uint8
 
-  XcbXPrintPrintPutDocumentDataRequest* {.importc: "xcb_x_print_print_put_document_data_request_t", bycopy.} = object
+  XcbXPrintPrintPutDocumentDataRequest* {.rename: "xcb_x_print_print_put_document_data_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -201,17 +202,17 @@ type
     lenFmt* {.importc: "len_fmt".}: uint16
     lenOptions* {.importc: "len_options".}: uint16
 
-  XcbXPrintPrintGetDocumentDataCookie* {.importc: "xcb_x_print_print_get_document_data_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetDocumentDataCookie* {.rename: "xcb_x_print_print_get_document_data_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetDocumentDataRequest* {.importc: "xcb_x_print_print_get_document_data_request_t", bycopy.} = object
+  XcbXPrintPrintGetDocumentDataRequest* {.rename: "xcb_x_print_print_get_document_data_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
     maxBytes* {.importc: "max_bytes".}: uint32
 
-  XcbXPrintPrintGetDocumentDataReply* {.importc: "xcb_x_print_print_get_document_data_reply_t", bycopy.} = object
+  XcbXPrintPrintGetDocumentDataReply* {.rename: "xcb_x_print_print_get_document_data_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -221,36 +222,36 @@ type
     dataLen*: uint32
     pad1: array[12, uint8]
 
-  XcbXPrintPrintStartPageRequest* {.importc: "xcb_x_print_print_start_page_request_t", bycopy.} = object
+  XcbXPrintPrintStartPageRequest* {.rename: "xcb_x_print_print_start_page_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     window*: XcbWindow
 
-  XcbXPrintPrintEndPageRequest* {.importc: "xcb_x_print_print_end_page_request_t", bycopy.} = object
+  XcbXPrintPrintEndPageRequest* {.rename: "xcb_x_print_print_end_page_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     cancel*: uint8
     pad0: array[3, uint8]
 
-  XcbXPrintPrintSelectInputRequest* {.importc: "xcb_x_print_print_select_input_request_t", bycopy.} = object
+  XcbXPrintPrintSelectInputRequest* {.rename: "xcb_x_print_print_select_input_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
     eventMask* {.importc: "event_mask".}: uint32
 
-  XcbXPrintPrintInputSelectedCookie* {.importc: "xcb_x_print_print_input_selected_cookie_t", bycopy.} = object
+  XcbXPrintPrintInputSelectedCookie* {.rename: "xcb_x_print_print_input_selected_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintInputSelectedRequest* {.importc: "xcb_x_print_print_input_selected_request_t", bycopy.} = object
+  XcbXPrintPrintInputSelectedRequest* {.rename: "xcb_x_print_print_input_selected_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
 
-  XcbXPrintPrintInputSelectedReply* {.importc: "xcb_x_print_print_input_selected_reply_t", bycopy.} = object
+  XcbXPrintPrintInputSelectedReply* {.rename: "xcb_x_print_print_input_selected_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -258,10 +259,10 @@ type
     eventMask* {.importc: "event_mask".}: uint32
     allEventsMask* {.importc: "all_events_mask".}: uint32
 
-  XcbXPrintPrintGetAttributesCookie* {.importc: "xcb_x_print_print_get_attributes_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetAttributesCookie* {.rename: "xcb_x_print_print_get_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetAttributesRequest* {.importc: "xcb_x_print_print_get_attributes_request_t", bycopy.} = object
+  XcbXPrintPrintGetAttributesRequest* {.rename: "xcb_x_print_print_get_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -269,7 +270,7 @@ type
     pool*: uint8
     pad0: array[3, uint8]
 
-  XcbXPrintPrintGetAttributesReply* {.importc: "xcb_x_print_print_get_attributes_reply_t", bycopy.} = object
+  XcbXPrintPrintGetAttributesReply* {.rename: "xcb_x_print_print_get_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -277,10 +278,10 @@ type
     stringLen*: uint32
     pad1: array[20, uint8]
 
-  XcbXPrintPrintGetOneAttributesCookie* {.importc: "xcb_x_print_print_get_one_attributes_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetOneAttributesCookie* {.rename: "xcb_x_print_print_get_one_attributes_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetOneAttributesRequest* {.importc: "xcb_x_print_print_get_one_attributes_request_t", bycopy.} = object
+  XcbXPrintPrintGetOneAttributesRequest* {.rename: "xcb_x_print_print_get_one_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -289,7 +290,7 @@ type
     pool*: uint8
     pad0: array[3, uint8]
 
-  XcbXPrintPrintGetOneAttributesReply* {.importc: "xcb_x_print_print_get_one_attributes_reply_t", bycopy.} = object
+  XcbXPrintPrintGetOneAttributesReply* {.rename: "xcb_x_print_print_get_one_attributes_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -297,7 +298,7 @@ type
     valueLen*: uint32
     pad1: array[20, uint8]
 
-  XcbXPrintPrintSetAttributesRequest* {.importc: "xcb_x_print_print_set_attributes_request_t", bycopy.} = object
+  XcbXPrintPrintSetAttributesRequest* {.rename: "xcb_x_print_print_set_attributes_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
@@ -307,16 +308,16 @@ type
     rule*: uint8
     pad0: array[2, uint8]
 
-  XcbXPrintPrintGetPageDimensionsCookie* {.importc: "xcb_x_print_print_get_page_dimensions_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetPageDimensionsCookie* {.rename: "xcb_x_print_print_get_page_dimensions_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetPageDimensionsRequest* {.importc: "xcb_x_print_print_get_page_dimensions_request_t", bycopy.} = object
+  XcbXPrintPrintGetPageDimensionsRequest* {.rename: "xcb_x_print_print_get_page_dimensions_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
 
-  XcbXPrintPrintGetPageDimensionsReply* {.importc: "xcb_x_print_print_get_page_dimensions_reply_t", bycopy.} = object
+  XcbXPrintPrintGetPageDimensionsReply* {.rename: "xcb_x_print_print_get_page_dimensions_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -328,15 +329,15 @@ type
     reproducibleWidth* {.importc: "reproducible_width".}: uint16
     reproducibleHeight* {.importc: "reproducible_height".}: uint16
 
-  XcbXPrintPrintQueryScreensCookie* {.importc: "xcb_x_print_print_query_screens_cookie_t", bycopy.} = object
+  XcbXPrintPrintQueryScreensCookie* {.rename: "xcb_x_print_print_query_screens_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintQueryScreensRequest* {.importc: "xcb_x_print_print_query_screens_request_t", bycopy.} = object
+  XcbXPrintPrintQueryScreensRequest* {.rename: "xcb_x_print_print_query_screens_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
 
-  XcbXPrintPrintQueryScreensReply* {.importc: "xcb_x_print_print_query_screens_reply_t", bycopy.} = object
+  XcbXPrintPrintQueryScreensReply* {.rename: "xcb_x_print_print_query_screens_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
@@ -344,62 +345,64 @@ type
     listCount*: uint32
     pad1: array[20, uint8]
 
-  XcbXPrintPrintSetImageResolutionCookie* {.importc: "xcb_x_print_print_set_image_resolution_cookie_t", bycopy.} = object
+  XcbXPrintPrintSetImageResolutionCookie* {.rename: "xcb_x_print_print_set_image_resolution_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintSetImageResolutionRequest* {.importc: "xcb_x_print_print_set_image_resolution_request_t", bycopy.} = object
+  XcbXPrintPrintSetImageResolutionRequest* {.rename: "xcb_x_print_print_set_image_resolution_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
     imageResolution* {.importc: "image_resolution".}: uint16
 
-  XcbXPrintPrintSetImageResolutionReply* {.importc: "xcb_x_print_print_set_image_resolution_reply_t", bycopy.} = object
+  XcbXPrintPrintSetImageResolutionReply* {.rename: "xcb_x_print_print_set_image_resolution_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     status*: uint8
     sequence*: uint16
     length*: uint32
     previousResolutions* {.importc: "previous_resolutions".}: uint16
 
-  XcbXPrintPrintGetImageResolutionCookie* {.importc: "xcb_x_print_print_get_image_resolution_cookie_t", bycopy.} = object
+  XcbXPrintPrintGetImageResolutionCookie* {.rename: "xcb_x_print_print_get_image_resolution_cookie_t", bycopy.} = object
     sequence*: cuint
 
-  XcbXPrintPrintGetImageResolutionRequest* {.importc: "xcb_x_print_print_get_image_resolution_request_t", bycopy.} = object
+  XcbXPrintPrintGetImageResolutionRequest* {.rename: "xcb_x_print_print_get_image_resolution_request_t", bycopy.} = object
     majorOpcode* {.importc: "major_opcode".}: uint8
     minorOpcode* {.importc: "minor_opcode".}: uint8
     length*: uint16
     context*: XcbXPrintPcontext
 
-  XcbXPrintPrintGetImageResolutionReply* {.importc: "xcb_x_print_print_get_image_resolution_reply_t", bycopy.} = object
+  XcbXPrintPrintGetImageResolutionReply* {.rename: "xcb_x_print_print_get_image_resolution_reply_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     pad0: uint8
     sequence*: uint16
     length*: uint32
     imageResolution* {.importc: "image_resolution".}: uint16
 
-  XcbXPrintNotifyEvent* {.importc: "xcb_x_print_notify_event_t", bycopy.} = object
+  XcbXPrintNotifyEvent* {.rename: "xcb_x_print_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
     context*: XcbXPrintPcontext
     cancel*: uint8
 
-  XcbXPrintAttributNotifyEvent* {.importc: "xcb_x_print_attribut_notify_event_t", bycopy.} = object
+  XcbXPrintAttributNotifyEvent* {.rename: "xcb_x_print_attribut_notify_event_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     detail*: uint8
     sequence*: uint16
     context*: XcbXPrintPcontext
 
-  XcbXPrintBadContextError* {.importc: "xcb_x_print_bad_context_error_t", bycopy.} = object
+  XcbXPrintBadContextError* {.rename: "xcb_x_print_bad_context_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
-  XcbXPrintBadSequenceError* {.importc: "xcb_x_print_bad_sequence_error_t", bycopy.} = object
+  XcbXPrintBadSequenceError* {.rename: "xcb_x_print_bad_sequence_error_t", bycopy.} = object
     responseType* {.importc: "response_type".}: uint8
     errorCode* {.importc: "error_code".}: uint8
     sequence*: uint16
 
+when xcbDynlib:
+  {.push dynlib: "libxcb.so(|.1)".}
 {.push cdecl.}
 
 proc next*(i: ptr XcbXPrintString8Iterator) {.importc: "xcb_x_print_string8_next".}

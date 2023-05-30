@@ -1,9 +1,12 @@
-import ./xcb
+import ./xcb, private/importutil
 
-{.passl: "-lxcb-xrm".}
-{.push cdecl, header: "xcb/xcb_xrm.h".}
+when xcbDynlib:
+  {.push cdecl, dynlib: "libxcb-xrm.so(|.0)".}
+else:
+  {.passl: "-lxcb-xrm".}
+  {.push cdecl, header: "xcb/xcb_xrm.h".}
 
-type XcbXrmDatabase* {.importc: "xcb_xrm_database_t", incompleteStruct.} = object
+type XcbXrmDatabase* {.rename: "xcb_xrm_database_t", incompleteStruct.} = object
 
 proc xrmDatabaseFromDefault*(conn: ptr XcbConnection): ptr XcbXrmDatabase {.importc: "xcb_xrm_database_from_default".}
 proc xrmDatabaseFromResourceManager*(conn: ptr XcbConnection; screen: ptr XcbScreen): ptr XcbXrmDatabase {.importc: "xcb_xrm_database_from_resource_manager".}

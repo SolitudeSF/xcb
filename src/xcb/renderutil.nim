@@ -1,12 +1,13 @@
-import ./xcb, ./render
+import ./xcb, ./render, private/importutil
 
-{.passl: "-lxcb-render-util".}
-{.push header: "xcb/xcb_renderutil.h".}
+when not xcbDynlib:
+  {.passl: "-lxcb-render-util".}
+  {.push header: "xcb/xcb_renderutil.h".}
 
 type
-  XcbRenderUtilCompositeTextStream* {.importc: "xcb_shm_segment_info_t", incompleteStruct.} = object
+  XcbRenderUtilCompositeTextStream* {.rename: "xcb_shm_segment_info_t", incompleteStruct.} = object
 
-  XcbPictFormat* {.importc: "xcb_pict_format_t".} = enum
+  XcbPictFormat* {.rename: "xcb_pict_format_t".} = enum
     xcbPictFormatId = 1 shl 0, xcbPictFormatType = 1 shl 1,
     xcbPictFormatDepth = 1 shl 2, xcbPictFormatRed = 1 shl 3,
     xcbPictFormatRedMask = 1 shl 4, xcbPictFormatGreen = 1 shl 5,
@@ -14,10 +15,12 @@ type
     xcbPictFormatBlueMask = 1 shl 8, xcbPictFormatAlpha = 1 shl 9,
     xcbPictFormatAlphaMask = 1 shl 10, xcbPictFormatColormap = 1 shl 11
 
-  XcbPictStandard* {.importc: "xcb_pict_standard_t".} = enum
+  XcbPictStandard* {.rename: "xcb_pict_standard_t".} = enum
     xcbPictStandardArgb32, xcbPictStandardRgb24, xcbPictStandardA8,
     xcbPictStandardA4, xcbPictStandardA1
 
+when xcbDynlib:
+  {.push dynlib: "libxcb-render-util.so(|.0)".}
 {.push cdecl.}
 
 proc findVisualFormat*(formats: ptr XcbRenderQueryPictFormatsReply; visual: XcbVisualid): ptr XcbRenderPictvisual {.importc: "xcb_render_util_find_visual_format".}
