@@ -40,7 +40,7 @@ const
   xcbRenderCreateRadialGradient* = 35
   xcbRenderCreateConicalGradient* = 36
 
-when not xcbDynlib
+when not xcbDynlib:
   {.passl: "-lxcb-render".}
   {.push header: "xcb/render.h".}
 
